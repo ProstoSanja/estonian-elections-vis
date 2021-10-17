@@ -8,6 +8,7 @@ import com.thatguyalex.kov2021.infrastructure.classes.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,17 +26,28 @@ public class ElectionEndpoint {
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultData test() {
-        return dataProvider.getData();
+        return dataProvider.getResultData(); //TODO: remove me before prod
     }
 
-    @GetMapping(value = "/county", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/countyData", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CountyData> getCountyData() {
         return dataProcessor.getCountyData();
     }
 
-    @GetMapping(value = "/people", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<PersonData> getPeople() {
-        return dataProcessor.getPeopleData();
+    @GetMapping(value = "/topPeopleData", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonData> getTopPeople() {
+        return dataProcessor.getTopPeopleData();
     }
+
+    @GetMapping(value = "/person/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonData> getPeopleList() {
+        return dataProcessor.getAllPeople();
+    }
+
+    @GetMapping(value = "/person/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonData getPeopleList(@PathVariable int id) {
+        return dataProcessor.getPersonById(id);
+    }
+
 
 }
