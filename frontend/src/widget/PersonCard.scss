@@ -1,0 +1,20 @@
+.PersonCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px;
+
+  .colorLine {
+    align-self: stretch;
+    width: 5px;
+  }
+
+  .bio {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: calc(10px + 1vmin);
+    margin: 5px;
+  }
+
+}
