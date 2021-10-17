@@ -16,7 +16,7 @@ class HaalteMagnet extends Component {
         return (
             <div className="HaalteMagnet">
                 {rawData.map((person, i) => {
-                    return <PersonCard key={i} person={person}/>
+                    return <PersonCard key={i} index={i} person={person}/>
                 })}
             </div>
         );

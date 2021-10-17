@@ -16,7 +16,7 @@ class HaalteMagnet extends Component {
                 <div style={{backgroundColor: person.color}} className="colorLine"/>
                 <div className="bio">
                     <span>{person.name} {person.lastname}</span>
-                    <span>{person.totalVotes}</span>
+                    <span className="voteCount">{person.totalVotes}</span>
                 </div>
             </div>
         );

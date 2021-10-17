@@ -40,6 +40,9 @@ class App extends Component {
                 <AnyChart
                     instance={map}
                 />
+                <span>
+                    <h3>Häälte magnetid</h3>
+                </span>
                 <HaalteMagnet/>
             </div>
         );
