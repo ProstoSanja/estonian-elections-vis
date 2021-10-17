@@ -6,8 +6,10 @@ let partyColor = (partyname) => {
             return "#FFDC00"
         case "SDE":
             return "#CE1126"
-        case "IRL":
+        case "IE":
             return "#009DE0"
+        case "EE200":
+            return "#ffeead"
         case "EKRE":
             return "#996600"
         case "ROH":

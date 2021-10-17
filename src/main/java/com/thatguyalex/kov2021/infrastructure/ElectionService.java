@@ -6,7 +6,7 @@ import retrofit2.http.GET;
 
 public interface ElectionService {
 
-    @GET("RESULTS.xml")
+    @GET("KOV_2021/RESULTS.xml")
     Call<ResultData> getResults();
 
 }
