@@ -1,0 +1,19 @@
+.ProgressBarHolder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+
+  .progressBarCounted {
+    height: 30px;
+    background: lightcyan;
+  }
+
+  .progressBarNotCounted {
+    height: 30px;
+    background: deepskyblue;
+  }
+
+}

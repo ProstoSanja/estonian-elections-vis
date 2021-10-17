@@ -34,7 +34,7 @@ class PersonSearch extends Component {
         if (this.state.selectedCandidate.length <= 0) {
             return;
         }
-        var baseUrl = "http://192.168.0.15:12345/api/person?names=";
+        var baseUrl = "/api/person?names=";
         this.state.selectedCandidate.forEach(item => {
             baseUrl += item.name + item.lastname + ","
         })
