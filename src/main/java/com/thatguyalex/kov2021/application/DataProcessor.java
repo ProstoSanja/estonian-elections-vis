@@ -33,7 +33,9 @@ public class DataProcessor {
                 .map(it -> {
                     List<PartyData> partyData = null;
                     if (it.getParties().getParty() != null) {
-                        partyData = it.getParties().getParty().stream().map(party -> new PartyData(party.getCode(), party.getVotesCount())).sorted(Comparator.comparingInt(PartyData::getVotes)).toList();
+                        partyData = it.getParties().getParty().stream().map(party -> new PartyData(party.getCode(), party.getVotesCount()))
+                                .sorted((f1, f2) -> Integer.compare(f2.getVotes(), f1.getVotes()))
+                                .toList();
                     }
                     return CountyData.builder()
                             .id(it.getAdminUnit().getCode())

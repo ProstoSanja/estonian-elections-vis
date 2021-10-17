@@ -5,6 +5,10 @@
   padding: 10px;
   width: calc(20% - 20px);
 
+  &.big {
+    width: initial;
+  }
+
   .colorLine {
     align-self: stretch;
     width: 5px;
@@ -18,6 +22,14 @@
     text-align: start;
     font-size: calc(10px + 1vmin);
     margin: 5px;
+
+    .bigName {
+      font-size: calc(10px + 3vmin);
+    }
+
+    .bigLastname {
+      font-size: calc(10px + 4vmin);
+    }
 
     .voteCount {
       font-weight: bold;
