@@ -33,13 +33,24 @@ public class DataProcessor {
                 .map(it -> {
                     List<PartyData> partyData = null;
                     if (it.getParties().getParty() != null) {
-                        partyData = it.getParties().getParty().stream().map(party -> new PartyData(party.getCode(), party.getVotesCount()))
+                        partyData = it.getParties().getParty().stream().map(party -> {
+                                    StringBuilder name = new StringBuilder(party.getCode());
+                                    if (name.isEmpty()) {
+                                        var names = party.getName().replace("\"", "").split(" ");
+                                        for (var i : names) {
+                                            name.append(i.charAt(0));
+                                        }
+                                    }
+                                    return new PartyData(name.toString(), party.getVotesCount());
+                                })
                                 .sorted((f1, f2) -> Integer.compare(f2.getVotes(), f1.getVotes()))
                                 .toList();
                     }
                     return CountyData.builder()
                             .id(it.getAdminUnit().getCode())
                             .totalVotes(it.getTotalVotes())
+                            .ballotStations(it.getTotalDepartmentsCount())
+                            .ballotStationsCounted(it.getConfirmedDepartmentCount())
                             .leadingParty(partyData != null ? partyData.get(0).getName() : null)
                             .partyData(partyData)
                             .build();

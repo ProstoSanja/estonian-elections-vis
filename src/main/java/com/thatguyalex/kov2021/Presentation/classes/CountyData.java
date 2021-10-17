@@ -10,6 +10,8 @@ import java.util.List;
 public class CountyData {
     private String id;
     private int totalVotes;
+    private int ballotStations;
+    private int ballotStationsCounted;
     private String leadingParty;
     private List<PartyData> partyData;
 }

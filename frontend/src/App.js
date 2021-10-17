@@ -42,12 +42,12 @@ class App extends Component {
         this.updateMap([]);
         map.container("map-container");
         map.draw();
-        this.fetchAndProcess('http://localhost:12345/api/countyData', this.updateMap);
-        this.fetchAndProcess('http://localhost:12345/api/topPeopleData', this.updateTopPeople);
-        this.fetchAndProcess('http://localhost:12345/api/person/list', this.updatePersonList);
+        this.fetchAndProcess('http://192.168.0.15:12345/api/countyData', this.updateMap);
+        this.fetchAndProcess('http://192.168.0.15:12345/api/topPeopleData', this.updateTopPeople);
+        this.fetchAndProcess('http://192.168.0.15:12345/api/person/list', this.updatePersonList);
         this.interval = setInterval(() => {
-            this.fetchAndProcess('http://localhost:12345/api/countyData', this.updateMap);
-            this.fetchAndProcess('http://localhost:12345/api/topPeopleData', this.updateTopPeople);
+            this.fetchAndProcess('http://192.168.0.15:12345/api/countyData', this.updateMap);
+            this.fetchAndProcess('http://192.168.0.15:12345/api/topPeopleData', this.updateTopPeople);
         }, 60000);
     }
 
