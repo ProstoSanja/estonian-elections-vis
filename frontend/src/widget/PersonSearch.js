@@ -9,14 +9,19 @@ class PersonSearch extends Component {
     state = {
         search: '',
         searchHidden: false,
-        selectedCandidate: null
+        selectedCandidate: []
     }
 
     selectCandidate = (candidate) => {
         this.setState({
+            search: '',
             searchHidden: true,
-            selectedCandidate: candidate
+            selectedCandidate: this.state.selectedCandidate.push(candidate)
         })
+        if (this.callback != null) {
+            clearInterval(this.callback);
+        }
+        this.fetchCandidate()
         this.callback = setInterval(this.fetchCandidate, 60000);
     }
 
@@ -26,7 +31,14 @@ class PersonSearch extends Component {
 
 
     fetchCandidate = () => {
-        fetch("http://localhost:12345/api/person/"+ this.state.selectedCandidate.regNumber)
+        if (this.state.selectedCandidate.length <= 0) {
+            return;
+        }
+        var baseUrl = "http://localhost:12345/api/person?names=";
+        this.state.selectedCandidate.forEach(item => {
+            baseUrl += item.name + item.lastname + ","
+        })
+        fetch(baseUrl)
             .then(response => response.json())
             .then(data => this.setState({
                 selectedCandidate: data
@@ -37,12 +49,12 @@ class PersonSearch extends Component {
     render() {
         const people = this.props.allPeople;
         const search = this.state.search;
-        console.log("RENDER SEARCH")
         return (
             <div className="PersonSearch">
                 <div className="searchField">
                     <input
                         value={search}
+                        placeholder={"Kandidaati nimi või perekonnanimi"}
                         onChange={event => {
                             this.setState({
                                 search: event.target.value,
@@ -53,16 +65,18 @@ class PersonSearch extends Component {
                     {search.length > 3 && !this.state.searchHidden &&
                         <div className={"suggestions"}>
                             {
-                                this.searchMatches(search, people).map(person =>
-                                    <PersonCard person={person} hideVotes={true} callback={this.selectCandidate}/>
+                                this.searchMatches(search, people).map((person, i) =>
+                                    <PersonCard key={i} person={person} hideVotes={true} callback={this.selectCandidate}/>
                                 )
                             }
                         </div>
                     }
                 </div>
-                {this.state.selectedCandidate &&
-                    <PersonCard person={this.state.selectedCandidate} large={true}/>
-                }
+                <div className="searchResults">
+                    {this.state.selectedCandidate.length > 0 && this.state.selectedCandidate.map((candidate, i) =>
+                        <PersonCard key={i} person={candidate}/>
+                    )}
+                </div>
             </div>
         );
     }
@@ -71,7 +85,7 @@ class PersonSearch extends Component {
         var searchTerms = query.split(' ');
         return list.filter(person => {
             for (const term of searchTerms) {
-                if (!person.name.includes(term) && !person.lastname.includes(term)) {
+                if (!person.name.toLowerCase().includes(term.toLowerCase()) && !person.lastname.toLowerCase().includes(term.toLowerCase())) {
                     return false;
                 }
             }

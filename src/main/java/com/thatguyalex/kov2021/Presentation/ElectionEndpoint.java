@@ -42,9 +42,12 @@ public class ElectionEndpoint {
         return dataProcessor.getAllPeople();
     }
 
-    @GetMapping(value = "/person/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PersonData getPeopleList(@PathVariable int id) {
-        return dataProcessor.getPersonById(id);
+    @GetMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonData> getPeopleList(@RequestParam List<String> names) {
+        if (names.size() > 50) {
+            names = names.subList(0,50);
+        }
+        return dataProcessor.getPersonById(names);
     }
 
 

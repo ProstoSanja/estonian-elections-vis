@@ -75,8 +75,8 @@ public class DataProcessor {
         return peopleData;
     }
 
-    public PersonData getPersonById(int id) {
+    public List<PersonData> getPersonById(List<String> names) {
         checkCache();
-        return peopleData.stream().filter(it -> it.getRegNumber() == id).findFirst().orElse(null);
+        return peopleData.stream().filter(it -> names.contains(it.getName() + it.getLastname())).toList();
     }
 }

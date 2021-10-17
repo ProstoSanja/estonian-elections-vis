@@ -8,7 +8,7 @@ class HaalteMagnet extends Component {
     render() {
         return (
             <div className="HaalteMagnet">
-                {this.props.topPeople.map((person, i) => {
+                {this.props.topPeople.length > 0 && this.props.topPeople.map((person, i) => {
                     return <PersonCard key={i} index={i} person={person} hideVotes={false}/>
                 })}
             </div>
