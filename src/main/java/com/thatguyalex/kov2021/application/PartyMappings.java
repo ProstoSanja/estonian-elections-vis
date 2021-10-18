@@ -10,9 +10,10 @@ public class PartyMappings {
             case "Eesti Keskerakond" -> "KESK";
             case "Eesti Reformierakond" -> "REF";
             case "Sotsiaaldemokraatlik Erakond" -> "SDE";
-            case "Erakond Isamaa ja Res Publica Liit" -> "IRL";
+            case "ISAMAA Erakond" -> "IE";
             case "Eesti Konservatiivne Rahvaerakond" -> "EKRE";
             case "Erakond Eestimaa Rohelised" -> "ROH";
+            case "Erakond Eesti 200" -> "EE200";
             default -> partyName;
         };
     }
