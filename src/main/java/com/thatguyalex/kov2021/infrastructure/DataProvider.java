@@ -25,7 +25,7 @@ public class DataProvider {
 
     public DataProvider() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://vis-media-api.ria.ee/")
+                .baseUrl("http://localhost:12345/")
                 .addConverterFactory(JaxbConverterFactory.create())
                 .build();
         electionService = retrofit.create(ElectionService.class);
