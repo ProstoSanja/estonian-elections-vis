@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import {Component} from "react";
 import anychart from 'anychart'
 
