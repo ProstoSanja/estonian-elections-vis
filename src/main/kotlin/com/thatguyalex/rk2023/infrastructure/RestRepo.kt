@@ -19,7 +19,6 @@ class RestRepo {
     fun fetchElectionData() {
         val results = restTemplate.getForEntity("http://localhost:8080/RESULTS_TEST.xml", ElectionResultsRoot::class.java)
         val usefulResults = results.body!!.data.electionResult
-        println(usefulResults)
     }
 
 }
