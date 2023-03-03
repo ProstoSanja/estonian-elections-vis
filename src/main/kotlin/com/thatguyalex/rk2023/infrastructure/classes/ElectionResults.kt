@@ -36,9 +36,9 @@ data class ElectionParty(
     val partyCode: String,
     val partyTossUpNumber: Int,
     val partyNumberOfMandates: Int,
-    val candidates: List<ElectionPartyCandidate>,
+    val candidates: List<ElectionPartyCandidate> = emptyList(),
     val partyVotes: Int,
-    val percentage: String,
+    val percentage: String?,
 )
 
 data class ElectionPartyCandidate(

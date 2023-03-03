@@ -17,7 +17,7 @@ class RestRepo {
     //https://opendata.valimised.ee/api/RK_2023/RESULTS.xml
     @Scheduled(fixedRate = 60 * 1000)
     fun fetchElectionData() {
-        val results = restTemplate.getForEntity("http://localhost:8080/RESULTS_TEST.xml", ElectionResultsRoot::class.java)
+        val results = restTemplate.getForEntity("http://localhost:8080/EXAMPLE_RESULTS.xml", ElectionResultsRoot::class.java)
         val usefulResults = results.body!!.data.electionResult
     }
 
