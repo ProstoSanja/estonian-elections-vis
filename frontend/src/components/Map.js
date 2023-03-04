@@ -1,5 +1,5 @@
 import anychart from 'anychart';
-import localMap from './../data/mapOutline';
+import localMap from '../data/const/mapOutline';
 import {useEffect, useState} from "react";
 
 const mapDataContainer = anychart.data.set([]);
