@@ -1,4 +1,4 @@
-let localMap = {
+{
     "type": "FeatureCollection",
     "name": "export",
     "crs": {
@@ -18134,4 +18134,3 @@ let localMap = {
         }
     ]
 }
-export default localMap;
