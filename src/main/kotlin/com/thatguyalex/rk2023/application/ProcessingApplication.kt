@@ -1,6 +1,6 @@
 package com.thatguyalex.rk2023.application
 
-import com.thatguyalex.rk2023.application.classes.Candidate
+import com.thatguyalex.rk2023.application.classes.District
 import com.thatguyalex.rk2023.application.classes.ProcessedResults
 import com.thatguyalex.rk2023.infrastructure.RestRepo
 import com.thatguyalex.rk2023.infrastructure.classes.toResult
@@ -22,9 +22,15 @@ class ProcessingApplication(
         val candidates = rawResults.parties
             .flatMap { it.candidates.map { cand -> cand to it.partyCode } }
             .map { it.first.toResult(it.second) }
+        val globalDistrict = District(
+            name = rawResults.adminUnitName,
+            number = 0,
+            parties = rawResults.parties.map { it.toResult() },
+            voteStats = rawResults.participation.toResult()
+        )
         val districts = rawResults.districts
             .map { it.toResult() }
-        // add region 0
+            .plus(globalDistrict)
         processedResults = ProcessedResults(districts, candidates)
     }
 

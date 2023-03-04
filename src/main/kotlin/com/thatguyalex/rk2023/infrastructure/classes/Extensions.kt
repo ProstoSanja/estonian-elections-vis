@@ -36,6 +36,13 @@ fun ElectionDistrictVotes.toResult() = VoteStats(
     evotesCounted = evotesCounted,
 )
 
+fun ElectionParticipation.toResult() = VoteStats(
+    votesCounted = votes,
+    protocolsCounted = numberOfProtocols,
+    protocolsTotal = totalNumberOfProtocols,
+    evotesCounted = evotesCounted,
+)
+
 fun ElectionParty.toResult() = Party(
     name = partyName,
     code = partyCode,
