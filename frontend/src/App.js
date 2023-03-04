@@ -2,15 +2,19 @@ import Map from "./components/Map";
 import {useEffect, useState} from "react";
 import {fetchAndProcess} from "./data/network/api";
 import {processMapData} from "./data/processing/processData";
+import TopCandidates from "./components/TopCandidates";
 
 function App() {
 
   const [mapData, setMapData] = useState([])
+  const [candidateData, setCandidateData] = useState([])
 
   const processUpdate = async () => {
     console.log("starting update")
     const result = await fetchAndProcess()
+    console.log(result)
     setMapData(processMapData(result.districts))
+    setCandidateData(result.candidates)
   }
 
   useEffect(() => {
@@ -26,6 +30,7 @@ function App() {
     <div className="App">
       <h1>2023 Riigikogu Visimisõhtu</h1>
       <Map mapData={mapData}/>
+      <TopCandidates candidates={candidateData}/>
     </div>
   );
 }

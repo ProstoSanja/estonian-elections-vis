@@ -23,7 +23,7 @@ function Map({
 
     useEffect(() => {
         mapDataContainer.data(mapData);
-        console.log("mapData", mapData);
+        console.log("mapData");
     }, [mapData]);
 
     return (

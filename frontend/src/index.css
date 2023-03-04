@@ -34,3 +34,11 @@ code {
   max-height: 85vh;
   margin-bottom: 20px;
 }
+
+.TopCandidates {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-wrap: wrap;
+}
