@@ -30,6 +30,7 @@ function App() {
     <div className="App">
       <h1>2023 Riigikogu Visimisõhtu</h1>
       <Map mapData={mapData}/>
+      <h2>Häälte magnetid</h2>
       <TopCandidates candidates={candidateData}/>
     </div>
   );
