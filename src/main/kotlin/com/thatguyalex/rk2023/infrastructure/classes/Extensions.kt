@@ -24,7 +24,7 @@ fun ElectionPartyCandidate.toResult(partyCode: String) = Candidate(
 fun ElectionDistrict.toResult() = District(
     name = districtName,
     number = districtNumber,
-    parties = voteDistributionByParties.map { it.toResult() },
+    parties = voteDistributionByParties.map { it.toResult() }.sortedByDescending { it.votes },
     voteStats = districtVotes.toResult(),
 
 )
