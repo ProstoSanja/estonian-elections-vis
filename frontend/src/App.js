@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {fetchAndProcess} from "./data/network/api";
 import {processMapData} from "./data/processing/processData";
 import TopCandidates from "./components/TopCandidates";
+import ProgressBar from "./components/ProgressBar";
 
 function App() {
 
@@ -30,6 +31,9 @@ function App() {
     <div className="App">
       <h1>2023 Riigikogu Visimisõhtu</h1>
       <Map mapData={mapData}/>
+      <div className={"SplitRow"}>
+        <ProgressBar globalRegion={mapData.find((it) => it.id === 0)} />
+      </div>
       <h2>Häälte magnetid</h2>
       <TopCandidates candidates={candidateData}/>
     </div>

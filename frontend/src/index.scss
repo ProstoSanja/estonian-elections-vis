@@ -42,3 +42,39 @@ code {
   justify-content: stretch;
   flex-wrap: wrap;
 }
+
+.SplitRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ProgressBar {
+  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  margin: 40px;
+}
+
+.ProgressBarHolder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+
+  .progressBarCounted {
+    height: 30px;
+    background: lightcyan;
+  }
+
+  .progressBarNotCounted {
+    height: 30px;
+    background: deepskyblue;
+  }
+
+}
