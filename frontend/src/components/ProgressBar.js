@@ -5,13 +5,12 @@ function ProgressBar({
     return <></>
   }
 
-  console.log("RED", globalRegion)
   const stats = globalRegion.voteStats;
   const protocolsNotCounter = stats.protocolsTotal - stats.protocolsCounted;
 
   const donePercent = stats.protocolsCounted / stats.protocolsTotal * 100;
   const notDonePercent = protocolsNotCounter / stats.protocolsTotal * 100;
-  console.log(donePercent, notDonePercent)
+
   return (
     <div className="ProgressBar">
       <h3>Häälte lugemine</h3>
