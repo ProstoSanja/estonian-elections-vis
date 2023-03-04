@@ -28,7 +28,7 @@ data class VoteStats(
 
 data class Candidate(
     val forename: String,
-    val surname: String,
+    val surename: String,
     val regNumber: Int,
     val votes: Int,
     val partyCode: String,

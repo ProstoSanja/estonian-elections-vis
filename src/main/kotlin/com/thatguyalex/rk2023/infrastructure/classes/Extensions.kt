@@ -7,7 +7,7 @@ import com.thatguyalex.rk2023.application.classes.VoteStats
 
 fun ElectionPartyCandidate.toResult(partyCode: String) = Candidate(
     forename = forename,
-    surname = surname,
+    surename = surname,
     regNumber = candidateRegNumber,
     votes = candidateVotes,
     partyCode = partyCode,
