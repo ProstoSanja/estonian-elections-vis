@@ -2,14 +2,16 @@ import Map from "./components/Map";
 import {useEffect, useState} from "react";
 import {mockMapData} from "./data/const/mockData";
 import {fetchAndProcess} from "./data/network/api";
+import {processMapData} from "./data/processing/processData";
 
 function App() {
 
   const [mapData, setMapData] = useState(mockMapData)
 
-  const processUpdate = () => {
+  const processUpdate = async () => {
     console.log("starting update")
-    fetchAndProcess()
+    const result = await fetchAndProcess()
+    setMapData(processMapData(result.districts))
   }
 
   useEffect(() => {
