@@ -7,6 +7,17 @@ const map = anychart.choropleth(mapDataContainer);
 map.geoData(localMap);
 map.background().fill("#282c34");
 map.interactivity().selectionMode("none");
+map.tooltip().useHtml(true);
+map.tooltip().format((e) => {
+  const parties = e.getData("parties")
+  const voteStats = e.getData("voteStats")
+  let result = "<span>Protokolle esitatud: " + voteStats.protocolsCounted + "/" + voteStats.protocolsTotal + "</span><br/>"
+  parties.forEach((party) => {
+    console.log(party)
+    result += "<span>" + party.code + " - " + party.votes + " (" + (party.votes / voteStats.votesCounted * 100).toFixed(2) +"%)</span><br/>"
+  })
+  return result
+});
 
 function Map({
      mapData
