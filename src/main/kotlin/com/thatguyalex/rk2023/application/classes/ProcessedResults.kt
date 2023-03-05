@@ -2,7 +2,8 @@ package com.thatguyalex.rk2023.application.classes
 
 data class ProcessedResults(
     val districts: List<District>,
-    val candidates: List<Candidate>
+    val candidates: List<Candidate>,
+    val coalitionPossibilities: List<List<String>>,
 )
 
 data class Party(

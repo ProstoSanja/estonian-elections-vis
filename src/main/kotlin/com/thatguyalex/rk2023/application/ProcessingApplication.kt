@@ -1,6 +1,7 @@
 package com.thatguyalex.rk2023.application
 
 import com.thatguyalex.rk2023.application.classes.District
+import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.ProcessedResults
 import com.thatguyalex.rk2023.infrastructure.RestRepo
 import com.thatguyalex.rk2023.infrastructure.classes.toResult
@@ -12,7 +13,7 @@ class ProcessingApplication(
     private val restRepo: RestRepo
 ) {
 
-    private var processedResults = ProcessedResults(emptyList(), emptyList())
+    private var processedResults = ProcessedResults(emptyList(), emptyList(), emptyList())
     fun getProcessedResults(): ProcessedResults {
         return processedResults
     }
@@ -23,17 +24,39 @@ class ProcessingApplication(
             .flatMap { it.candidates.map { cand -> cand to it.partyCode } }
             .map { it.first.toResult(it.second) }
             .sortedByDescending { it.votes }
+        val globalParties = rawResults.parties.map { it.toResult() }.sortedBy { it.votes }
         val globalDistrict = District(
             name = rawResults.adminUnitName,
             number = 0,
-            parties = rawResults.parties.map { it.toResult() }.sortedBy { it.votes },
+            parties = globalParties,
             voteStats = rawResults.participation.toResult()
         )
         val districts = rawResults.districts
             .map { it.toResult() }
             .plus(globalDistrict)
-        processedResults = ProcessedResults(districts, candidates)
+        val coalitionPossibilities = generateCoalitionPossibilities(globalParties)
+        processedResults = ProcessedResults(districts, candidates, coalitionPossibilities.toList())
     }
 
+
+    private fun generateCoalitionPossibilities(parties: List<Party>, currentlySelected: List<String> = emptyList(), currentScore: Int = 0): Set<List<String>> {
+        val result = mutableSetOf<List<String>>()
+        for ((index, party) in parties.withIndex()) {
+            val scoreWithCurrent = currentScore + party.mandates
+            val selectedWithCurrent = (currentlySelected + party.code).sorted()
+            if (scoreWithCurrent > 50) {
+                result.add(selectedWithCurrent)
+            } else {
+                result.addAll(
+                    generateCoalitionPossibilities(
+                        parties.subList(index + 1, parties.size),
+                        selectedWithCurrent,
+                        scoreWithCurrent
+                    )
+                )
+            }
+        }
+        return result
+    }
 
 }
