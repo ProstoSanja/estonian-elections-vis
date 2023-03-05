@@ -8,6 +8,7 @@ map.geoData(localMap);
 map.background().fill("#282c34");
 map.interactivity().selectionMode("none");
 map.tooltip().useHtml(true);
+map.credits().enabled(false);
 map.tooltip().format((e) => {
   const parties = e.getData("parties")
   const voteStats = e.getData("voteStats")

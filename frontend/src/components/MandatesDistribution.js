@@ -8,6 +8,7 @@ pie.interactivity().selectionMode("none");
 pie.labels().format("{%value}");
 pie.innerRadius("40%");
 pie.legend(false);
+pie.credits().enabled(false);
 // map.tooltip().useHtml(true);
 
 function MandatesDistribution({
