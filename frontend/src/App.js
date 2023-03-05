@@ -1,10 +1,11 @@
 import Map from "./components/Map";
 import {useEffect, useState} from "react";
 import {fetchAndProcess} from "./data/network/api";
-import {processMapData} from "./data/processing/processData";
+import {processCandidateData, processMapData} from "./data/processing/processData";
 import TopCandidates from "./components/TopCandidates";
 import ProgressBar from "./components/ProgressBar";
 import MandatesDistribution from "./components/MandatesDistribution";
+import SearchCandidates from "./components/SearchCandidates";
 
 function App() {
 
@@ -14,9 +15,8 @@ function App() {
   const processUpdate = async () => {
     console.log("starting update")
     const result = await fetchAndProcess()
-    console.log(result)
     setMapData(processMapData(result.districts))
-    setCandidateData(result.candidates)
+    setCandidateData(processCandidateData(result.candidates))
   }
 
   useEffect(() => {
@@ -30,6 +30,7 @@ function App() {
 
   const globalRegion = mapData.find((it) => it.id === 0);
 
+  console.log(mapData, candidateData)
   return (
     <div className="App">
       <h1>2023 Riigikogu Visimisõhtu</h1>
@@ -42,6 +43,8 @@ function App() {
       </div>
       <h2>Häälte magnetid</h2>
       <TopCandidates candidates={candidateData}/>
+      <h2>Kandidaatide otsing</h2>
+      <SearchCandidates candidates={candidateData} />
     </div>
   );
 }

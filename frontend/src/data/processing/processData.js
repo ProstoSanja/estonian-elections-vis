@@ -1,4 +1,5 @@
 import {partyColors} from "../const/mappings";
+import {processName} from "./processText";
 
 function processMapData(districts) {
   return districts.map((district) => {
@@ -24,4 +25,13 @@ function processPartyData(parties) {
   })
 }
 
-export { processMapData, processPartyData }
+function processCandidateData(candidates) {
+  return candidates.map((candidate) => {
+    return {
+      ...candidate,
+      tokenizedName: processName(candidate.forename).concat(processName(candidate.surename)).join("~"),
+    }
+  })
+}
+
+export { processMapData, processPartyData, processCandidateData }

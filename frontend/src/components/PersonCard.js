@@ -2,14 +2,16 @@ import './PersonCard.scss'
 import {partyColors} from "../data/const/mappings";
 
 function PersonCard({
-  candidate
+  candidate,
+  callback
 }) {
   return (
-    <div className="PersonCard">
+    <div style={callback && {cursor: "pointer", width: "initial"}} onClick={callback && (() => {callback(candidate.regNumber);})} className="PersonCard">
       <div style={{backgroundColor: partyColors[candidate.partyCode]}} className="colorLine"/>
       <div className="bio">
         <span>{candidate.forename} {candidate.surename}</span>
-        <span className="voteCount">{candidate.votes}</span>
+        {!callback &&
+          <span className="voteCount">{candidate.votes}</span>}
       </div>
     </div>
   );

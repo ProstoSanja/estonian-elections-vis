@@ -6,6 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color: #282c34;
+  overflow-x: hidden;
 }
 
 code {
@@ -45,6 +47,47 @@ code {
   align-items: stretch;
   justify-content: stretch;
   flex-wrap: wrap;
+}
+
+.PersonSearch {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  padding-bottom: 300px;
+  align-self: stretch;
+
+  .SearchResults {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .searchField {
+    position: relative;
+    display: inline-block;
+
+    input {
+      width: 80vw;
+      height: calc(10px + 2vmin);
+      background-color: #0d0f11;
+      outline: none;
+      border: none;
+      padding: 5px 10px;
+      color: white;
+    }
+
+    .suggestions {
+      margin-top: 1vmin;
+      margin-left: calc(10vw - 10px);
+      position: absolute;
+      width: 80vw;
+      padding: 5px 10px;
+      background-color: #0d0f11;
+    }
+  }
 }
 
 .SplitRow {
