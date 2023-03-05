@@ -82,6 +82,12 @@ code {
   max-height: 100px;
   flex-grow: 1;
 
+  .progressBarEVotes {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+
   .progressBarCounted {
     height: 30px;
     background: lightcyan;
