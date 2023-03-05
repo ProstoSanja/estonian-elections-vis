@@ -131,6 +131,10 @@ code {
     margin-right: 10px;
   }
 
+  .progressBarNoColor {
+    height: 30px;
+  }
+
   .progressBarCounted {
     height: 30px;
     background: lightcyan;
@@ -149,4 +153,11 @@ footer {
     font-size: calc(10px + 0.5vmin);
     margin: 5px;
   }
+}
+
+.coalitionLabel {
+  font-size: calc(10px + 0.5vmin);
+  display: block;
+  line-height: 30px;
+  font-weight: bold;
 }

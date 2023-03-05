@@ -34,7 +34,11 @@ class ProcessingApplication(
         val districts = rawResults.districts
             .map { it.toResult() }
             .plus(globalDistrict)
-        val coalitionPossibilities = generateCoalitionPossibilities(globalParties)
+        val coalitionPossibilities = try {
+            generateCoalitionPossibilities(globalParties)
+        } catch (e: Exception) {
+            emptySet()
+        }
         processedResults = ProcessedResults(districts, candidates, coalitionPossibilities.toList())
     }
 

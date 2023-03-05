@@ -6,17 +6,20 @@ import TopCandidates from "./components/TopCandidates";
 import ProgressBar from "./components/ProgressBar";
 import MandatesDistribution from "./components/MandatesDistribution";
 import SearchCandidates from "./components/SearchCandidates";
+import CoalitionPossibilities from "./components/CoalitionPossibilities";
 
 function App() {
 
   const [mapData, setMapData] = useState([])
   const [candidateData, setCandidateData] = useState([])
+  const [coalitionPossibilities, setCoalitionPossibilities] = useState([])
 
   const processUpdate = async () => {
     console.log("starting update")
     const result = await fetchAndProcess()
     setMapData(processMapData(result.districts))
     setCandidateData(processCandidateData(result.candidates))
+    setCoalitionPossibilities(result.coalitionPossibilities)
   }
 
   useEffect(() => {
@@ -42,6 +45,7 @@ function App() {
         <>
           <div className={"SplitRow"}>
             <ProgressBar globalRegion={globalRegion}/>
+            <CoalitionPossibilities coalitionPossibilities={coalitionPossibilities} />
             <MandatesDistribution globalRegion={globalRegion}/>
           </div>
           <div className={"SplitRow"}>
