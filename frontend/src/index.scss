@@ -54,13 +54,22 @@ code {
   flex-wrap: wrap;
 }
 
+.MandatesDistribution {
+  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  margin: 20px 40px;
+}
+
 .ProgressBar {
   flex-grow: 2;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  margin: 40px;
+  margin: 20px 40px;
 }
 
 .ProgressBarHolder {
@@ -69,6 +78,8 @@ code {
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
+  min-height: 50px;
+  max-height: 100px;
   flex-grow: 1;
 
   .progressBarCounted {

@@ -7,8 +7,21 @@ function processMapData(districts) {
       id: district.number,
       stroke: "#282c34 0.2",
       fill: partyColors[district.parties[0].code],
+      parties: processPartyData(district.parties),
     }
   })
 }
 
-export { processMapData }
+function processPartyData(parties) {
+  return parties.map((party) => {
+    return {
+      ...party,
+      id: party.code,
+      stroke: "#282c34 0.2",
+      fill: partyColors[party.code],
+      value: party.mandates,
+    }
+  })
+}
+
+export { processMapData, processPartyData }

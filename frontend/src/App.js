@@ -4,6 +4,7 @@ import {fetchAndProcess} from "./data/network/api";
 import {processMapData} from "./data/processing/processData";
 import TopCandidates from "./components/TopCandidates";
 import ProgressBar from "./components/ProgressBar";
+import MandatesDistribution from "./components/MandatesDistribution";
 
 function App() {
 
@@ -27,12 +28,17 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  const globalRegion = mapData.find((it) => it.id === 0);
+
   return (
     <div className="App">
       <h1>2023 Riigikogu Visimisõhtu</h1>
       <Map mapData={mapData}/>
       <div className={"SplitRow"}>
-        <ProgressBar globalRegion={mapData.find((it) => it.id === 0)} />
+        <ProgressBar globalRegion={globalRegion} />
+        <MandatesDistribution globalRegion={globalRegion} />
+      </div>
+      <div className={"SplitRow"}>
       </div>
       <h2>Häälte magnetid</h2>
       <TopCandidates candidates={candidateData}/>
