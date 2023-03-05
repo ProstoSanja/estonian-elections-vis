@@ -21,30 +21,37 @@ function App() {
 
   useEffect(() => {
     console.log("Setting up timer")
-    const timer = setTimeout(() => {
+    const timer = setInterval(() => {
       processUpdate()
     }, 30000);
     processUpdate()
-    return () => clearTimeout(timer);
+    return () => clearInterval(timer);
   }, []);
 
   const globalRegion = mapData.find((it) => it.id === 0);
 
-  console.log(mapData, candidateData)
+  console.log("mapData", mapData, "candidateData", candidateData)
   return (
     <div className="App">
-      <h1>2023 Riigikogu Visimisõhtu</h1>
+      <h1>2023 Riigikogu Valimisõhtu</h1>
       <Map mapData={mapData}/>
-      <div className={"SplitRow"}>
-        <ProgressBar globalRegion={globalRegion} />
-        <MandatesDistribution globalRegion={globalRegion} />
-      </div>
-      <div className={"SplitRow"}>
-      </div>
-      <h2>Häälte magnetid</h2>
-      <TopCandidates candidates={candidateData}/>
-      <h2>Kandidaatide otsing</h2>
-      <SearchCandidates candidates={candidateData} />
+      {(!globalRegion?.voteStats?.evotesCounted && globalRegion?.voteStats?.protocolsCounted === 0) ?
+        <div>
+          <h3 style={{marginBottom: "300px"}}>Infot kuvatakse kohe pärast esimeste häälte lugemist</h3>
+        </div> :
+        <>
+          <div className={"SplitRow"}>
+            <ProgressBar globalRegion={globalRegion}/>
+            <MandatesDistribution globalRegion={globalRegion}/>
+          </div>
+          <div className={"SplitRow"}>
+          </div>
+          <h2>Häälte magnetid</h2>
+          <TopCandidates candidates={candidateData}/>
+          <h2>Kandidaatide otsing</h2>
+          <SearchCandidates candidates={candidateData}/>
+        </>
+      }
     </div>
   );
 }

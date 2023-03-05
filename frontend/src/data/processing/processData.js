@@ -7,7 +7,7 @@ function processMapData(districts) {
       ...district,
       id: district.number,
       stroke: "#282c34 0.2",
-      fill: partyColors[district.parties[0].code],
+      fill: partyColors[district.parties[0]?.code],
       parties: processPartyData(district.parties),
     }
   })

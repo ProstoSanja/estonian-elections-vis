@@ -15,6 +15,7 @@ class RestRepo {
         .build()
 
     //https://opendata.valimised.ee/api/RK_2023/RESULTS.xml
+    //http://localhost:12345/EXAMPLE_RESULTS.xml
     fun fetchElectionData(): ElectionResult {
         val results = restTemplate.getForEntity("https://opendata.valimised.ee/api/RK_2023/RESULTS.xml", ElectionResultsRoot::class.java)
         return results.body!!.data.electionResult

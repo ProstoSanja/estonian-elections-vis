@@ -5,6 +5,7 @@ rm -rf build
 yarn install
 yarn build
 popd
+rm -rf ./src/main/resources/static/
 cp -r ./frontend/build/ ./src/main/resources/static
 
 ./gradlew clean bootJar
