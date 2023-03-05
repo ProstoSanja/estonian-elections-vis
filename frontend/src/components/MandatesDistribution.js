@@ -31,7 +31,7 @@ function MandatesDistribution({
 
   return (
     <div className="MandatesDistribution">
-      <h3>Mandaatide jaotus</h3>
+      <h2>Mandaatide jaotus</h2>
       <div id="mandates-container" style={{height: "300px"}}/>
     </div>
   );

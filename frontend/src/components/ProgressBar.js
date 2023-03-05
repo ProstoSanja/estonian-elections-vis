@@ -13,7 +13,7 @@ function ProgressBar({
 
   return (
     <div className="ProgressBar">
-      <h3>Häälte lugemine</h3>
+      <h2>Häälte lugemine</h2>
       <span>Kokku loetud: {donePercent.toFixed(2)}%</span>
       <span>Protokolle esitatud: {stats.protocolsCounted}/{stats.protocolsTotal}</span>
       <div className="ProgressBarHolder">
