@@ -55,7 +55,6 @@ code {
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  padding-bottom: 300px;
   align-self: stretch;
 
   .SearchResults {
@@ -141,5 +140,13 @@ code {
     height: 30px;
     background: deepskyblue;
   }
+}
 
+footer {
+  font-size: calc(10px + 0.5vmin);
+  align-self: stretch;
+  a {
+    font-size: calc(10px + 0.5vmin);
+    margin: 5px;
+  }
 }

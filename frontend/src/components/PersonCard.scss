@@ -1,4 +1,4 @@
-button {
+button, a {
   background-color: #0d0f11;
   margin: 20px;
   padding: 10px;
@@ -8,6 +8,7 @@ button {
   font-size: calc(10px + 1vmin);
   cursor: pointer;
   outline: inherit;
+  text-decoration: none;
 }
 
 .PersonCard {

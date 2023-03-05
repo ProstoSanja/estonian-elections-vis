@@ -23,7 +23,7 @@ function App() {
     console.log("Setting up timer")
     const timer = setInterval(() => {
       processUpdate()
-    }, 30000);
+    }, 60000);
     processUpdate()
     return () => clearInterval(timer);
   }, []);
@@ -37,7 +37,7 @@ function App() {
       <Map mapData={mapData}/>
       {(!globalRegion?.voteStats?.evotesCounted && globalRegion?.voteStats?.protocolsCounted === 0) ?
         <div>
-          <h3 style={{marginBottom: "300px"}}>Infot kuvatakse kohe pärast esimeste häälte lugemist</h3>
+          <h3 style={{maxWidth: "90vw"}}>Infot kuvatakse kohe pärast esimeste häälte lugemist</h3>
         </div> :
         <>
           <div className={"SplitRow"}>
@@ -52,6 +52,23 @@ function App() {
           <SearchCandidates candidates={candidateData}/>
         </>
       }
+      <footer>
+        <br/>
+        <br/>
+        <br/>
+        <span>Arhiiv: <a rel="noreferrer" target="_blank" href="https://kov2021.valimisohtu.ee/">KOV2021</a></span>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <span>© 2023 Aleksandr Tšernõh:
+          <a rel="noreferrer" target="_blank" href="https://www.linkedin.com/in/prostosanja/">Contact</a>
+          <a rel="noreferrer" target="_blank" href="https://github.com/ProstoSanja/estonian-elections-vis/">Source</a>
+        </span>
+        <br/>
+        <br/>
+        <br/>
+      </footer>
     </div>
   );
 }
