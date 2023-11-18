@@ -8,14 +8,13 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.thatguyalex.rk2023.infrastructure.classes.ElectionResult
 import com.thatguyalex.rk2023.infrastructure.classes.ElectionResultsRoot
 import org.springframework.stereotype.Service
-import java.io.File
 
 
 @Service
 class StorageRepo {
 
     private val rk2023 = run {
-        val file = File(javaClass.getResource("/results/RESULTS_2023.xml")!!.file)
+        val file = javaClass.getResourceAsStream("/results/RESULTS_2023.xml")!!
         XmlMapper().registerModule(JavaTimeModule()).registerKotlinModule()
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .readValue<ElectionResultsRoot>(file).data.electionResult
