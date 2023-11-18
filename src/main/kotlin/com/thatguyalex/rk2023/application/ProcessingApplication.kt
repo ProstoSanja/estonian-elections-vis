@@ -3,13 +3,13 @@ package com.thatguyalex.rk2023.application
 import com.thatguyalex.rk2023.application.classes.District
 import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.ProcessedResults
-import com.thatguyalex.rk2023.infrastructure.classes.ElectionResult
+import com.thatguyalex.rk2023.infrastructure.classes.RK1Result
 import com.thatguyalex.rk2023.infrastructure.classes.toResult
 import org.springframework.stereotype.Service
 
 @Service
 class ProcessingApplication {
-    fun fetchAndProcess(rawResults: ElectionResult): ProcessedResults {
+    fun fetchAndProcess(rawResults: RK1Result): ProcessedResults {
         val candidates = rawResults.parties
             .flatMap { it.candidates.map { cand -> cand to it.partyCode } }
             .map { it.first.toResult(it.second) }

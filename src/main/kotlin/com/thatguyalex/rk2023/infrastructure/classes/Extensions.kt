@@ -5,7 +5,7 @@ import com.thatguyalex.rk2023.application.classes.District
 import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.VoteStats
 
-fun ElectionPartyCandidate.toResult(partyCode: String) = Candidate(
+fun RK1PartyCandidate.toResult(partyCode: String) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = candidateRegNumber,
@@ -21,7 +21,7 @@ fun ElectionPartyCandidate.toResult(partyCode: String) = Candidate(
     reserved = reserved
 )
 
-fun ElectionDistrict.toResult() = District(
+fun RK1District.toResult() = District(
     name = districtName,
     number = districtNumber,
     parties = voteDistributionByParties.map { it.toResult() }.sortedByDescending { it.votes },
@@ -29,21 +29,21 @@ fun ElectionDistrict.toResult() = District(
 
 )
 
-fun ElectionDistrictVotes.toResult() = VoteStats(
+fun RK1DistrictVotes.toResult() = VoteStats(
     votesCounted = districtNumberOfVotes,
     protocolsCounted = districtNumberOfProtocols,
     protocolsTotal = districtTotalNumberOfProtocols,
     evotesCounted = evotesCounted,
 )
 
-fun ElectionParticipation.toResult() = VoteStats(
+fun RK1Participation.toResult() = VoteStats(
     votesCounted = votes,
     protocolsCounted = numberOfProtocols,
     protocolsTotal = totalNumberOfProtocols,
     evotesCounted = evotesCounted,
 )
 
-fun ElectionParty.toResult() = Party(
+fun RK1Party.toResult() = Party(
     name = partyName,
     code = partyCode,
     mandates = partyNumberOfMandates,

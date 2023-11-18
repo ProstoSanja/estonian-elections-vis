@@ -3,45 +3,45 @@ package com.thatguyalex.rk2023.infrastructure.classes
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.Instant
 
-data class ElectionResultsRoot(
+data class RK1ResultsRoot(
     val electionCode: String,
     val reportType: String,
     val generated: Instant,
-    val data: ElectionResultsData,
+    val data: RK1ResultsData,
 )
 
-data class ElectionResultsData(
+data class RK1ResultsData(
     @JsonProperty("electionResult")
-    val electionResult: ElectionResult,
+    val electionResult: RK1Result,
 )
 
-data class ElectionResult(
+data class RK1Result(
     val adminUnitName: String,
     val ehakCode: String,
-    val participation: ElectionParticipation,
-    val parties: List<ElectionParty>,
+    val participation: RK1Participation,
+    val parties: List<RK1Party>,
     //partyVotesAndMandatesRows
-    val districts: List<ElectionDistrict>,
+    val districts: List<RK1District>,
 )
 
-data class ElectionParticipation(
+data class RK1Participation(
     val votes: Int,
     val numberOfProtocols: Int,
     val totalNumberOfProtocols: Int,
     val evotesCounted: Boolean,
 )
 
-data class ElectionParty(
+data class RK1Party(
     val partyName: String,
     val partyCode: String,
     val partyTossUpNumber: Int,
     val partyNumberOfMandates: Int,
-    val candidates: List<ElectionPartyCandidate> = emptyList(),
+    val candidates: List<RK1PartyCandidate> = emptyList(),
     val partyVotes: Int,
     val percentage: String?,
 )
 
-data class ElectionPartyCandidate(
+data class RK1PartyCandidate(
     val forename: String,
     val surname: String,
     val candidateRegNumber: Int,
@@ -58,14 +58,14 @@ data class ElectionPartyCandidate(
     val reserved: Boolean,
 )
 
-data class ElectionDistrict(
+data class RK1District(
     val districtName: String,
     val districtNumber: Int,
-    val voteDistributionByParties: List<ElectionParty>,
-    val districtVotes: ElectionDistrictVotes
+    val voteDistributionByParties: List<RK1Party>,
+    val districtVotes: RK1DistrictVotes
 )
 
-data class ElectionDistrictVotes(
+data class RK1DistrictVotes(
     val districtNumberOfVotes: Int,
     val districtNumberOfProtocols: Int,
     val districtTotalNumberOfProtocols: Int,
