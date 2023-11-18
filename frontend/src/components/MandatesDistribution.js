@@ -6,14 +6,14 @@ const pieDataContainer = anychart.data.set([]);
 const pie = anychart.pie(pieDataContainer);
 pie.background().fill("#282c34");
 pie.interactivity().selectionMode("none");
-pie.labels().useHtml(true);
+pie.padding(0);
 pie.labels().fontColor("white");
+pie.labels().fontWeight(900);
 pie.labels({position: getCurrentMode().mandatesDistributionLocation});
 pie.labels().format(getCurrentMode().mandatesDistributionPlaceholder);
 pie.innerRadius("40%");
 pie.legend(false);
 pie.credits().enabled(false);
-// map.tooltip().useHtml(true);
 
 function MandatesDistribution({
   globalRegion
