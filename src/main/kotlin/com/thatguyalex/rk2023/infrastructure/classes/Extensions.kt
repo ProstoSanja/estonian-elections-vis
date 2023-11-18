@@ -5,47 +5,66 @@ import com.thatguyalex.rk2023.application.classes.District
 import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.VoteStats
 
-fun RK1PartyCandidate.toResult(partyCode: String) = Candidate(
+fun RK2PartyCandidate.toResult(partyCode: String) = Candidate(
     forename = forename,
     surename = surname,
-    regNumber = candidateRegNumber,
-    votes = candidateVotes,
+    regNumber = registrationNumber,
+    votes = votes,
     partyCode = partyCode,
-    districtNumber = districtNumber,
-    quota = quota,
-    vrd = vrd,
-    v1 = v1,
-    v2 = v2,
-    v3 = v3,
-    elected = elected,
-    reserved = reserved
 )
 
-fun RK1District.toResult() = District(
-    name = districtName,
-    number = districtNumber,
-    parties = voteDistributionByParties.map { it.toResult() }.sortedByDescending { it.votes },
-    voteStats = districtVotes.toResult(),
-
+fun RK2District.toResult() = District(
+    name = name,
+    number = number,
+    parties = voteDistribution.map { it.toResult() }.sortedByDescending { it.votes },
+    voteStats = statistics.toResult(),
 )
 
-fun RK1DistrictVotes.toResult() = VoteStats(
-    votesCounted = districtNumberOfVotes,
-    protocolsCounted = districtNumberOfProtocols,
-    protocolsTotal = districtTotalNumberOfProtocols,
-    evotesCounted = evotesCounted,
+fun RK2DistrictVotes.toResult() = Party(
+    name = name,
+    code = code ?: "ÜKSIK",
+    mandates = 0,
+    votes = votes,
 )
 
-fun RK1Participation.toResult() = VoteStats(
+fun RK2Result.toResult() = District(
+    name = adminUnitName,
+    number = ehakCode.toInt(),
+    parties = parties.map { it.toResult() }.sortedByDescending { it.votes },
+    voteStats = statistics.toResult()
+)
+
+fun RK2Party.toResult() = Party(
+    name = name ?: "Üksikkandidaatid",
+    code = code ?: "ÜKSIK",
+    mandates = numberOfMandates,
+    votes = votes,
+)
+
+fun KOV2Candidate.toResult(partyCode: String) = Candidate(
+    forename = forename,
+    surename = surname,
+    regNumber = registrationNumber,
+    votes = votes,
+    partyCode = partyCode,
+)
+fun KOV2AdminUnitResult.toResult() = District(
+    name = adminUnit.name,
+    number = adminUnit.ehakCode.toInt(),
+    parties = votesAndMandates.map { it.toResult() }.sortedByDescending { it.votes },
+    voteStats = statistics.toResult(),
+)
+
+fun KOV2Party.toResult() = Party(
+    name = name,
+    code = code ?: "ÜKSIK",
+    mandates = numberOfMandates,
+    votes = votes,
+)
+
+fun ElectionStatistics.toResult() = VoteStats(
     votesCounted = votes,
-    protocolsCounted = numberOfProtocols,
-    protocolsTotal = totalNumberOfProtocols,
-    evotesCounted = evotesCounted,
-)
-
-fun RK1Party.toResult() = Party(
-    name = partyName,
-    code = partyCode,
-    mandates = partyNumberOfMandates,
-    votes = partyVotes,
+    protocolsCounted = confirmedPollingStationsCount,
+    protocolsTotal = totalPollingStationsCount,
+    evotesCounted = eVotesCounted,
 )

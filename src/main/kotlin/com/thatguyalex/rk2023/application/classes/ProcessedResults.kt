@@ -33,12 +33,4 @@ data class Candidate(
     val regNumber: Int,
     val votes: Int,
     val partyCode: String,
-    val districtNumber: Int,
-    val quota: Float,
-    val vrd: Float,
-    val v1: Boolean,
-    val v2: Boolean,
-    val v3: Boolean,
-    val elected: Boolean,
-    val reserved: Boolean,
 )

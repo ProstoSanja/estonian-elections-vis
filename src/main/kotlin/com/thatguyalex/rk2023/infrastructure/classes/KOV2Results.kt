@@ -6,7 +6,7 @@ class KOV2ResultsData: ElectionResultsData, ArrayList<KOV2AdminUnitResult>()
 
 data class KOV2AdminUnitResult(
     val adminUnit: KOV2AdminUnitDescription,
-    val statistics: KOV2Statistics,
+    val statistics: ElectionStatistics,
     val mandateCount: Int?,
     val fivePercentage: Double?,
     val votesAndMandates: List<KOV2Party>,
@@ -18,13 +18,6 @@ data class KOV2AdminUnitDescription(
     val ehakCode: String,
     val parentAdminUnitName: String?,
     val parentEhakCode: String?,
-)
-
-data class KOV2Statistics(
-    val votes: Int,
-    val confirmedPollingStationsCount: Int,
-    val totalPollingStationsCount: Int,
-    val eVotesCounted: Boolean,
 )
 
 data class KOV2Party(
@@ -48,13 +41,7 @@ data class KOV2Candidate(
     val districtNumber: Int,
     val quota: Float,
     val comparativeFigure: Float,
-    val mandateType: KOV2MandateType?,
+    val mandateType: ElectionMandateType?,
     val elected: Boolean,
     val reserved: Boolean,
 )
-
-enum class KOV2MandateType {
-    PERSONAL,
-    DISTRICT,
-    COMPENSATION,
-}

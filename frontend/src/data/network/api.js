@@ -1,5 +1,5 @@
 function fetchAndProcess(){
-  return fetch("/api/data/rk2023")
+  return fetch("/api/data/RK2023")
     .then((result) => result.json())
 }
 

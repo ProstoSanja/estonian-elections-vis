@@ -1,4 +1,4 @@
-import {partyColors} from "../data/const/mappings";
+import {getPartyColor} from "../data/const/mappings";
 
 function CoalitionPossibilities({
   coalitionPossibilities
@@ -24,7 +24,7 @@ function CoalitionOption({
   return (
     <div className="ProgressBarHolder">
       {coalitionOption.map((partyCode) =>
-        <div key={partyCode} style={{width:(1/coalitionOption.length * 100) + "%", backgroundColor: partyColors[partyCode]}}  className="progressBarNoColor">
+        <div key={partyCode} style={{width:(1/coalitionOption.length * 100) + "%", backgroundColor: getPartyColor(partyCode)}}  className="progressBarNoColor">
           <span className="coalitionLabel">{partyCode}</span>
         </div>
       )}

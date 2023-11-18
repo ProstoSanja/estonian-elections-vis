@@ -1,5 +1,5 @@
 import './PersonCard.scss'
-import {partyColors} from "../data/const/mappings";
+import {getPartyColor} from "../data/const/mappings";
 
 function PersonCard({
   candidate,
@@ -7,7 +7,7 @@ function PersonCard({
 }) {
   return (
     <div style={callback && {cursor: "pointer", width: "initial"}} onClick={callback && (() => {callback(candidate.regNumber);})} className="PersonCard">
-      <div style={{backgroundColor: partyColors[candidate.partyCode]}} className="colorLine"/>
+      <div style={{backgroundColor: getPartyColor(candidate.partyCode)}} className="colorLine"/>
       <div className="bio">
         <span>{candidate.forename} {candidate.surename}</span>
         {!callback &&

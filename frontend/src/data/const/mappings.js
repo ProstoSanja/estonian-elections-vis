@@ -22,9 +22,14 @@ const partyColors = {
     "PP": "#ff781b",
     "ROH": "#79ff0e",
     "EÜVP": "#996600",
-    "ÜKSIK": "#545454",
+    "ÜKSIK": "#8c8c8c",
 }
+
+const getPartyColor = (partyCode) => {
+    return partyColors[partyCode] || "#9f77b7"
+}
+
 export {
     partyNames,
-    partyColors
+    getPartyColor
 }

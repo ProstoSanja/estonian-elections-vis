@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 class ResultsCachingApplication(
     private val storageRepo: StorageRepo,
+    private val processingApplication: ProcessingApplication,
 ) {
-    private val processedResults = run { storageRepo.getResults() }
+    private val processedResults = run {
+        storageRepo.getResults().mapValues { processingApplication.process(it.value) }
+    }
 
     fun getProcessedResults(electionType: ElectionType): ProcessedResults {
         return processedResults[electionType]!!

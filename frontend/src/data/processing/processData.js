@@ -1,4 +1,4 @@
-import {partyColors} from "../const/mappings";
+import {getPartyColor} from "../const/mappings";
 import {processName} from "./processText";
 
 function processMapData(districts) {
@@ -7,7 +7,7 @@ function processMapData(districts) {
       ...district,
       id: district.number,
       stroke: "#282c34 0.2",
-      fill: partyColors[district.parties[0]?.code],
+      fill: getPartyColor(district.parties[0]?.code),
       parties: processPartyData(district.parties),
     }
   })
@@ -19,7 +19,7 @@ function processPartyData(parties) {
       ...party,
       id: party.code,
       stroke: "#282c34 0.2",
-      fill: partyColors[party.code],
+      fill: getPartyColor(party.code),
       value: party.mandates,
     }
   })

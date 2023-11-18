@@ -10,3 +10,17 @@ data class ElectionResultsRoot<T: ElectionResultsData>(
 )
 
 interface ElectionResultsData
+
+
+data class ElectionStatistics(
+    val votes: Int,
+    val confirmedPollingStationsCount: Int,
+    val totalPollingStationsCount: Int,
+    val eVotesCounted: Boolean,
+)
+
+enum class ElectionMandateType {
+    PERSONAL,
+    DISTRICT,
+    COMPENSATION,
+}
