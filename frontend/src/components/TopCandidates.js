@@ -9,7 +9,7 @@ function TopCandidates({
   return (
     <div className="TopCandidates">
       {candidates.length > 0 && candidates.slice(0, showNumber).map((candidate) => {
-        return <PersonCard key={candidate.regNumber} candidate={candidate}/>
+        return <PersonCard key={candidate.surename + "-" + candidate.regNumber} candidate={candidate}/>
       })}
       <button onClick={() => {setShowNumber(showNumber+25);}}>Näita veel</button>
     </div>

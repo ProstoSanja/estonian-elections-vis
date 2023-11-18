@@ -1,5 +1,6 @@
 import {getPartyColor} from "../const/mappings";
 import {processName} from "./processText";
+import getCurrentMode from "../const/modes";
 
 function processMapData(districts) {
   return districts.map((district) => {
@@ -14,14 +15,17 @@ function processMapData(districts) {
 }
 
 function processPartyData(parties) {
+  const totalVotes = parties.reduce((acc, cur) => acc + cur.votes, 0)
+  const valueSelector = getCurrentMode().partyValueSelector
   return parties.map((party) => {
     return {
       ...party,
       id: party.code,
       stroke: "#282c34 0.2",
       fill: getPartyColor(party.code),
-      value: party.mandates,
-    }
+      value: party[valueSelector],
+      votesPercentage: (party.votes / totalVotes * 100).toFixed(2),
+    };
   })
 }
 

@@ -7,6 +7,7 @@ import ProgressBar from "./components/ProgressBar";
 import MandatesDistribution from "./components/MandatesDistribution";
 import SearchCandidates from "./components/SearchCandidates";
 import CoalitionPossibilities from "./components/CoalitionPossibilities";
+import getCurrentMode from "./data/const/modes";
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
   const processUpdate = async () => {
     console.log("starting update")
     const result = await fetchAndProcess()
-    setMapData(processMapData(result.districts))
+    setMapData(processMapData(result.districts, 'mandates'))
     setCandidateData(processCandidateData(result.candidates))
     setCoalitionPossibilities(result.coalitionPossibilities)
   }
@@ -33,10 +34,10 @@ function App() {
 
   const globalRegion = mapData.find((it) => it.id === 0);
 
-  console.log("mapData", mapData, "candidateData", candidateData)
+  // console.log("mapData", mapData, "candidateData", candidateData)
   return (
     <div className="App">
-      <h1>2023 Riigikogu Valimisõhtu</h1>
+      <h1>{getCurrentMode().title}</h1>
       <Map mapData={mapData}/>
       {(!globalRegion?.voteStats?.evotesCounted && globalRegion?.voteStats?.protocolsCounted === 0) ?
         <div>
@@ -60,7 +61,11 @@ function App() {
         <br/>
         <br/>
         <br/>
-        <span>Arhiiv: <a rel="noreferrer" target="_blank" href="https://kov2021.valimisohtu.ee/">KOV2021</a></span>
+        <span>
+          Arhiiv:
+          <a rel="noreferrer" target="_blank" href="/RK2023">RK2023</a>
+          <a rel="noreferrer" target="_blank" href="/KOV2021">KOV2021</a>
+        </span>
         <br/>
         <br/>
         <br/>

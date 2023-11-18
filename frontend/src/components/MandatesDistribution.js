@@ -1,12 +1,15 @@
 import anychart from 'anychart';
 import {useEffect, useState} from "react";
+import getCurrentMode from "../data/const/modes";
 
 const pieDataContainer = anychart.data.set([]);
 const pie = anychart.pie(pieDataContainer);
 pie.background().fill("#282c34");
 pie.interactivity().selectionMode("none");
 pie.labels().useHtml(true);
-pie.labels().format("<b>{%value}</b>");
+pie.labels().fontColor("white");
+pie.labels({position: getCurrentMode().mandatesDistributionLocation});
+pie.labels().format(getCurrentMode().mandatesDistributionPlaceholder);
 pie.innerRadius("40%");
 pie.legend(false);
 pie.credits().enabled(false);

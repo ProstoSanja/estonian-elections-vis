@@ -1,5 +1,8 @@
+import getCurrentMode from "../const/modes";
+
 function fetchAndProcess(){
-  return fetch("/api/data/RK2023")
+  const env = getCurrentMode().apiEndpoint
+  return fetch(`/api/data/${env}`)
     .then((result) => result.json())
 }
 

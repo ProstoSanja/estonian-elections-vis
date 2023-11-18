@@ -1,10 +1,10 @@
 import anychart from 'anychart';
-import localMap from '../data/const/mapOutline';
 import {useEffect, useState} from "react";
+import getCurrentMode from "../data/const/modes";
 
 const mapDataContainer = anychart.data.set([]);
 const map = anychart.choropleth(mapDataContainer);
-map.geoData(localMap);
+map.geoData(getCurrentMode().map);
 map.background().fill("#282c34");
 map.interactivity().selectionMode("none");
 map.tooltip().useHtml(true);
