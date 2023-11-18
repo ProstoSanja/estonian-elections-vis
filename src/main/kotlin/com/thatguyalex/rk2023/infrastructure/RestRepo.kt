@@ -1,7 +1,5 @@
 package com.thatguyalex.rk2023.infrastructure
 
-import com.thatguyalex.rk2023.infrastructure.classes.RK1Result
-import com.thatguyalex.rk2023.infrastructure.classes.RK1ResultsRoot
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -16,9 +14,9 @@ class RestRepo {
 
     //https://opendata.valimised.ee/api/RK_2023/RESULTS.xml
     //http://localhost:12345/EXAMPLE_RESULTS.xml
-    fun fetchElectionData(): RK1Result {
-        val results = restTemplate.getForEntity("http://localhost:12345/EXAMPLE_RESULTS.xml", RK1ResultsRoot::class.java)
-        return results.body!!.data.electionResult
-    }
+//    fun fetchElectionData(): RK1Result {
+//        val results = restTemplate.getForEntity("http://localhost:12345/EXAMPLE_RESULTS.xml", ElectionResultsRoot::class.java)
+//        return results.body!!.data.electionResult
+//    }
 
 }

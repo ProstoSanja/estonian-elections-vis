@@ -3,17 +3,19 @@ package com.thatguyalex.rk2023.infrastructure.classes
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.Instant
 
-data class RK1ResultsRoot(
+data class ElectionResultsRoot<T: ElectionResultsData>(
     val electionCode: String,
     val reportType: String,
     val generated: Instant,
-    val data: RK1ResultsData,
+    val data: T,
 )
+
+open class ElectionResultsData
 
 data class RK1ResultsData(
     @JsonProperty("electionResult")
     val electionResult: RK1Result,
-)
+) : ElectionResultsData()
 
 data class RK1Result(
     val adminUnitName: String,
