@@ -1,1 +1,1 @@
-rootProject.name = "RK2023"
+rootProject.name = "estonian-election-vis"

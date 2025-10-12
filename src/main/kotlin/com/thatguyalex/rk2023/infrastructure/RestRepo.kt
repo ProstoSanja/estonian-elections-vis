@@ -1,22 +1,22 @@
 package com.thatguyalex.rk2023.infrastructure
 
-import org.springframework.boot.web.client.RestTemplateBuilder
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.thatguyalex.rk2023.application.classes.ElectionType
+import com.thatguyalex.rk2023.infrastructure.ElectionResultsParser.Companion.mapper
+import com.thatguyalex.rk2023.infrastructure.ElectionResultsParser.Companion.restTemplate
+import com.thatguyalex.rk2023.infrastructure.classes.ElectionResultsData
+import com.thatguyalex.rk2023.infrastructure.classes.ElectionResultsRoot
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
-import java.time.Duration
 
 @Service
 class RestRepo {
-
-    private val restTemplate = RestTemplateBuilder()
-        .setConnectTimeout(Duration.ofSeconds(10))
-        .setReadTimeout(Duration.ofSeconds(10))
-        .build()
-
-    //https://opendata.valimised.ee/api/RK_2023/RESULTS.xml
-    //http://localhost:12345/EXAMPLE_RESULTS.xml
-//    fun fetchElectionData(): RK1Result {
-//        val results = restTemplate.getForEntity("http://localhost:12345/EXAMPLE_RESULTS.xml", ElectionResultsRoot::class.java)
-//        return results.body!!.data.electionResult
-//    }
-
+    final inline fun <reified T : ElectionResultsData> fetchElectionData(electionType: ElectionType): T {
+        return restTemplate.exchange(
+            "https://opendata.valimised.ee/api/${electionType.visCode}/RESULTS.xml",
+            HttpMethod.GET,
+            null,
+            String::class.java
+        ).let { mapper.readValue<ElectionResultsRoot<T>>(it.body!!).data }
+    }
 }

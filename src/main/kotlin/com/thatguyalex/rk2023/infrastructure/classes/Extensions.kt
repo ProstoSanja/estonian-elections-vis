@@ -58,7 +58,7 @@ fun KOV2AdminUnitResult.toResult() = District(
 fun KOV2Party.toResult() = Party(
     name = name,
     code = code ?: "ÜKSIK",
-    mandates = numberOfMandates,
+    mandates = numberOfMandates ?: 0,
     votes = votes,
 )
 

@@ -9,7 +9,7 @@ data class KOV2AdminUnitResult(
     val statistics: ElectionStatistics,
     val mandateCount: Int?,
     val fivePercentage: Double?,
-    val votesAndMandates: List<KOV2Party>,
+    val votesAndMandates: List<KOV2Party> = emptyList(),
 )
 
 data class KOV2AdminUnitDescription(
@@ -24,7 +24,7 @@ data class KOV2Party(
     val name: String,
     val code: String?,
     val votes: Int,
-    val numberOfMandates: Int,
+    val numberOfMandates: Int?,
     val percentage: Double,
     @JsonProperty("electedAndReservedCandidates")
     val candidates: List<KOV2Candidate> = emptyList()
