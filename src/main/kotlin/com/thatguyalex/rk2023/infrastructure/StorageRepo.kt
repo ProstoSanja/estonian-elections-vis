@@ -3,6 +3,7 @@ package com.thatguyalex.rk2023.infrastructure
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.thatguyalex.rk2023.application.classes.ElectionType
 import com.thatguyalex.rk2023.infrastructure.ElectionResultsParser.Companion.mapper
+import com.thatguyalex.rk2023.infrastructure.classes.CAND1ResultsData
 import com.thatguyalex.rk2023.infrastructure.classes.ElectionResultsData
 import com.thatguyalex.rk2023.infrastructure.classes.ElectionResultsRoot
 import com.thatguyalex.rk2023.infrastructure.classes.KOV2ResultsData
@@ -20,11 +21,21 @@ class StorageRepo {
         javaClass.getResourceAsStream("/results/RESULTS_KOV2021.xml")!!
             .let { mapper.readValue<ElectionResultsRoot<KOV2ResultsData>>(it).data }
     }
+    private val kov2025Candidates = run {
+        javaClass.getResourceAsStream("/results/ELECTION_CANDIDATES_KOV2025.xml")!!
+            .let { mapper.readValue<ElectionResultsRoot<CAND1ResultsData>>(it).data }
+    }
 
     fun getResults(): MutableMap<ElectionType, ElectionResultsData> {
         return mutableMapOf(
             ElectionType.RK2023 to rk2023,
             ElectionType.KOV2021 to kov2021,
+        )
+    }
+
+    fun getCandidates(): MutableMap<ElectionType, CAND1ResultsData> {
+        return mutableMapOf(
+            ElectionType.KOV2025 to kov2025Candidates,
         )
     }
 }

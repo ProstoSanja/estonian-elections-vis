@@ -3,7 +3,10 @@
 
 </script>
 <template>
-  <div class="h-[50vh] md:h-[25vh] w-full flex flex-col justify-end items-stretch md:items-center opacity-70">
+  <div class="w-full flex flex-col justify-end items-stretch md:items-center opacity-70">
+    <div class="w-full h-[30vh] ">
+
+    </div>
     <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center text-center">
       <span>Arhiiv</span>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"

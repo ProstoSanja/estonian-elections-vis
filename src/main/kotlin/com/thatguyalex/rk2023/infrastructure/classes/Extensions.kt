@@ -38,7 +38,7 @@ fun RK2Result.toResult() = District(
 )
 
 fun RK2Party.toResult() = Party(
-    name = name ?: "Üksikkandidaatid",
+    name = name ?: "Üksikkandidaadid",
     code = code ?: "ÜKSIK",
     mandates = numberOfMandates,
     votes = votes,
@@ -72,7 +72,7 @@ fun KOV2Party.toResult(mandatesOverride: Int = 0) = Party(
     votes = votes,
 )
 
-fun List<KOV2Party>.toResult() = Party(
+fun List<KOV2Party>.kov2ListToResult() = Party(
     name = first().name,
     code = first().code ?: "ÜKSIK",
     mandates = sumOf { it.numberOfMandates ?: 0 },
@@ -84,4 +84,20 @@ fun ElectionStatistics.toResult() = VoteStats(
     protocolsCounted = confirmedPollingStationsCount,
     protocolsTotal = totalPollingStationsCount,
     evotesCounted = eVotesCounted,
+)
+
+fun CAND1Candidate.toResult(partyCode: String, districtNumber: Int) = Candidate(
+    forename = forename,
+    surename = surname,
+    regNumber = candidateRegNumber,
+    votes = 0,
+    partyCode = partyCode,
+    districtNumber = districtNumber,
+)
+
+fun List<CAND1Party>.cand1ListtoResult() = Party(
+    name = first().partyName,
+    code = first().partyCode,
+    mandates = 0,
+    votes = 0,
 )

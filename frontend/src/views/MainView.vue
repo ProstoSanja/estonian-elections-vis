@@ -48,7 +48,7 @@ const globalVoteCountingStarter = computed<boolean>(() => {
 <template>
   <div class="flex flex-col p-4 md:p-8 gap-4 bg-slate-800 text-white min-h-screen items-center">
     <h1 class="text-6xl font-bold">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
-    <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval pärast kella 20:00</span>
+    <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella 20:00</span>
     <MapComponent />
     <div class="flex flex-col md:flex-row gap-8 items-stretch self-stretch mb-8">
       <RegionRace :regionEHAK="0" />

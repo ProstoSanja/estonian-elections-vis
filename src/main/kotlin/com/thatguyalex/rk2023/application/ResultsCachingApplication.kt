@@ -14,8 +14,12 @@ class ResultsCachingApplication(
     private val restRepo: RestRepo,
     private val processingApplication: ProcessingApplication,
 ) {
+    private val processedCandidates = run {
+        storageRepo.getCandidates().mapValues { processingApplication.process(it.value, null) }.toMutableMap()
+    }
+
     private val processedResults = run {
-        storageRepo.getResults().mapValues { processingApplication.process(it.value) }.toMutableMap()
+        storageRepo.getResults().mapValues { processingApplication.process(it.value, processedCandidates[it.key]) }.toMutableMap()
     }
 
     fun getProcessedResults(electionType: ElectionType): ProcessedResults {
@@ -25,6 +29,6 @@ class ResultsCachingApplication(
     @Scheduled(fixedRate = 60 * 1000)
     fun fetchActiveElection() {
         processedResults[ElectionType.KOV2025] = restRepo.fetchElectionData<KOV2ResultsData>(ElectionType.KOV2025)
-            .let { processingApplication.process(it) }
+            .let { processingApplication.process(it, processedCandidates[ElectionType.KOV2025]) }
     }
 }

@@ -2,7 +2,6 @@ export interface ProcessedResults {
   parties: Party[];
   districts: District[];
   candidates: Candidate[];
-  coalitionPossibilities: string[][];
 }
 
 export interface Party {

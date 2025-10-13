@@ -4,7 +4,6 @@ data class ProcessedResults(
     val parties: List<Party>,
     val districts: List<District>,
     val candidates: List<Candidate>,
-    val coalitionPossibilities: List<List<String>>,
 )
 
 data class Party(
