@@ -4,7 +4,6 @@ import com.thatguyalex.rk2023.application.classes.Candidate
 import com.thatguyalex.rk2023.application.classes.District
 import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.VoteStats
-import java.lang.classfile.Attributes.code
 
 fun RK2PartyCandidate.toResult(partyCode: String) = Candidate(
     forename = forename,
