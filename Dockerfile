@@ -1,4 +1,12 @@
-FROM azul/zulu-openjdk-alpine:17-jre
-EXPOSE 80
-COPY build/libs/RK2023-0.0.1.jar app.jar
-ENTRYPOINT ["java","-jar", "/app.jar"]
+# TODO: include frontend build in the build process
+
+FROM azul/zulu-openjdk-alpine:21-latest
+COPY . /build
+WORKDIR /build
+RUN ./gradlew clean bootJar
+
+FROM azul/zulu-openjdk-alpine:21-jre-latest
+COPY --from=0 build/libs/estonian-election-vis-0.0.1.jar app.jar
+EXPOSE 12345
+HEALTHCHECK --interval=1m --timeout=10s --start-period=30s --retries=10 CMD wget -q --spider http://localhost:80/actuator/health || exit 1
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=production", "/app.jar"]

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.web.client.RestTemplate
+import java.nio.charset.StandardCharsets
 import java.time.Duration
 
 class ElectionResultsParser {
@@ -14,6 +16,7 @@ class ElectionResultsParser {
         val restTemplate: RestTemplate = RestTemplateBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .readTimeout(Duration.ofSeconds(10))
+            .additionalMessageConverters(StringHttpMessageConverter(StandardCharsets.UTF_8))
             .build()
 
         val mapper: ObjectMapper = XmlMapper()

@@ -1,0 +1,1 @@
+arch -x86_64 ./publish.sh

@@ -18,11 +18,17 @@ class ProcessingApplication {
 
     private fun processKOV2(rawResults: KOV2ResultsData): ProcessedResults {
         val candidates = rawResults
-            .flatMap { it.votesAndMandates }
-            .flatMap { it.candidates.map { cand -> cand.toResult(it.code ?: "ÜKSIK") } }
+            .flatMap { it.votesAndMandates.map { party -> it.adminUnit.ehakCode.toInt() to party  } }
+            .flatMap { (ehakCode, party) ->  party.candidates.map { cand -> cand.toResult(party.code ?: "ÜKSIK", ehakCode) } }
             .sortedByDescending { it.votes }
-        val districts = rawResults.map { it.toResult() }
-        return ProcessedResults(districts, candidates, emptyList())
+        val districts = rawResults.map { it.toResult(rawResults) }
+        val parties = rawResults
+            .flatMap { it.votesAndMandates }
+            .groupBy { it.code ?: "ÜKSIK" }
+            .map {
+                it.value.toResult()
+            }.toList()
+        return ProcessedResults(parties, districts, candidates, emptyList())
     }
 
     private fun processRK2(rawResults: RK2Result): ProcessedResults {
@@ -30,14 +36,14 @@ class ProcessingApplication {
             .flatMap { it.candidates.map { cand -> cand.toResult(it.code ?: "ÜKSIK") } }
             .sortedByDescending { it.votes }
         val globalDistrict = rawResults.toResult()
-        val districts = rawResults.districts.map { it.toResult() }
+        val districts = rawResults.districts.map { it.toResult(rawResults.parties.flatMap { it.candidates }) }
             .plus(globalDistrict)
         val coalitionPossibilities = try {
             generateCoalitionPossibilities(globalDistrict.parties)
         } catch (e: Exception) {
             emptySet()
         }
-        return ProcessedResults(districts, candidates, coalitionPossibilities.toList())
+        return ProcessedResults(globalDistrict.parties, districts, candidates, coalitionPossibilities.toList())
     }
 
     private fun generateCoalitionPossibilities(parties: List<Party>, currentlySelected: List<String> = emptyList(), currentScore: Int = 0): Set<List<String>> {
