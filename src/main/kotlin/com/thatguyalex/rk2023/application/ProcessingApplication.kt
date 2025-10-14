@@ -1,5 +1,6 @@
 package com.thatguyalex.rk2023.application
 
+import com.thatguyalex.rk2023.application.classes.Party
 import com.thatguyalex.rk2023.application.classes.ProcessedResults
 import com.thatguyalex.rk2023.infrastructure.classes.*
 import org.springframework.stereotype.Service
@@ -55,13 +56,13 @@ class ProcessingApplication {
                 }
         } }.sortedBy { Random.nextLong() }
         val parties = rawResults.adminUnits.flatMap { unpackCAND1(it) { adminUnit ->
-            adminUnit.districts
-                .flatMap { district -> district.parties }
-                .groupBy { party -> party.partyCode }
-                .map {
-                    it.value.cand1ListtoResult()
-                }
+            adminUnit.districts.flatMap { district -> district.parties }
         } }
+            .groupBy { party -> party.partyCode }
+            .map {
+                it.value.cand1ListtoResult()
+            }
+            .sortedWith(compareBy<Party>{ it.name.contains("liit", ignoreCase = true) }.thenBy { it.name })
         return ProcessedResults(parties, emptyList(), candidates)
     }
 

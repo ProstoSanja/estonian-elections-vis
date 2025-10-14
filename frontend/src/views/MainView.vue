@@ -50,7 +50,7 @@ const globalVoteCountingStarter = computed<boolean>(() => {
     <h1 class="text-6xl font-bold">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
     <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella 20:00</span>
     <MapComponent />
-    <div class="flex flex-col md:flex-row gap-8 items-stretch self-stretch mb-8">
+    <div class="flex flex-col md:flex-row gap-8 items-stretch self-stretch mb-10">
       <RegionRace :regionEHAK="0" />
       <RegionRace :regionEHAK="784" />
     </div>
