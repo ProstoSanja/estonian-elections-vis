@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useElectionDataStore } from '@/stores/electionData'
 import { getPartyColor, getShortPartyCode } from '@/data/data-lookups'
 import { XMarkIcon } from '@heroicons/vue/16/solid';
+import type { District } from '@/data/api-types';
 
 const props = defineProps<{
-  regionEHAK: number
+  district: District,
   onRemove?: () => void
 }>()
 
-const electionDataStore = useElectionDataStore()
-
 const race = computed(() => {
-  return electionDataStore.electionData?.districts.find(district => district.number === props.regionEHAK)
+  return props.district
 })
 
 const voteStatsWithEVotes = computed(() => {

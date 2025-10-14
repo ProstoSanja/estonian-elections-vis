@@ -1,6 +1,6 @@
 {
-  "short_name": "RK2023 Valimisõhtu",
-  "name": "Riigikogu Valimised 2023",
+  "short_name": "Valimisõhtu",
+  "name": "Valimiste tulemused reaalajas",
   "icons": [
     {
       "src": "favicon.ico",

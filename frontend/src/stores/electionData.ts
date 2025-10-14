@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 import {defineStore} from 'pinia'
-import type { Candidate, ElectionType, Party, ProcessedResults } from '@/data/api-types'
+import type { Candidate, District, ElectionType, Party, ProcessedResults } from '@/data/api-types'
 import axios from 'axios'
 import {useRoute} from 'vue-router'
 import {computed} from 'vue'
@@ -37,5 +37,12 @@ export const useElectionDataStore = defineStore('electionData', () => {
     }, {} as Record<string, Candidate>) || {}
   })
 
-  return { electionData, fetchElectionData, lastFetch, electionName, partiesByCode, candidatesByToken }
+  const districtsByNumber = computed(() => {
+    return electionData.value?.districts.reduce((acc, district) => {
+      acc[district.number] = district
+      return acc
+    }, {} as Record<number, District>) || {}
+  })
+
+  return { electionData, fetchElectionData, lastFetch, electionName, partiesByCode, candidatesByToken, districtsByNumber }
 })
