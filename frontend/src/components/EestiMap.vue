@@ -4,11 +4,13 @@ import { onMounted, computed, ref } from "vue";
 import { registerMap } from "echarts/core";
 import VChart from "vue-echarts";
 import { useElectionDataStore } from "@/stores/electionData";
+import { useDashboardContentStore } from "@/stores/dashboardContent";
 import { getPartyColor } from "@/data/data-lookups";
 import Color from 'color';
 import type { District } from "@/data/api-types";
 
 const electionDataStore = useElectionDataStore()
+const dashboardContentStore = useDashboardContentStore()
 const mapLoaded = ref(false)
 
 const mapData = computed(() => {
@@ -114,11 +116,21 @@ onMounted(async () => {
   mapLoaded.value = true;
 });
 
+const handleMapClick = (params: any) => {
+  if (params.data?.electionDistrict) {
+    const district = params.data.electionDistrict as District;
+    dashboardContentStore.toggleEntry({
+      type: 'region',
+      code: district.number
+    });
+  }
+};
+
 </script>
 
 <template>
-  <VChart v-if="mapLoaded" :option="option" autoresize class="max-h-[70vh] !h-[65vw]"/>
-  <div v-else class="flex items-center justify-center max-h-[70vh] !h-[65vw] w-full">
-    <p class="text-gray-500">Kaart on laadimas...</p>
+  <div class="flex items-center justify-center max-h-[55vh] !h-[60vw] md:!h-[35vw] w-full">
+    <VChart v-if="mapLoaded" :option="option" :autoresize="true" class="max-h-[55vh] !h-[60vw] md:!h-[35vw]" @click="handleMapClick"/>
+    <p v-else class="text-gray-500">Kaart on laadimas...</p>
   </div>
 </template>

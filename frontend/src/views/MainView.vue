@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import MapComponent from '@/components/EestiMap.vue'
-import RegionRace from '@/components/RegionRace.vue'
+import EestiDashbaord from '@/components/EestiDashbaord.vue'
 import EestiCandidates from '@/components/EestiCandidates.vue'
-import {useElectionDataStore} from '@/stores/electionData'
+import { useElectionDataStore } from '@/stores/electionData'
 import FooterView from '@/components/FooterView.vue'
-import {onMounted, onUnmounted, ref, computed} from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 
 const electionDataStore = useElectionDataStore()
 const intervalId = ref<number | null>(null)
@@ -33,19 +33,23 @@ onUnmounted(() => {
 const globalVoteCountingStarter = computed<boolean>(() => {
   const globalRegion = electionDataStore.electionData?.districts.find(district => district.number === 0)
   const voteCount = globalRegion?.voteStats.protocolsCounted ?? 0
-  return voteCount > 0 || (globalRegion?.voteStats.evotesCounted ?? false)
+  const eVotesCounted = globalRegion?.voteStats.evotesCounted ?? false
+  return voteCount > 0 || eVotesCounted
 })
 </script>
 <template>
-  <div class="flex flex-col p-4 md:p-8 gap-4 bg-slate-800 text-white min-h-screen items-center">
-    <h1 class="text-6xl font-bold">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
-    <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella 20:00</span>
-    <MapComponent />
-    <div class="flex flex-col md:flex-row gap-8 items-stretch self-stretch mb-10">
-      <RegionRace :regionEHAK="0" />
-      <RegionRace :regionEHAK="784" />
+  <div class="flex flex-col md:flex-row w-screen  min-w-screen max-w-screen md:h-screen min-h-screen md:max-h-screen bg-slate-800 text-white md:overflow-hidden">
+    <div class="flex flex-col w-full md:w-1/2 lg:w-3/5 p-4 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden order-2 md:order-1">
+      <h1 class="text-6xl font-bold hidden md:block">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
+      <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella
+        20:00</span>
+      <MapComponent />
+      <EestiCandidates />
+      <FooterView />
     </div>
-    <EestiCandidates />
-    <FooterView />
+    <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900">
+      <h1 class="text-5xl font-bold block md:hidden py-4">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
+      <EestiDashbaord />
+    </div>
   </div>
 </template>

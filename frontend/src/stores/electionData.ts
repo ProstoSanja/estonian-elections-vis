@@ -1,9 +1,10 @@
 import {ref} from 'vue'
 import {defineStore} from 'pinia'
-import type { ElectionType, ProcessedResults } from '@/data/api-types'
+import type { Candidate, ElectionType, Party, ProcessedResults } from '@/data/api-types'
 import axios from 'axios'
 import {useRoute} from 'vue-router'
 import {computed} from 'vue'
+import { tokenizeString } from '@/data/search'
 
 export const useElectionDataStore = defineStore('electionData', () => {
   const electionData = ref<ProcessedResults | null>(null)
@@ -22,5 +23,19 @@ export const useElectionDataStore = defineStore('electionData', () => {
     return response.data
   };
 
-  return { electionData, fetchElectionData, lastFetch, electionName }
+  const partiesByCode = computed(() => {
+    return electionData.value?.parties.reduce((acc, party) => {
+      acc[party.code] = party
+      return acc
+    }, {} as Record<string, Party>) || {}
+  })
+
+  const candidatesByToken = computed(() => {
+    return electionData.value?.candidates.reduce((acc, candidate) => {
+      acc[tokenizeString(candidate.forename + candidate.surename + candidate.regNumber.toString())] = candidate
+      return acc
+    }, {} as Record<string, Candidate>) || {}
+  })
+
+  return { electionData, fetchElectionData, lastFetch, electionName, partiesByCode, candidatesByToken }
 })
