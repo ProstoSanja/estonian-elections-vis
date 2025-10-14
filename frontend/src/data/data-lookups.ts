@@ -7,6 +7,7 @@ export const partyColorLookup: Map<string, string> = new Map([
 
   ["EE200", "#F699CD"],
   ["PP", "#ff781b"],
+  ["EERK", "#8b4513"],
 
   ["ROH", "#79ff0e"],
   ["EÜVP", "#996600"],
@@ -28,6 +29,7 @@ export const ultraShortPartyCodeLookup: Map<string, string> = new Map([
 
   ["EE200", "EE"],
   ["PP", "PP"],
+  ["EERK", "ER"],
   ["ROH", "RO"],
   ["VAL_LIIDUD", "VL"],
 ])
@@ -41,11 +43,12 @@ export const veryShortPartyCodeLookup: Map<string, string> = new Map([
 
   ["EE200", "200"],
   ["PP", "PP"],
+  ["EERK", "ERK"],
   ["ROH", "ROH"],
   ["VAL_LIIDUD", "VAL"],
 ])
 
 export const getShortPartyCode = (partyCode: string, type: 'ultra' | 'very' = 'ultra') => {
-  if (type === 'ultra') return ultraShortPartyCodeLookup.get(partyCode) || partyCode.slice(0, 2)
-  return veryShortPartyCodeLookup.get(partyCode) || partyCode.slice(0, 3)
+  if (type === 'ultra') return ultraShortPartyCodeLookup.get(partyCode) || partyCode.replace(/^VL|V/, '').slice(0, 2)
+  return veryShortPartyCodeLookup.get(partyCode) || partyCode.replace(/^VL|V/, '').slice(0, 3)
 }

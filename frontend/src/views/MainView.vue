@@ -4,32 +4,23 @@ import RegionRace from '@/components/RegionRace.vue'
 import EestiCandidates from '@/components/EestiCandidates.vue'
 import {useElectionDataStore} from '@/stores/electionData'
 import FooterView from '@/components/FooterView.vue'
-
-import {useRoute} from 'vue-router'
 import {onMounted, onUnmounted, ref, computed} from 'vue'
-import type { ElectionType } from '@/data/api-types'
 
-const route = useRoute()
 const electionDataStore = useElectionDataStore()
 const intervalId = ref<number | null>(null)
 
-const electionName = computed(() => {
-  const routeName = route.name
-  return routeName === 'index' || !routeName ? 'KOV2025' : routeName as ElectionType
-})
-
 const electionTitle = computed(() => {
   return {
-    type: electionName.value.replace(/\d+$/, ''),
-    year: electionName.value.match(/\d+$/)?.[0] || ''
+    type: electionDataStore.electionName.replace(/\d+$/, ''),
+    year: electionDataStore.electionName.match(/\d+$/)?.[0] || ''
   }
 })
 
 onMounted(() => {
-  electionDataStore.fetchElectionData(electionName.value)
+  electionDataStore.fetchElectionData()
 
   intervalId.value = window.setInterval(() => {
-    electionDataStore.fetchElectionData(electionName.value)
+    electionDataStore.fetchElectionData()
   }, 15 * 1000)
 })
 

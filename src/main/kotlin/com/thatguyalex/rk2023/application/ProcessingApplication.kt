@@ -9,6 +9,10 @@ import kotlin.random.Random
 @Service
 class ProcessingApplication {
 
+    companion object {
+        private val partySort = compareBy<Party>{ it.name.lowercase().contains("liit") }.thenBy { it.name.lowercase().trim() }
+    }
+
     fun process(rawResults: ElectionResultsData, fallback: ProcessedResults?): ProcessedResults {
         return when (rawResults) {
             is RK2ResultsData -> processRK2(rawResults.electionResult)
@@ -32,6 +36,7 @@ class ProcessingApplication {
                 it.value.kov2ListToResult()
             }
             .ifEmpty { fallback?.parties ?: emptyList() }
+            .sortedWith(partySort)
         return ProcessedResults(parties, districts, candidates)
     }
 
@@ -62,7 +67,7 @@ class ProcessingApplication {
             .map {
                 it.value.cand1ListtoResult()
             }
-            .sortedWith(compareBy<Party>{ it.name.contains("liit", ignoreCase = true) }.thenBy { it.name })
+            .sortedWith(partySort)
         return ProcessedResults(parties, emptyList(), candidates)
     }
 

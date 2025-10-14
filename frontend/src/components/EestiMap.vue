@@ -1,15 +1,15 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { registerMap } from "echarts/core";
 import VChart from "vue-echarts";
 import { useElectionDataStore } from "@/stores/electionData";
 import { getPartyColor } from "@/data/data-lookups";
-import geojson from "@/data/kov2025.singleTallinn.geo.json";
 import Color from 'color';
 import type { District } from "@/data/api-types";
 
 const electionDataStore = useElectionDataStore()
+const mapLoaded = ref(false)
 
 const mapData = computed(() => {
   if (!electionDataStore.electionData) return [];
@@ -59,7 +59,6 @@ const option = computed(() => ({
     formatter: (params: any) => {
       if (!params.data?.electionDistrict) {
         return null
-        return `${params.name}<br/>Votes: ${params.value}`;
       }
       const district = params.data.electionDistrict as District
       return `<span style="font-size: 1.5em;">${params.name}</span><br/><div style="margin-top: 0.8em;">` +
@@ -91,12 +90,35 @@ const option = computed(() => ({
   }]
 }));
 
-onMounted(() => {
-  registerMap("custom", geojson as any);
+onMounted(async () => {
+  // Dynamically load the map GeoJSON based on the election type
+  const electionName = electionDataStore.electionName;
+  let mapJson;
+
+  switch (electionName) {
+    case 'KOV2021':
+      mapJson = await import('@/data/kov2021.geo.json');
+      break;
+    case 'RK2023':
+      mapJson = await import('@/data/rk2023.geo.json');
+      break;
+    case 'KOV2025':
+      mapJson = await import('@/data/kov2025.singleTallinn.geo.json');
+      break;
+    default:
+      console.error(`Unknown election type: ${electionName}`);
+      return;
+  }
+
+  registerMap("custom", (mapJson.default || mapJson) as any);
+  mapLoaded.value = true;
 });
 
 </script>
 
 <template>
-  <VChart :option="option" autoresize class="max-h-[70vh] !h-[65vw]"/>
+  <VChart v-if="mapLoaded" :option="option" autoresize class="max-h-[70vh] !h-[65vw]"/>
+  <div v-else class="flex items-center justify-center max-h-[70vh] !h-[65vw] w-full">
+    <p class="text-gray-500">Kaart on laadimas...</p>
+  </div>
 </template>

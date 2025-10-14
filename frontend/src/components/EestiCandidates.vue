@@ -31,15 +31,21 @@ const candidates = computed(() => {
 </script>
 <template>
   <div class="flex flex-col gap-8 items-stretch self-stretch">
-    <div class="flex md:flex-row md:items-center flex-col items-stretch justify-center gap-8">
+    <div class="flex flex-col items-stretch md:flex-row md:items-center justify-center gap-4 md:gap-8">
       <div class="flex flex-row flex-1 relative items-center justify-end order-2 md:order-1">
-        <select
-          class="rounded-xl p-2 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full md:w-60 lg:w-90 max-w-full"
-          :class="{ 'text-slate-400': partySearch.length <= 0 }"
-          v-model="partySearch">
-          <option value="">Kõik erakonnad</option>
-          <option v-for="party in electionDataStore.electionData?.parties" :value="party.code" :key="party.code">{{ party.name }}</option>
-        </select>
+
+        <div class="flex flex-row relative items-center flex-1 md:flex-0 justify-end">
+          <MagnifyingGlassIcon class="absolute left-3 w-5 h-5 text-slate-400" />
+          <select
+            class="rounded-xl p-2 px-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full md:w-60 lg:w-90 max-w-full appearance-none"
+            :class="{ 'text-slate-400': partySearch.length <= 0 }" v-model="partySearch">
+            <option value="">Kõik erakonnad</option>
+            <option v-for="party in electionDataStore.electionData?.parties" :value="party.code" :key="party.code">{{
+              party.name }}</option>
+          </select>
+          <XMarkIcon class="absolute right-3 w-6 h-6 text-slate-400 cursor-pointer" @click="partySearch = ''"
+            v-if="partySearch.length > 0" />
+        </div>
       </div>
       <h1 class="text-2xl font-bold text-center order-1 md:order-2">Kandidaadid</h1>
       <div class="flex items-center flex-1 order-3">
@@ -48,11 +54,13 @@ const candidates = computed(() => {
           <input
             class="rounded-xl p-2 px-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full md:w-60 lg:w-90 max-w-full"
             type="text" v-model="candidateSearch" placeholder="Kandidaadi nimi või number" />
-          <XMarkIcon class="absolute right-3 w-6 h-6 text-slate-400 cursor-pointer" @click="candidateSearch = ''" v-if="candidateSearch.length > 0" />
+          <XMarkIcon class="absolute right-3 w-6 h-6 text-slate-400 cursor-pointer" @click="candidateSearch = ''"
+            v-if="candidateSearch.length > 0" />
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4" :key="`candidates-${candidateSearch}-${partySearch}`">
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4"
+      :key="`candidates-${candidateSearch}-${partySearch}`">
       <CandidateCard v-for="candidate in candidates" :key="candidate.regNumber" :candidate="candidate"
         :party="electionDataStore.electionData?.parties.find(party => party.code === candidate.partyCode)" />
       <LoadMoreButton v-if="(candidates?.length ?? 0) >= candidateCount" @loadMore="candidateCount += 25" />
