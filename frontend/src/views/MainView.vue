@@ -39,16 +39,18 @@ const globalVoteCountingStarter = computed<boolean>(() => {
 </script>
 <template>
   <div class="flex flex-col md:flex-row w-screen  min-w-screen max-w-screen md:h-screen min-h-screen md:max-h-screen bg-slate-800 text-white md:overflow-hidden scrollbar-thumb-slate-900  scrollbar-track-slate-800 scrollbar-w-2">
-    <div class="flex flex-col w-full md:w-1/2 lg:w-3/5 p-4 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden order-2 md:order-1 md:scrollbar-thin">
-      <h1 class="text-6xl font-bold hidden md:block">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
-      <span class="text-xl" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella
+    <div class="flex flex-col w-full md:w-1/2 lg:w-3/5 p-4 max-md:pt-2 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden order-2 md:order-1 md:scrollbar-thin">
+      <h1 class="text-6xl font-bold max-md:hidden">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
+      <span class="text-xl max-md:hidden" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella
         20:00</span>
       <MapComponent />
       <EestiCandidates />
       <FooterView />
     </div>
-    <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900 md:scrollbar-thin">
-      <h1 class="text-5xl font-bold block md:hidden py-4">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
+    <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 max-md:pb-2 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900 md:scrollbar-thin">
+      <h1 class="text-5xl font-bold block md:hidden pt-4">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
+      <span class="text-xl md:hidden text-slate-400" v-if="!globalVoteCountingStarter">Ootame esimesi hääli valimispäeval alates kella
+        20:00</span>
       <EestiDashboard />
     </div>
   </div>

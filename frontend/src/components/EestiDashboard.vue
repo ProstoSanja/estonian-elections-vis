@@ -8,10 +8,9 @@ import TutorialCard from '@/components/TutorialCard.vue'
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
 
-// TODO: Style dashboard and add hints/examples that you can add to it. have a ref (manually changed) that would disable all hints once an update is performed and it is not prefilled form URL or storage.
 // TODO: Notifications?
-// TODO: Lookup candidates from big map and fallback to small map in case they are missing from RESULTS dump
 // TODO: Tallinn districts
+// TODO: Lookup candidates from big map and fallback to small map in case they are missing from RESULTS dump
 // TODO: Detailed views for candidates and parties in sidebar. enabled with toggle
 // TODO: Some indicator of how many votes have been counted, for region and for candidates?
 // TODO: For candidates add stats from previous elections? Same for parties?
