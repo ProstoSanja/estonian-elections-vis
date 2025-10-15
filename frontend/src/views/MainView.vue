@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MapComponent from '@/components/EestiMap.vue'
-import EestiDashbaord from '@/components/EestiDashbaord.vue'
+import EestiDashboard from '@/components/EestiDashboard.vue'
 import EestiCandidates from '@/components/EestiCandidates.vue'
 import { useElectionDataStore } from '@/stores/electionData'
 import FooterView from '@/components/FooterView.vue'
@@ -49,7 +49,7 @@ const globalVoteCountingStarter = computed<boolean>(() => {
     </div>
     <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900 md:scrollbar-thin">
       <h1 class="text-5xl font-bold block md:hidden py-4">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
-      <EestiDashbaord />
+      <EestiDashboard />
     </div>
   </div>
 </template>

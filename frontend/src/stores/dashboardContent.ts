@@ -1,5 +1,6 @@
 import {ref, watch} from 'vue'
 import {defineStore} from 'pinia'
+import { useElectionName } from './useElectionName'
 
 export type DashboardContentEntry = {
   type: 'region' | 'candidate' //| 'party'
@@ -7,10 +8,11 @@ export type DashboardContentEntry = {
 }
 
 export const useDashboardContentStore = defineStore('dashboardContent', () => {
-  const dashboardContent = ref<DashboardContentEntry[]>(loadDashboard())
+  const { electionName } = useElectionName()
+  const dashboardContent = ref<DashboardContentEntry[]>(loadDashboard(electionName.value))
 
   watch(dashboardContent, (newValue) => {
-    saveDashboard(newValue)
+    saveDashboard(newValue, electionName.value)
   }, { deep: true, immediate: true })
 
   const toggleEntry = (entry: DashboardContentEntry) => {
@@ -25,7 +27,7 @@ export const useDashboardContentStore = defineStore('dashboardContent', () => {
   return { dashboardContent, toggleEntry }
 })
 
-const STORAGE_KEY = 'dashboardContent'
+const getStorageKey = (electionName: string) => `dashboardContent_${electionName}`
 
 const typeToPrefix = {
   'region': 'r',
@@ -58,7 +60,7 @@ const decodeDashboard = (encoded: string): DashboardContentEntry[] => {
   }).map((entry) => entry as DashboardContentEntry)
 }
 
-const loadDashboard = (): DashboardContentEntry[] => {
+const loadDashboard = (electionName: string): DashboardContentEntry[] => {
   // Try to load from URL search query first
   try {
     const urlParams = new URLSearchParams(window.location.search)
@@ -73,7 +75,7 @@ const loadDashboard = (): DashboardContentEntry[] => {
 
   // Fall back to localStorage
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(getStorageKey(electionName))
     if (stored) {
       const decoded = decodeDashboard(stored)
       if (decoded.length > 0) return decoded
@@ -89,9 +91,9 @@ const loadDashboard = (): DashboardContentEntry[] => {
   ]
 }
 
-const saveDashboard = (content: DashboardContentEntry[]) => {
+const saveDashboard = (content: DashboardContentEntry[], electionName: string) => {
   try {
-    localStorage.setItem(STORAGE_KEY, encodeDashboard(content))
+    localStorage.setItem(getStorageKey(electionName), encodeDashboard(content))
   } catch (error) {
     console.error('Failed to save to localStorage:', error)
   }
