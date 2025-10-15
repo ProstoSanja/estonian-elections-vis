@@ -56,7 +56,7 @@ class ProcessingApplication {
             adminUnit.districts
                 .flatMap { district -> district.parties
                     .flatMap { party -> party.candidates
-                        .map { candidate -> candidate.toResult(party.partyCode, district.districtNumber) }
+                        .map { candidate -> candidate.toResult(party.partyCode, adminUnit.ehakCode.toInt()) } // district.districtNumber is for tallinn, it is mostly 1 for all others
                     }
                 }
         } }.sortedBy { Random.nextLong() }

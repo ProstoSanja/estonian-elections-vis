@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/vue/16/solid';
 import type { District } from '@/data/api-types';
 
 const props = defineProps<{
-  district: District,
+  district?: District,
   onRemove?: () => void
 }>()
 
