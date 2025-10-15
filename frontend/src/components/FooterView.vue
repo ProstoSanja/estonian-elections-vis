@@ -11,8 +11,8 @@
       <span>Arhiiv</span>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
         href="/KOV2025">KOV2025</a>
-      <!-- <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
-        href="/RK2023">RK2023</a> -->
+      <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
+        href="/RK2023">RK2023</a>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
         href="/KOV2021">KOV2021</a>
     </div>
