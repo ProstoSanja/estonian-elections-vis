@@ -10,8 +10,9 @@ const electionDataStore = useElectionDataStore()
 
 // TODO: Notifications?
 // TODO: Tallinn districts
-// TODO: Lookup candidates from big map and fallback to small map in case they are missing from RESULTS dump
+// TODO: Lookup candidates from big CAND1 in case they are missing from RESULTS dump
 // TODO: Detailed views for candidates and parties in sidebar. enabled with toggle
+// TODO: candidate regions should be an array for parent regions
 // TODO: Some indicator of how many votes have been counted, for region and for candidates?
 // TODO: For candidates add stats from previous elections? Same for parties?
 // TODO: Exit polls/predictions for these elections?

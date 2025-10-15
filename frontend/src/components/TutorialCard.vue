@@ -8,7 +8,7 @@ import { CursorArrowRaysIcon } from '@heroicons/vue/24/solid'
       <rect class="dashed-rect" />
     </svg>
     <div class="flex flex-row items-center gap-4 self-stretch">
-      <CursorArrowRaysIcon class="w-10 h-10" />
+      <CursorArrowRaysIcon class="w-10 h-10 max-md:hidden" />
       <span class="text-base md:hidden">Valige regiooni või vajutage kandidaadi nimele, et lisada neid siin jälgimiseks ja kuvada rohkem infot.</span>
       <span class="text-base max-md:hidden">Vajutage kaardi regioonile või kandidaadi nimele, et lisada neid siin jälgimiseks ja kuvada rohkem infot.</span>
     </div>

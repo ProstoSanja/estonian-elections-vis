@@ -83,6 +83,9 @@ const option = computed(() => ({
     emphasis: {
       label: {
         show: false
+      },
+      itemStyle: {
+        areaColor: '#aaaaaa'
       }
     },
     itemStyle: {
@@ -142,13 +145,13 @@ const handleDistrictChange = (event: any) => {
 <template>
   <div class="flex flex-row relative items-center flex-1 self-stretch md:hidden">
     <BarsArrowDownIcon class="absolute left-3 w-5 h-5 text-slate-400" />
-    <select
-      v-model="selectedDistrict"
+    <select v-model="selectedDistrict"
       class="rounded-xl p-2 pl-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full max-w-full appearance-none text-slate-400"
       @change="handleDistrictChange">
       <option :value="undefined">Regioonide valik</option>
-      <option v-for="district in electionDataStore.electionData?.districts || []" :value="district.number" :key="district.number">{{
-        district.name }}</option>
+      <option v-for="district in electionDataStore.electionData?.districts || []" :value="district.number"
+        :key="district.number">{{
+          district.name }}</option>
     </select>
   </div>
   <div class="flex items-center justify-center max-h-[55vh] !h-[60vw] md:!h-[35vw] w-full">
