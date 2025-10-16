@@ -74,7 +74,8 @@ data class Candidate(
     val regNumber: Int,
     val votes: Int,
     val partyCode: String,
-    val districtNumber: Int,
+    val primaryDistrictNumber: Int,
+    val districtNumbers: List<Int>,
 ) {
-    val uniqueId: String = "$districtNumber-$regNumber"
+    val uniqueId: String = "$primaryDistrictNumber-$regNumber"
 }

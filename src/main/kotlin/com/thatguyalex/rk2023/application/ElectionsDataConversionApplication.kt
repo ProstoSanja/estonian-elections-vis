@@ -17,9 +17,9 @@ import com.thatguyalex.rk2023.infrastructure.classes.elections.cand1ListtoResult
 import com.thatguyalex.rk2023.infrastructure.classes.elections.getEVotes
 import com.thatguyalex.rk2023.infrastructure.classes.elections.getTotalVotes
 import com.thatguyalex.rk2023.infrastructure.classes.elections.kov2ListToResult
+import com.thatguyalex.rk2023.infrastructure.classes.elections.subDistrictCodeFor
 import com.thatguyalex.rk2023.infrastructure.classes.elections.toResult
 import org.springframework.stereotype.Service
-import kotlin.random.Random
 
 @Service
 class ElectionsDataConversionApplication {
@@ -50,8 +50,11 @@ class ElectionsDataConversionApplication {
 
     private fun processKOV2(rawResults: KOV2ResultsData): ProcessedResults {
         val candidates = rawResults
-            .flatMap { it.votesAndMandates.map { party -> it.adminUnit.ehakCode.toInt() to party  } }
-            .flatMap { (ehakCode, party) ->  party.candidates.map { cand -> cand.toResult(party.code ?: "ÜKSIK", ehakCode) } }
+            .flatMap { it.votesAndMandates.map { party -> Triple(it.adminUnit.ehakCode.toInt(), it.adminUnit.parentEhakCode?.toInt(), party) } }
+            .flatMap { (ehakCode, parentEhakCode, party) ->  party.candidates.map { cand ->
+                val districtCode = if (ehakCode == 784) ehakCode.subDistrictCodeFor(cand.districtNumber) else null
+                cand.toResult(party.code ?: "ÜKSIK", ehakCode, listOfNotNull(ehakCode, parentEhakCode, districtCode))
+            } }
         val districts = rawResults.map { it.toResult(rawResults) }
         val parties = rawResults
             .flatMap { it.votesAndMandates }
@@ -71,23 +74,27 @@ class ElectionsDataConversionApplication {
 
     private fun processCAND1(rawResults: CAND1ResultsData): ProcessedResults {
         // KOV Edition. For RK top level different?
-        val candidates = rawResults.adminUnits.flatMap { unpackCAND1(it) { adminUnit ->
+        val candidates = rawResults.adminUnits.flatMap { unpackCAND1(emptyList(), it) { parentUnits, adminUnit ->
             adminUnit.districts
                 .flatMap { district -> district.parties
                     .flatMap { party -> party.candidates
-                        // TODO: populate candidate region allegiances when switched to array
-                        .map { candidate -> candidate.toResult(party.partyCode, adminUnit.ehakCode.toInt()) } // district.districtNumber is for tallinn, it is mostly 1 for all others
+                        .map { candidate ->
+                            val ehakCode = adminUnit.ehakCode.toInt()
+                            val districtCode = if (ehakCode == 784) ehakCode.subDistrictCodeFor(district.districtNumber) else null
+                            val allCodes = parentUnits.map { parent -> parent.ehakCode.toInt() } + ehakCode + districtCode
+                            candidate.toResult(party.partyCode, ehakCode, allCodes.filterNotNull())
+                        }
                     }
                 }
         } }
-        val parties = rawResults.adminUnits.flatMap { unpackCAND1(it) { adminUnit ->
+        val parties = rawResults.adminUnits.flatMap { unpackCAND1(emptyList(), it) { _, adminUnit ->
             adminUnit.districts.flatMap { district -> district.parties }
         } }
             .groupBy { party -> party.partyCode }
             .map {
                 it.value.cand1ListtoResult()
             }
-        val districts = rawResults.adminUnits.flatMap { unpackCAND1(it) { adminUnit ->
+        val districts = rawResults.adminUnits.flatMap { unpackCAND1(emptyList(), it) { _, adminUnit ->
             adminUnit.districts
                 .map { district ->
                     District(
@@ -97,7 +104,7 @@ class ElectionsDataConversionApplication {
                             .drop(1)
                             .joinToString("-")
                             .trim(),
-                        number = (adminUnit.ehakCode.toInt() * 10) + district.districtNumber,
+                        number = adminUnit.ehakCode.toInt().subDistrictCodeFor(district.districtNumber),
                         parties = emptyList(),
                         voteStats = VoteStats.empty(),
                         totalMandates = 0
@@ -108,15 +115,15 @@ class ElectionsDataConversionApplication {
         return ProcessedResults(parties, districts, candidates)
     }
 
-    private fun <T> unpackCAND1(cand1AdminUnit: CAND1AdminUnit, ret: (cand1AdminUnit: CAND1AdminUnit) -> List<T>): List<T> {
-        val directResult = ret(cand1AdminUnit)
-        val childResults = if (cand1AdminUnit.childAdminUnits.isNotEmpty()) cand1AdminUnit.childAdminUnits.flatMap { unpackCAND1(it, ret) } else emptyList()
+    private fun <T> unpackCAND1(parentUnits: List<CAND1AdminUnit>, cand1AdminUnit: CAND1AdminUnit, ret: (parentUnits: List<CAND1AdminUnit>, cand1AdminUnit: CAND1AdminUnit) -> List<T>): List<T> {
+        val directResult = ret( parentUnits, cand1AdminUnit)
+        val childResults = if (cand1AdminUnit.childAdminUnits.isNotEmpty()) cand1AdminUnit.childAdminUnits.flatMap { unpackCAND1(parentUnits + cand1AdminUnit,it, ret) } else emptyList()
         return directResult + childResults
     }
 
     private fun processKOV1MUN(rawResults: KOV1MUNElectionResult, fallback: ProcessedResults?, parentRegion: Int): ProcessedResults {
         val districts = rawResults.districts.map { district ->
-            val districtNumber = (parentRegion * 10) + district.districtNumber
+            val districtNumber = parentRegion.subDistrictCodeFor(district.districtNumber)
             District(
                 name = fallback?.districts[districtNumber]?.name ?: "Valimisrigkond $districtNumber",
                 number = districtNumber,

@@ -21,7 +21,7 @@ const candidates = computed(() => {
   const searchToken = tokenizeString(candidateSearch.value)
   return electionDataStore.electionData?.candidates
     .filter(candidate => {
-      if (districtSearch.value !== undefined) return candidate.districtNumber === districtSearch.value
+      if (districtSearch.value !== undefined) return candidate.districtNumbers.includes(districtSearch.value)
       return true
     })
     .filter(candidate => {

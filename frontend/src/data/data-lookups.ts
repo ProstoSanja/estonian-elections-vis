@@ -56,5 +56,5 @@ export const getShortPartyCode = (partyCode: string, type: 'ultra' | 'very' = 'u
 }
 
 export const candidateUniqueId = (candidate: Candidate) => {
-  return `${candidate.districtNumber}-${candidate.regNumber}`
+  return `${candidate.primaryDistrictNumber}-${candidate.regNumber}`
 }

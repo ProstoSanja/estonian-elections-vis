@@ -6,7 +6,6 @@ import com.thatguyalex.rk2023.infrastructure.classes.elections.ProcessedResults
 import com.thatguyalex.rk2023.infrastructure.classes.helpers.PartyCodeType
 import com.thatguyalex.rk2023.infrastructure.classes.helpers.getShortPartyCode
 import com.thatguyalex.rk2023.infrastructure.classes.push.ElectionPushMessage
-import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushTopicType
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
@@ -46,7 +45,7 @@ class ElectionsNotificationsProcessingApplication(
             .mapNotNull { (newCandidate, oldCandidate) ->
                 if (oldCandidate == null) return@mapNotNull null
                 if (oldCandidate.votes >= newCandidate.votes) return@mapNotNull null
-                val statsForCandidateRegion = new.districts[newCandidate.districtNumber]?.voteStats
+                val statsForCandidateRegion = new.districts[newCandidate.primaryDistrictNumber]?.voteStats
                     ?.let { "(${it.protocolsCounted}/${it.protocolsTotal} jaoskonda)" }
                 ElectionPushMessage(
                     electionType,

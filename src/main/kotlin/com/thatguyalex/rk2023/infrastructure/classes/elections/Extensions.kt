@@ -6,7 +6,8 @@ fun RK2PartyCandidate.toResult(partyCode: String) = Candidate(
     regNumber = registrationNumber,
     votes = votes,
     partyCode = partyCode,
-    districtNumber = districtNumber,
+    primaryDistrictNumber = districtNumber,
+    districtNumbers = listOf(districtNumber),
 )
 
 fun RK2District.toResult(allCandidates: List<RK2PartyCandidate>) = District(
@@ -39,13 +40,14 @@ fun RK2Party.toResult() = Party(
     votes = votes,
 )
 
-fun KOV2Candidate.toResult(partyCode: String, districtNumber: Int) = Candidate(
+fun KOV2Candidate.toResult(partyCode: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = registrationNumber,
     votes = votes,
     partyCode = partyCode,
-    districtNumber = districtNumber,
+    primaryDistrictNumber = primaryDistrictNumber,
+    districtNumbers = districtNumbers
 )
 
 fun KOV2AdminUnitResult.toResult(allDistricts: List<KOV2AdminUnitResult>): District {
@@ -81,13 +83,14 @@ fun GOVElectionStatistics.toResult() = VoteStats(
     evotesCounted = eVotesCounted,
 )
 
-fun CAND1Candidate.toResult(partyCode: String, districtNumber: Int) = Candidate(
+fun CAND1Candidate.toResult(partyCode: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = candidateRegNumber,
     votes = 0,
     partyCode = partyCode,
-    districtNumber = districtNumber,
+    primaryDistrictNumber = primaryDistrictNumber,
+    districtNumbers = districtNumbers,
 )
 
 fun List<CAND1Party>.cand1ListtoResult() = Party(
@@ -96,3 +99,7 @@ fun List<CAND1Party>.cand1ListtoResult() = Party(
     mandates = 0,
     votes = 0,
 )
+
+fun Int.subDistrictCodeFor(subDistrict: Int): Int {
+    return (this * 10) + subDistrict
+}

@@ -32,7 +32,8 @@ export interface Candidate {
   regNumber: number;
   votes: number;
   partyCode: string;
-  districtNumber: number;
+  primaryDistrictNumber: number;
+  districtNumbers: number[];
 }
 
 export type ElectionType = 'KOV2021' | 'RK2023' | 'KOV2025';
