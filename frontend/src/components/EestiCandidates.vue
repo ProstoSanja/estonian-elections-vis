@@ -7,6 +7,7 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { XMarkIcon } from '@heroicons/vue/16/solid'
 import { tokenizeString } from '@/data/search'
 import { useDashboardContentStore } from '@/stores/dashboardContent'
+import { candidateUniqueId } from '@/data/data-lookups'
 
 const electionDataStore = useElectionDataStore()
 const dashboardContentStore = useDashboardContentStore()
@@ -90,7 +91,7 @@ const searchableDistricts = computed(() => {
       :key="`candidates-${candidateSearch}-${partySearch}`">
       <CandidateCard v-for="candidate in candidates" :key="candidate.regNumber" :candidate="candidate"
         :party="electionDataStore.electionData?.parties.find(party => party.code === candidate.partyCode)"
-        @click="dashboardContentStore.toggleEntry({ type: 'candidate', code: tokenizeString(candidate.forename + candidate.surename + candidate.regNumber.toString()) })" />
+        @click="dashboardContentStore.toggleEntry({ type: 'CANDIDATE', code: candidateUniqueId(candidate) })" />
       <LoadMoreButton v-if="(candidates?.length ?? 0) >= candidateCount" @loadMore="candidateCount += 25" />
     </div>
   </div>

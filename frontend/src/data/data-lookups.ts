@@ -1,3 +1,5 @@
+import type { Candidate } from './api-types'
+
 export const partyColorLookup: Map<string, string> = new Map([
   ["IE", "#009DE0"],
   ["SDE", "#d21b2f"],
@@ -51,4 +53,8 @@ export const veryShortPartyCodeLookup: Map<string, string> = new Map([
 export const getShortPartyCode = (partyCode: string, type: 'ultra' | 'very' = 'ultra') => {
   if (type === 'ultra') return ultraShortPartyCodeLookup.get(partyCode) || partyCode.replace(/^VL|V/, '').slice(0, 2)
   return veryShortPartyCodeLookup.get(partyCode) || partyCode.replace(/^VL|V/, '').slice(0, 3)
+}
+
+export const candidateUniqueId = (candidate: Candidate) => {
+  return `${candidate.districtNumber}-${candidate.regNumber}`
 }

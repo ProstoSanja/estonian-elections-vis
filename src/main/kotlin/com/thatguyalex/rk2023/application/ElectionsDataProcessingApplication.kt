@@ -35,7 +35,7 @@ class ElectionsDataProcessingApplication {
             .flatMap { it.votesAndMandates.map { party -> it.adminUnit.ehakCode.toInt() to party  } }
             .flatMap { (ehakCode, party) ->  party.candidates.map { cand -> cand.toResult(party.code ?: "ÜKSIK", ehakCode) } }
             .sortedByDescending { it.votes }
-            .ifEmpty { fallback?.candidates ?: emptyList() }
+            .ifEmpty { fallback?.candidatesList ?: emptyList() }
         val districts = rawResults.map { it.toResult(rawResults) }
         val parties = rawResults
             .flatMap { it.votesAndMandates }
@@ -43,7 +43,7 @@ class ElectionsDataProcessingApplication {
             .map {
                 it.value.kov2ListToResult()
             }
-            .ifEmpty { fallback?.parties ?: emptyList() }
+            .ifEmpty { fallback?.partiesList ?: emptyList() }
             .sortedWith(partySort)
         return ProcessedResults(parties, districts, candidates)
     }

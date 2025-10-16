@@ -19,14 +19,34 @@ data class PushSubscriptionTopic(
     val id: Long? = null,
     val pushSubscriptionId: Long,
     val electionType: ElectionType,
-    val topicType: String, // 'region' or 'candidate'
+    val topicType: PushTopicType,
     val topicCode: String
 )
+
+enum class PushTopicType(val smallName: String) {
+    REGION("R"),
+    CANDIDATE("C"),
+}
+
+data class ElectionPushMessage(
+    val electionType: ElectionType,
+    val topicType: PushTopicType,
+    val topicCode: String,
+    val title: String,
+    val body: String,
+) {
+    val pushMessage = PushMessage(
+        title = title,
+        body = body,
+        topic = "${electionType.smallName}-${topicType.smallName}-$topicCode",
+    )
+}
 
 data class PushMessage(
     val title: String,
     val body: String,
     val url: String = "",
+    val topic: String? = null,
 )
 
 enum class PushSendResult {

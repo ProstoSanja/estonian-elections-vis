@@ -8,7 +8,6 @@ import TutorialCard from '@/components/TutorialCard.vue'
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
 
-// TODO: Notifications? (send subsctiptions to server)
 // TODO: Tallinn districts
 // TODO: Lookup candidates from big CAND1 in case they are missing from RESULTS dump
 // TODO: Detailed views for candidates and parties in sidebar. enabled with toggle
@@ -21,12 +20,12 @@ const electionDataStore = useElectionDataStore()
 <template>
   <template v-for="entry in dashboardContentStore.dashboardContent" :key="`${entry.type}-${entry.code}`">
     <RegionRace
-      v-if="entry.type === 'region'"
+      v-if="entry.type === 'REGION'"
       :district="electionDataStore.districtsByNumber[Number(entry.code)]"
       :onRemove="() => dashboardContentStore.toggleEntry(entry)"
     />
 
-    <CandidateCard v-if="entry.type === 'candidate' && electionDataStore.candidatesByToken[entry.code]" :candidate="electionDataStore.candidatesByToken[entry.code]"
+    <CandidateCard v-if="entry.type === 'CANDIDATE' && electionDataStore.candidatesByToken[entry.code]" :candidate="electionDataStore.candidatesByToken[entry.code]"
       :party="electionDataStore.partiesByCode[electionDataStore.candidatesByToken[entry.code]?.partyCode ?? '']"
       :class="'self-stretch'"
       :onRemove="() => dashboardContentStore.toggleEntry(entry)" />

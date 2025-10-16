@@ -1,13 +1,13 @@
 // Service Worker for Push Notifications
 self.addEventListener('push', function(event) {
-  console.log('Push received:', event);
+  console.log('Push received:', event, event.data.json());
 
   let data = {
     title: 'Valimisõhtu',
     body: 'Uus teade',
     icon: '/logo192.png',
     badge: '/logo192.png',
-    tag: 'election-update',
+    tag: 'election-update-' + Date.now(),
     requireInteraction: false
   };
 

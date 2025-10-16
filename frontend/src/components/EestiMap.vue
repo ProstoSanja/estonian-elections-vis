@@ -124,7 +124,7 @@ const handleMapClick = (params: any) => {
   if (params.data?.electionDistrict) {
     const district = params.data.electionDistrict as District;
     dashboardContentStore.toggleEntry({
-      type: 'region',
+      type: 'REGION',
       code: district.number
     });
   }
@@ -135,7 +135,7 @@ const handleDistrictChange = (event: any) => {
   const districtNumber = parseInt(event.target.value)
   const district = electionDataStore.electionData?.districts.find(district => district.number === districtNumber)
   if (district) {
-    dashboardContentStore.toggleEntry({ type: 'region', code: district.number })
+    dashboardContentStore.toggleEntry({ type: 'REGION', code: district.number })
   }
   selectedDistrict.value = undefined
 }

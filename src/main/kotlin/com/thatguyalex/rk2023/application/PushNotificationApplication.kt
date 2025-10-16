@@ -1,10 +1,10 @@
 package com.thatguyalex.rk2023.application
 
-import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
-import com.thatguyalex.rk2023.infrastructure.PushSubscriptionRepo
 import com.thatguyalex.rk2023.infrastructure.PushNotificationsSender
+import com.thatguyalex.rk2023.infrastructure.PushSubscriptionRepo
 import com.thatguyalex.rk2023.infrastructure.PushSubscriptionTopicRepo
-import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
+import com.thatguyalex.rk2023.infrastructure.classes.push.ElectionPushMessage
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,21 +13,19 @@ class PushNotificationApplication(
     private val topicRepo: PushSubscriptionTopicRepo,
     private val sender: PushNotificationsSender
 ) {
-    
-    fun sendNotificationToElection(electionType: ElectionType, message: PushMessage): Int {
-        val subscriptionIds = topicRepo.findSubscriptionIdsByElection(electionType)
-        val subscriptions = subscriptionRepo.findAllByIds(subscriptionIds)
-        return sender.sendNotificationTo(subscriptions, message)
-    }
-    
-    fun sendNotificationToTopic(
-        electionType: ElectionType, 
-        topicType: String, 
-        topicCode: String, 
-        message: PushMessage
+    private val logger = LoggerFactory.getLogger(PushNotificationApplication::class.java)
+
+    fun sendElectionMessages(
+        messages: List<ElectionPushMessage>
     ): Int {
-        val subscriptionIds = topicRepo.findSubscriptionIdsByTopic(electionType, topicType, topicCode)
-        val subscriptions = subscriptionRepo.findAllByIds(subscriptionIds)
-        return sender.sendNotificationTo(subscriptions, message)
+        return messages.associateWith { topicRepo.findSubscriptionIdsByTopic(it.electionType, it.topicType, it.topicCode) }
+            .filterValues { it.isNotEmpty() }
+            .map { (message, subscriptionIds) ->
+                val subscriptions = subscriptionRepo.findAllByIds(subscriptionIds)
+                logger.info("Sending notification for ${message.topicType} ${message.topicCode} to ${subscriptions.size} subscriptions")
+                sender.sendNotificationTo(subscriptions, message.pushMessage)
+//                    .also { Thread.sleep(1000) }
+            }
+            .sum()
     }
 }

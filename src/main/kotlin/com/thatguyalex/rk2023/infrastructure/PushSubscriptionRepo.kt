@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 interface PushSubscriptionRepo : CrudRepository<PushSubscription, Long> {
     fun findByEndpoint(endpoint: String): PushSubscription?
     
-    @Query("SELECT * FROM push_subscriptions WHERE id IN :ids")
+    @Query("SELECT * FROM push_subscriptions WHERE id IN (:ids)")
     fun findAllByIds(ids: List<Long>): List<PushSubscription>
     
     @Transactional

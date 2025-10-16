@@ -4,7 +4,7 @@ import { useElectionName } from './useElectionName'
 import { usePushNotifications } from './usePushNotifications'
 
 export type DashboardContentEntry = {
-  type: 'region' | 'candidate' //| 'party'
+  type: 'REGION' | 'CANDIDATE' //| 'party'
   code: number | string
 }
 
@@ -34,8 +34,8 @@ export const useDashboardContentStore = defineStore('dashboardContent', () => {
 const getStorageKey = (electionName: string) => `dashboardContent_${electionName}`
 
 const typeToPrefix = {
-  'region': 'r',
-  'candidate': 'c'
+  'REGION': 'r',
+  'CANDIDATE': 'c'
 } as const
 
 const prefixToType = Object.fromEntries(
@@ -90,8 +90,8 @@ const loadDashboard = (electionName: string): DashboardContentEntry[] => {
 
   // Fall back to default
   return [
-    {type: 'region', code: 0},
-    {type: 'region', code: 784},
+    {type: 'REGION', code: 0},
+    {type: 'REGION', code: 784},
   ]
 }
 

@@ -3,8 +3,8 @@ import {defineStore} from 'pinia'
 import type { Candidate, District, Party, ProcessedResults } from '@/data/api-types'
 import axios from 'axios'
 import {computed} from 'vue'
-import { tokenizeString } from '@/data/search'
 import { useElectionName } from './useElectionName'
+import { candidateUniqueId } from '@/data/data-lookups'
 
 export const useElectionDataStore = defineStore('electionData', () => {
   const electionData = ref<ProcessedResults | null>(null)
@@ -28,7 +28,7 @@ export const useElectionDataStore = defineStore('electionData', () => {
 
   const candidatesByToken = computed(() => {
     return electionData.value?.candidates.reduce((acc, candidate) => {
-      acc[tokenizeString(candidate.forename + candidate.surename + candidate.regNumber.toString())] = candidate
+      acc[candidateUniqueId(candidate)] = candidate
       return acc
     }, {} as Record<string, Candidate>) || {}
   })

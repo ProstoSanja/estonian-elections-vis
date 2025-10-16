@@ -42,3 +42,4 @@ out/
 .envrc
 
 .DS_Store
+MOCK_RESULTS.xml

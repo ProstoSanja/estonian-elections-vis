@@ -1,10 +1,14 @@
 package com.thatguyalex.rk2023.infrastructure.classes.elections
 
-data class ProcessedResults(
-    val parties: List<Party>,
-    val districts: List<District>,
-    val candidates: List<Candidate>,
-)
+class ProcessedResults(
+    val partiesList: List<Party>,
+    val districtsList: List<District>,
+    val candidatesList: List<Candidate>,
+) {
+    val parties: Map<String, Party> = partiesList.associateBy { it.code }
+    val districts: Map<Int, District> = districtsList.associateBy { it.number }
+    val candidates: Map<String, Candidate> = candidatesList.associateBy { it.uniqueId }
+}
 
 data class Party(
     val name: String,
@@ -35,4 +39,6 @@ data class Candidate(
     val votes: Int,
     val partyCode: String,
     val districtNumber: Int,
-)
+) {
+    val uniqueId: String = "$districtNumber-$regNumber"
+}

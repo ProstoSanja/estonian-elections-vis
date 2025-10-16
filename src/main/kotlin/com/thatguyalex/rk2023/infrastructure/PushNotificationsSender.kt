@@ -3,6 +3,7 @@ package com.thatguyalex.rk2023.infrastructure
 import com.interaso.webpush.VapidKeys
 import com.interaso.webpush.WebPush
 import com.interaso.webpush.WebPushService
+import com.thatguyalex.rk2023.infrastructure.classes.helpers.tokenizeString
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSendResult
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscription
@@ -91,10 +92,12 @@ class PushNotificationsSender(
         }
         return try {
             webPushService.send(
-                payload = """{"title":"${message.title}","body":"${message.body}","url":"${message.url}"}""",
+                payload = """{"title":"${message.title}","body":"${message.body}","url":"${message.url}","tag":"${message.topic}"}""",
                 endpoint = subscription.endpoint,
                 p256dh = subscription.p256dh,
-                auth = subscription.auth
+                auth = subscription.auth,
+                ttl = 60,
+                topic = message.topic?.let { tokenizeString(it) },
             ).let {
                 when (it) {
                     WebPush.SubscriptionState.ACTIVE -> PushSendResult.SUCCESS

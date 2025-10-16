@@ -2,6 +2,7 @@ package com.thatguyalex.rk2023.infrastructure
 
 import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscriptionTopic
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushTopicType
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -16,7 +17,7 @@ interface PushSubscriptionTopicRepo : CrudRepository<PushSubscriptionTopic, Long
     
     fun findByElectionTypeAndTopicTypeAndTopicCode(
         electionType: ElectionType,
-        topicType: String,
+        topicType: PushTopicType,
         topicCode: String
     ): List<PushSubscriptionTopic>
     
@@ -32,7 +33,7 @@ interface PushSubscriptionTopicRepo : CrudRepository<PushSubscriptionTopic, Long
     """)
     fun findSubscriptionIdsByTopic(
         electionType: ElectionType,
-        topicType: String,
+        topicType: PushTopicType,
         topicCode: String
     ): List<Long>
     

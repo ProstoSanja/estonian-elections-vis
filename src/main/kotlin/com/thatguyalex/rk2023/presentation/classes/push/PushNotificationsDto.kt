@@ -3,6 +3,7 @@ package com.thatguyalex.rk2023.presentation.classes.push
 import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscription
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscriptionTopic
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushTopicType
 
 data class PushSubscriptionKeysDto(
     val p256dh: String,
@@ -11,7 +12,7 @@ data class PushSubscriptionKeysDto(
 
 // Dashboard entry types matching frontend
 data class DashboardEntryDto(
-    val type: String, // 'region' or 'candidate'
+    val type: PushTopicType,
     val code: String
 )
 
