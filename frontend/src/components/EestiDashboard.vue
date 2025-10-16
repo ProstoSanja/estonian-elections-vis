@@ -4,11 +4,12 @@ import RegionRace from '@/components/RegionRace.vue'
 import { useElectionDataStore } from '@/stores/electionData'
 import CandidateCard from '@/components/CandidateCard.vue'
 import TutorialCard from '@/components/TutorialCard.vue'
+import PushNotificationPrompt from '@/components/PushNotificationPrompt.vue'
 
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
 
-// TODO: Notifications?
+// TODO: Notifications? (send subsctiptions to server)
 // TODO: Tallinn districts
 // TODO: Lookup candidates from big CAND1 in case they are missing from RESULTS dump
 // TODO: Detailed views for candidates and parties in sidebar. enabled with toggle
@@ -19,6 +20,7 @@ const electionDataStore = useElectionDataStore()
 
 </script>
 <template>
+  <PushNotificationPrompt />
   <template v-for="entry in dashboardContentStore.dashboardContent" :key="`${entry.type}-${entry.code}`">
     <RegionRace
       v-if="entry.type === 'region'"

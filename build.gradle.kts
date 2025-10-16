@@ -24,6 +24,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+    
+    // Web Push library (handles VAPID, encryption, etc.)
+    implementation("com.interaso:webpush:1.2.0")
 }
 
 kotlin {
