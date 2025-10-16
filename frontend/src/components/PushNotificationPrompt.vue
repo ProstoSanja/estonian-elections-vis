@@ -3,20 +3,14 @@ import { usePushNotifications } from '@/stores/usePushNotifications';
 import { ref } from 'vue';
 import { BellAlertIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid'
 
-const {
-  isSupported,
-  isSubscribed,
-  error,
-  shouldPrompt,
-  subscribe,
-} = usePushNotifications();
+const pushNotifications = usePushNotifications();
 
 const isLoading = ref(false);
 
 const handleSubscribe = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
-  await subscribe();
+  await pushNotifications.subscribe();
   isLoading.value = false;
 };
 
@@ -30,11 +24,11 @@ const getBackgroundImage = (isSubscribed: boolean) => {
 </script>
 
 <template>
-  <div v-if="isSupported" class="flex flex-col self-stretch rounded-xl overflow-hidden p-2 hover:opacity-70 transition-opacity" :style="{
-    backgroundImage: getBackgroundImage(isSubscribed)
+  <div v-if="pushNotifications.isSupported && !pushNotifications.isDenied" class="flex flex-col self-stretch rounded-t-xl overflow-hidden p-2 hover:brightness-125 transition" :style="{
+    backgroundImage: getBackgroundImage(pushNotifications.isSubscribed)
   }">
     <!-- Prompt to enable notifications -->
-    <div v-if="shouldPrompt" class="flex flex-row items-center gap-4 p-2 cursor-pointer" @click="handleSubscribe">
+    <div v-if="pushNotifications.shouldPrompt" class="flex flex-row items-center gap-4 p-2 cursor-pointer" @click="handleSubscribe">
       <BellAlertIcon class="min-w-6 h-6 text-slate-300" />
       <div class="flex flex-col items-stretch justify-start">
         <p v-if="!isLoading" class="text-slate-300 text-sm">
@@ -43,12 +37,12 @@ const getBackgroundImage = (isSubscribed: boolean) => {
           <span class="font-bold">Vajutage siia et jätkata.</span>
         </p>
         <p v-if="isLoading" class="text-slate-300 text-sm">Palun oodake...</p>
-        <p v-if="error" class="text-red-200 text-xs">Tekkis viga: {{ error }}</p>
+        <p v-if="pushNotifications.error" class="text-red-200 text-xs">Tekkis viga: {{ pushNotifications.error }}</p>
       </div>
     </div>
 
     <!-- Success message -->
-    <div v-if="isSubscribed" class="flex items-center gap-3 text-green-200 px-2">
+    <div v-if="pushNotifications.isSubscribed" class="flex items-center gap-4 text-green-200 px-2">
       <CheckBadgeIcon class="min-w-6 h-6 text-green-200" />
       <div>
         <p class="">Teavitused sisse lülitatud</p>

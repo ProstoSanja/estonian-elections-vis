@@ -4,7 +4,6 @@ import RegionRace from '@/components/RegionRace.vue'
 import { useElectionDataStore } from '@/stores/electionData'
 import CandidateCard from '@/components/CandidateCard.vue'
 import TutorialCard from '@/components/TutorialCard.vue'
-import PushNotificationPrompt from '@/components/PushNotificationPrompt.vue'
 
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
@@ -20,7 +19,6 @@ const electionDataStore = useElectionDataStore()
 
 </script>
 <template>
-  <PushNotificationPrompt />
   <template v-for="entry in dashboardContentStore.dashboardContent" :key="`${entry.type}-${entry.code}`">
     <RegionRace
       v-if="entry.type === 'region'"

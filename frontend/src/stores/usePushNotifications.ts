@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue';
+import { defineStore } from 'pinia';
 import axios from 'axios';
 
 const VAPID_PUBLIC_KEY = import.meta.env.VAPID_PUBLIC_KEY || 'YOUR_VAPID_PUBLIC_KEY_HERE';
 
-export function usePushNotifications() {
+export const usePushNotifications = defineStore('pushNotifications', () => {
   const isSupported = ref(false);
   const isSubscribed = ref(false);
   const subscription = ref<PushSubscription | null>(null);
@@ -198,5 +199,5 @@ export function usePushNotifications() {
     unsubscribe,
     requestPermission,
   };
-}
+});
 
