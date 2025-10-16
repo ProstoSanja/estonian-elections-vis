@@ -27,6 +27,12 @@ dependencies {
     
     // Web Push library (handles VAPID, encryption, etc.)
     implementation("com.interaso:webpush:1.2.0")
+
+    // Db Modules
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.flywaydb:flyway-core:11.13.1")
+    implementation("org.flywaydb:flyway-database-postgresql:11.13.1")
+    runtimeOnly("org.postgresql:postgresql")
 }
 
 kotlin {

@@ -13,7 +13,7 @@ const pushNotifications = usePushNotifications();
     </svg>
 
     <PushNotificationPrompt />
-    <div class="flex flex-row items-center gap-4 self-stretch p-4 text-slate-500 hover:text-slate-400 transition-colors">
+    <div class="flex flex-row items-center gap-4 self-stretch p-4 pt-3 text-slate-500 hover:text-slate-400 transition-colors">
       <CursorArrowRaysIcon class="min-w-6 h-6 max-md:hidden" />
       <span class="text-base md:hidden">Valige regiooni või vajutage kandidaadi nimele, et lisada neid siin jälgimiseks ja kuvada rohkem infot.</span>
       <span class="text-base max-md:hidden">Vajutage kaardi regioonile või kandidaadi nimele, et lisada neid siin jälgimiseks ja kuvada rohkem infot.</span>

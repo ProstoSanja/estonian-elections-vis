@@ -1,6 +1,7 @@
 import {ref, watch} from 'vue'
 import {defineStore} from 'pinia'
 import { useElectionName } from './useElectionName'
+import { usePushNotifications } from './usePushNotifications'
 
 export type DashboardContentEntry = {
   type: 'region' | 'candidate' //| 'party'
@@ -9,10 +10,13 @@ export type DashboardContentEntry = {
 
 export const useDashboardContentStore = defineStore('dashboardContent', () => {
   const { electionName } = useElectionName()
+  const pushNotifications = usePushNotifications()
+
   const dashboardContent = ref<DashboardContentEntry[]>(loadDashboard(electionName.value))
 
   watch(dashboardContent, (newValue) => {
     saveDashboard(newValue, electionName.value)
+    pushNotifications.updateTopics(electionName.value, newValue)
   }, { deep: true, immediate: true })
 
   const toggleEntry = (entry: DashboardContentEntry) => {

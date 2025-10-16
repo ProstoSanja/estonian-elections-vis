@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { usePushNotifications } from '@/stores/usePushNotifications';
+import { useDashboardContentStore } from '@/stores/dashboardContent';
+import { useElectionName } from '@/stores/useElectionName';
 import { ref } from 'vue';
 import { BellAlertIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid'
 
 const pushNotifications = usePushNotifications();
+const dashboardStore = useDashboardContentStore();
+const { electionName } = useElectionName();
 
 const isLoading = ref(false);
 
 const handleSubscribe = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
-  await pushNotifications.subscribe();
+  await pushNotifications.subscribe(electionName.value, dashboardStore.dashboardContent);
   isLoading.value = false;
 };
 

@@ -1,0 +1,22 @@
+spring:
+  main:
+    banner-mode: off
+  profiles:
+    default: production
+    active: production
+  datasource:
+    url: jdbc:postgresql://${SPRING_DB_ADDRESS:localhost}:${SPRING_DB_PORT:5432}/${SPRING_DB_NAME:election-vis}
+    username: ${SPRING_DB_USERNAME:postgres_user}
+    password: ${SPRING_DB_PASSWORD:postgres_pass}
+
+server:
+  port: 12345
+
+# Push Notification Configuration
+# Generate VAPID keys using: npx web-push generate-vapid-keys
+push:
+  vapid:
+    publicKey: ${VAPID_PUBLIC_KEY:}
+    privateKey: ${VAPID_PRIVATE_KEY:}
+    subject: ${VAPID_SUBJECT:legal@thatguyalex.com}
+

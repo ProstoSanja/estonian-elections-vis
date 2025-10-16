@@ -40,3 +40,5 @@ out/
 
 .env
 .envrc
+
+.DS_Store

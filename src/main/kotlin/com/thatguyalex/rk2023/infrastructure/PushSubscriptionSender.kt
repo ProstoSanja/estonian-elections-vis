@@ -1,15 +1,14 @@
-package com.thatguyalex.rk2023.application
+package com.thatguyalex.rk2023.infrastructure
 
 import com.interaso.webpush.VapidKeys
 import com.interaso.webpush.WebPush
 import com.interaso.webpush.WebPushService
-import com.thatguyalex.rk2023.infrastructure.PushSubscriptionRepo
 import com.thatguyalex.rk2023.infrastructure.classes.PushMessage
 import com.thatguyalex.rk2023.infrastructure.classes.PushSendResult
 import com.thatguyalex.rk2023.infrastructure.classes.PushSubscription
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import java.math.BigInteger
 import java.security.AlgorithmParameters
 import java.security.KeyFactory
@@ -22,14 +21,14 @@ import java.security.spec.ECPrivateKeySpec
 import java.security.spec.ECPublicKeySpec
 import java.util.Base64
 
-@Service
-class PushNotificationService(
+@Component
+class PushSubscriptionSender(
     private val subscriptionRepo: PushSubscriptionRepo,
     @Value("\${push.vapid.publicKey:}") private val vapidPublicKey: String,
     @Value("\${push.vapid.privateKey:}") private val vapidPrivateKey: String,
     @Value("\${push.vapid.subject:mailto:your-email@example.com}") private val vapidSubject: String
 ) {
-    private val logger = LoggerFactory.getLogger(PushNotificationService::class.java)
+    private val logger = LoggerFactory.getLogger(PushSubscriptionSender::class.java)
 
     // Security setup
 
@@ -82,7 +81,7 @@ class PushNotificationService(
         }.count { it == PushSendResult.SUCCESS }
     }
 
-    private fun sendPushNotification(
+    fun sendPushNotification(
         subscription: PushSubscription,
         message: PushMessage
     ): PushSendResult {
@@ -100,7 +99,7 @@ class PushNotificationService(
                 when (it) {
                     WebPush.SubscriptionState.ACTIVE -> PushSendResult.SUCCESS
                     WebPush.SubscriptionState.EXPIRED -> PushSendResult.EXPIRED.also {
-                        subscriptionRepo.remove(subscription.endpoint)
+                        subscriptionRepo.deleteById(subscription.id!!)
                     }
                 }
             }
@@ -110,3 +109,4 @@ class PushNotificationService(
         }
     }
 }
+

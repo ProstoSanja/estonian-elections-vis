@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import type { ElectionType } from '@/data/api-types';
+import type { DashboardContentEntry } from './dashboardContent';
 
 const VAPID_PUBLIC_KEY = import.meta.env.VAPID_PUBLIC_KEY || 'YOUR_VAPID_PUBLIC_KEY_HERE';
 
@@ -76,7 +78,10 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
     }
   };
 
-  const subscribe = async (): Promise<PushSubscription | null> => {
+  const subscribe = async (
+    electionType: ElectionType,
+    dashboardEntries: DashboardContentEntry[] = []
+  ): Promise<PushSubscription | null> => {
     try {
       error.value = null;
 
@@ -104,7 +109,7 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
       subscription.value = sub;
       isSubscribed.value = true;
 
-      await sendSubscriptionToBackend(sub);
+      await sendSubscriptionToBackend(sub, electionType, dashboardEntries);
 
       console.log('Push subscription:', sub);
       return sub;
@@ -137,9 +142,26 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
     }
   };
 
-  const sendSubscriptionToBackend = async (sub: PushSubscription): Promise<void> => {
+  const sendSubscriptionToBackend = async (
+    sub: PushSubscription,
+    electionType: ElectionType,
+    dashboardEntries: DashboardContentEntry[] = []
+  ): Promise<void> => {
     try {
-      await axios.post('/api/push/subscribe', sub.toJSON());
+      const subJson = sub.toJSON();
+      const payload = {
+        endpoint: subJson.endpoint,
+        keys: {
+          p256dh: subJson.keys?.p256dh,
+          auth: subJson.keys?.auth,
+        },
+        electionType,
+        dashboardEntries: dashboardEntries.map(entry => ({
+          type: entry.type,
+          code: String(entry.code)
+        }))
+      };
+      await axios.post('/api/push/subscribe', payload);
       console.log('Subscription saved to server');
     } catch (err) {
       console.error('Error sending subscription to backend:', err);
@@ -149,7 +171,11 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
 
   const removeSubscriptionFromBackend = async (sub: PushSubscription): Promise<void> => {
     try {
-      await axios.post('/api/push/unsubscribe', sub.toJSON());
+      const subJson = sub.toJSON();
+      const payload = {
+        endpoint: subJson.endpoint
+      };
+      await axios.post('/api/push/unsubscribe', payload);
       console.log('Subscription removed from server');
     } catch (err) {
       console.error('Error removing subscription from backend:', err);
@@ -170,6 +196,23 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
       }
     } catch (err) {
       console.error('Error checking subscription:', err);
+    }
+  };
+
+  const updateTopics = async (
+    electionType: ElectionType,
+    dashboardEntries: DashboardContentEntry[]
+  ): Promise<void> => {
+    try {
+      if (!isSubscribed.value || !subscription.value) {
+        return;
+      }
+
+      await sendSubscriptionToBackend(subscription.value, electionType, dashboardEntries);
+      console.log('Topics updated on server');
+    } catch (err) {
+      console.error('Error updating topics:', err);
+      error.value = 'Failed to update notification topics';
     }
   };
 
@@ -197,6 +240,7 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
     shouldPrompt,
     subscribe,
     unsubscribe,
+    updateTopics,
     requestPermission,
   };
 });
