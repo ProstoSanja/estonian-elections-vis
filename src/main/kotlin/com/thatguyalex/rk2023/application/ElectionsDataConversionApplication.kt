@@ -30,8 +30,8 @@ class ElectionsDataConversionApplication {
         val districtSort = compareBy<District> { district ->
             val nameLower = district.name.lowercase()
             when {
-                nameLower.contains("Tallinn") || nameLower.contains("Tartu") -> 0
                 nameLower.contains("linnaosa") -> 1
+                nameLower.contains("tallinn") || nameLower.contains("tartu linn") -> 0
                 nameLower.contains("linn") -> 2
                 else -> 3
             }

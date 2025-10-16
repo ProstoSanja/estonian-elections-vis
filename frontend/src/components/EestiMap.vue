@@ -109,7 +109,7 @@ onMounted(async () => {
       mapJson = await import('@/data/rk2023.geo.json');
       break;
     case 'KOV2025':
-      mapJson = await import('@/data/kov2025.singleTallinn.geo.json');
+      mapJson = await import('@/data/kov2025.splitTallinn.geo.json');
       break;
     default:
       console.error(`Unknown election type: ${electionName}`);
