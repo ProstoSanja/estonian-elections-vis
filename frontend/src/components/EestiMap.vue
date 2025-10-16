@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { onMounted, computed, ref } from "vue";
+import { onMounted, onUnmounted, computed, ref } from "vue";
 import { registerMap } from "echarts/core";
 import VChart from "vue-echarts";
 import { useElectionDataStore } from "@/stores/electionData";
@@ -13,6 +13,7 @@ import { BarsArrowDownIcon } from "@heroicons/vue/24/solid";
 const electionDataStore = useElectionDataStore()
 const dashboardContentStore = useDashboardContentStore()
 const mapLoaded = ref(false)
+const mapType = ref(1)
 
 const mapData = computed(() => {
   if (!electionDataStore.electionData) return [];
@@ -70,7 +71,7 @@ const option = computed(() => ({
   },
   series: [{
     type: "map",
-    map: "custom",
+    map: `custom${mapType.value}`,
     aspectScale: 1,
     zoom: 1.2,
     roam: false,
@@ -99,25 +100,38 @@ const option = computed(() => ({
 onMounted(async () => {
   // Dynamically load the map GeoJSON based on the election type
   const electionName = electionDataStore.electionName;
-  let mapJson;
+  let mapChartsJson;
 
   switch (electionName) {
     case 'KOV2021':
-      mapJson = await import('@/data/kov2021.geo.json');
+      mapChartsJson = [await import('@/data/kov2021.geo.json')];
       break;
     case 'RK2023':
-      mapJson = await import('@/data/rk2023.geo.json');
+      mapChartsJson = [await import('@/data/rk2023.geo.json')];
       break;
     case 'KOV2025':
-      mapJson = await import('@/data/kov2025.splitTallinn.geo.json');
+      mapChartsJson = [await import('@/data/kov2025.splitTallinn.geo.json'),
+      await import('@/data/kov2025.singleTallinn.geo.json')];
       break;
     default:
       console.error(`Unknown election type: ${electionName}`);
       return;
   }
 
-  registerMap("custom", (mapJson.default || mapJson) as any);
+  mapChartsJson.forEach((mapJson, index) => {
+    registerMap(`custom${index + 1}`, (mapJson.default || mapJson) as any);
+  });
   mapLoaded.value = true;
+
+  // Toggle mapType every 10 seconds
+  if (mapChartsJson.length > 1) {
+    const intervalId = setInterval(() => {
+      mapType.value = mapType.value == 1 ? 2 : 1;
+    }, 10_000);
+    onUnmounted(() => {
+      clearInterval(intervalId);
+    });
+  }
 });
 
 const handleMapClick = (params: any) => {
