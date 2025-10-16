@@ -5,3 +5,9 @@ enum class ElectionType(val visCode: String, val smallName: String) {
     RK2023("RK_2023", "R23"),
     KOV2025("KOV_2025", "K25"),
 }
+
+enum class ElectionFile(val filename: (String?) -> String) {
+    RESULTS({ "RESULTS.xml" }),
+    CANDIDATE({ "ELECTION_CANDIDATES.xml" }),
+    DETAILED_RESULT_PARISH({ f -> "DETAILED_RESULT_PARISH_${f!!.padStart(4, '0')}.xml" })
+}

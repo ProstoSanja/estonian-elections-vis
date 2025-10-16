@@ -1,9 +1,10 @@
 package com.thatguyalex.rk2023.infrastructure
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.ElectionResultsParser.Companion.mapper
 import com.thatguyalex.rk2023.infrastructure.ElectionResultsParser.Companion.restTemplate
+import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionFile
+import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.elections.GOVResultsData
 import com.thatguyalex.rk2023.infrastructure.classes.elections.GOVResultsRoot
 import org.springframework.http.HttpMethod
@@ -12,9 +13,9 @@ import java.io.File
 
 @Service
 class ElectionsRestRepo {
-    final inline fun <reified T : GOVResultsData> fetchElectionData(electionType: ElectionType): T {
+    final inline fun <reified T : GOVResultsData> fetchElectionData(electionType: ElectionType, file: ElectionFile, fileParam: String? = null): T {
         return restTemplate.exchange(
-            "https://opendata.valimised.ee/api/${electionType.visCode}/RESULTS.xml",
+            "https://opendata.valimised.ee/api/${electionType.visCode}/${file.filename(fileParam)}",
             HttpMethod.GET,
             null,
             String::class.java

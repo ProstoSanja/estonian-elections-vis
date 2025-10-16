@@ -28,6 +28,6 @@ defineProps<{
     </div>
     <XMarkIcon v-if="onRemove"
       class="w-6 h-6 text-slate-600 md:text-slate-500 cursor-pointer hidden group-hover:block group-focus:block focus:block hover:text-slate-400"
-      @click="onRemove?.()" />
+      @click.stop="onRemove?.()" />
   </div>
 </template>
