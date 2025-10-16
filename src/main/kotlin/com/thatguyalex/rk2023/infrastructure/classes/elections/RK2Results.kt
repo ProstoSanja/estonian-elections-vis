@@ -1,16 +1,16 @@
-package com.thatguyalex.rk2023.infrastructure.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class RK2ResultsData(
     @JsonProperty("electionResult")
     val electionResult: RK2Result,
-) : ElectionResultsData
+) : GOVResultsData
 
 data class RK2Result(
     val adminUnitName: String,
     val ehakCode: String,
-    val statistics: ElectionStatistics,
+    val statistics: GOVElectionStatistics,
     @JsonProperty("votesAndMandates")
     val parties: List<RK2Party>,
     val districts: List<RK2District>,
@@ -38,14 +38,14 @@ data class RK2PartyCandidate(
     val finalPositionNumber: Int?,
     val quota: Float,
     val districtNumber: Int,
-    val mandateType: ElectionMandateType?,
+    val mandateType: GOVCandidateMandateType?,
 )
 
 data class RK2District(
     val name: String,
     val number: Int,
     val voteDistribution: List<RK2DistrictVotes>,
-    val statistics: ElectionStatistics
+    val statistics: GOVElectionStatistics
 )
 
 data class RK2DistrictVotes(

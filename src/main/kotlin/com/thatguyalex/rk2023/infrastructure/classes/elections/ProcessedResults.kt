@@ -1,4 +1,4 @@
-package com.thatguyalex.rk2023.application.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 data class ProcessedResults(
     val parties: List<Party>,

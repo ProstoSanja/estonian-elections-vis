@@ -1,12 +1,11 @@
 package com.thatguyalex.rk2023.presentation
 
-import com.thatguyalex.rk2023.application.PushNotificationApplication
 import com.thatguyalex.rk2023.infrastructure.PushSubscriptionRepo
-import com.thatguyalex.rk2023.infrastructure.PushSubscriptionSender
+import com.thatguyalex.rk2023.infrastructure.PushNotificationsSender
 import com.thatguyalex.rk2023.infrastructure.PushSubscriptionTopicRepo
-import com.thatguyalex.rk2023.infrastructure.classes.PushMessage
-import com.thatguyalex.rk2023.infrastructure.classes.PushSubscriptionDto
-import com.thatguyalex.rk2023.infrastructure.classes.UnsubscribeDto
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
+import com.thatguyalex.rk2023.presentation.classes.push.PushSubscriptionDto
+import com.thatguyalex.rk2023.presentation.classes.push.UnsubscribeDto
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 class PushNotificationController(
     private val subscriptionRepo: PushSubscriptionRepo,
     private val topicRepo: PushSubscriptionTopicRepo,
-    private val sender: PushSubscriptionSender
+    private val sender: PushNotificationsSender
 ) {
 
     @PostMapping("/subscribe")

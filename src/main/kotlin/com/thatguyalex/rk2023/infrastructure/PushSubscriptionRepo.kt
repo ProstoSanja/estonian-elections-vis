@@ -1,6 +1,6 @@
 package com.thatguyalex.rk2023.infrastructure
 
-import com.thatguyalex.rk2023.infrastructure.classes.PushSubscription
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscription
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

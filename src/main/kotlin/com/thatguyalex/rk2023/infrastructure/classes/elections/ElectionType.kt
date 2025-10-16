@@ -1,4 +1,4 @@
-package com.thatguyalex.rk2023.application.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 enum class ElectionType(val visCode: String) {
     KOV2021("KOV_2021"),

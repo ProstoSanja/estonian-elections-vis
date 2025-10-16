@@ -1,25 +1,25 @@
-package com.thatguyalex.rk2023.infrastructure.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 import java.time.Instant
 
-data class ElectionResultsRoot<T: ElectionResultsData>(
+data class GOVResultsRoot<T: GOVResultsData>(
     val electionCode: String,
     val reportType: String,
     val generated: Instant,
     val data: T,
 )
 
-interface ElectionResultsData
+interface GOVResultsData
 
 
-data class ElectionStatistics(
+data class GOVElectionStatistics(
     val votes: Int,
     val confirmedPollingStationsCount: Int,
     val totalPollingStationsCount: Int,
     val eVotesCounted: Boolean,
 )
 
-enum class ElectionMandateType {
+enum class GOVCandidateMandateType {
     PERSONAL,
     DISTRICT,
     COMPENSATION,

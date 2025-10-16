@@ -1,9 +1,8 @@
-package com.thatguyalex.rk2023.infrastructure.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import java.time.Instant
 
 /**
  * Main data container
@@ -18,7 +17,7 @@ data class CAND1ResultsData(
     @JacksonXmlProperty(localName = "adminUnit")
     val adminUnits: List<CAND1AdminUnit> = emptyList(),
     val numberOfCandidates: Int,
-): ElectionResultsData
+): GOVResultsData
 
 /**
  * Election district structure for EP/RK elections

@@ -1,19 +1,27 @@
 package com.thatguyalex.rk2023.application
 
-import com.thatguyalex.rk2023.application.classes.Party
-import com.thatguyalex.rk2023.application.classes.ProcessedResults
-import com.thatguyalex.rk2023.infrastructure.classes.*
+import com.thatguyalex.rk2023.infrastructure.classes.elections.Party
+import com.thatguyalex.rk2023.infrastructure.classes.elections.ProcessedResults
+import com.thatguyalex.rk2023.infrastructure.classes.elections.CAND1AdminUnit
+import com.thatguyalex.rk2023.infrastructure.classes.elections.CAND1ResultsData
+import com.thatguyalex.rk2023.infrastructure.classes.elections.GOVResultsData
+import com.thatguyalex.rk2023.infrastructure.classes.elections.KOV2ResultsData
+import com.thatguyalex.rk2023.infrastructure.classes.elections.RK2Result
+import com.thatguyalex.rk2023.infrastructure.classes.elections.RK2ResultsData
+import com.thatguyalex.rk2023.infrastructure.classes.elections.cand1ListtoResult
+import com.thatguyalex.rk2023.infrastructure.classes.elections.kov2ListToResult
+import com.thatguyalex.rk2023.infrastructure.classes.elections.toResult
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
 @Service
-class ProcessingApplication {
+class ElectionsDataProcessingApplication {
 
     companion object {
         private val partySort = compareBy<Party>{ it.name.lowercase().contains("liit") }.thenBy { it.name.lowercase().trim() }
     }
 
-    fun process(rawResults: ElectionResultsData, fallback: ProcessedResults?): ProcessedResults {
+    fun process(rawResults: GOVResultsData, fallback: ProcessedResults?): ProcessedResults {
         return when (rawResults) {
             is RK2ResultsData -> processRK2(rawResults.electionResult)
             is KOV2ResultsData -> processKOV2(rawResults, fallback)

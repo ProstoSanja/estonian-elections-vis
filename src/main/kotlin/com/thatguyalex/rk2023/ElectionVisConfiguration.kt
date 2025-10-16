@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @Configuration
 @EnableScheduling
 @ConfigurationPropertiesScan
-class Rk2023Configuration {
+class ElectionVisConfiguration {
     @Bean
     @Primary
     fun applicationEventMulticaster(): ApplicationEventMulticaster {

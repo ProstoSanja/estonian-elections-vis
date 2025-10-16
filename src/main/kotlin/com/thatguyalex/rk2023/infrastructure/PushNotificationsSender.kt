@@ -3,9 +3,9 @@ package com.thatguyalex.rk2023.infrastructure
 import com.interaso.webpush.VapidKeys
 import com.interaso.webpush.WebPush
 import com.interaso.webpush.WebPushService
-import com.thatguyalex.rk2023.infrastructure.classes.PushMessage
-import com.thatguyalex.rk2023.infrastructure.classes.PushSendResult
-import com.thatguyalex.rk2023.infrastructure.classes.PushSubscription
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushSendResult
+import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscription
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -22,13 +22,13 @@ import java.security.spec.ECPublicKeySpec
 import java.util.Base64
 
 @Component
-class PushSubscriptionSender(
+class PushNotificationsSender(
     private val subscriptionRepo: PushSubscriptionRepo,
     @Value("\${push.vapid.publicKey:}") private val vapidPublicKey: String,
     @Value("\${push.vapid.privateKey:}") private val vapidPrivateKey: String,
     @Value("\${push.vapid.subject:mailto:your-email@example.com}") private val vapidSubject: String
 ) {
-    private val logger = LoggerFactory.getLogger(PushSubscriptionSender::class.java)
+    private val logger = LoggerFactory.getLogger(PushNotificationsSender::class.java)
 
     // Security setup
 
@@ -93,8 +93,8 @@ class PushSubscriptionSender(
             webPushService.send(
                 payload = """{"title":"${message.title}","body":"${message.body}","url":"${message.url}"}""",
                 endpoint = subscription.endpoint,
-                p256dh = subscription.keys.p256dh,
-                auth = subscription.keys.auth
+                p256dh = subscription.p256dh,
+                auth = subscription.auth
             ).let {
                 when (it) {
                     WebPush.SubscriptionState.ACTIVE -> PushSendResult.SUCCESS

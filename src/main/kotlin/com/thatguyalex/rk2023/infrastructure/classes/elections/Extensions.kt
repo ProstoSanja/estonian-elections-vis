@@ -1,9 +1,4 @@
-package com.thatguyalex.rk2023.infrastructure.classes
-
-import com.thatguyalex.rk2023.application.classes.Candidate
-import com.thatguyalex.rk2023.application.classes.District
-import com.thatguyalex.rk2023.application.classes.Party
-import com.thatguyalex.rk2023.application.classes.VoteStats
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 fun RK2PartyCandidate.toResult(partyCode: String) = Candidate(
     forename = forename,
@@ -79,7 +74,7 @@ fun List<KOV2Party>.kov2ListToResult() = Party(
     votes = sumOf { it.votes }
 )
 
-fun ElectionStatistics.toResult() = VoteStats(
+fun GOVElectionStatistics.toResult() = VoteStats(
     votesCounted = votes,
     protocolsCounted = confirmedPollingStationsCount,
     protocolsTotal = totalPollingStationsCount,

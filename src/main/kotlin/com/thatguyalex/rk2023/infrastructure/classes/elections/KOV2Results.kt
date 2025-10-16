@@ -1,12 +1,12 @@
-package com.thatguyalex.rk2023.infrastructure.classes
+package com.thatguyalex.rk2023.infrastructure.classes.elections
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class KOV2ResultsData: ElectionResultsData, ArrayList<KOV2AdminUnitResult>()
+class KOV2ResultsData: GOVResultsData, ArrayList<KOV2AdminUnitResult>()
 
 data class KOV2AdminUnitResult(
     val adminUnit: KOV2AdminUnitDescription,
-    val statistics: ElectionStatistics,
+    val statistics: GOVElectionStatistics,
     val mandateCount: Int?,
     val fivePercentage: Double?,
     val votesAndMandates: List<KOV2Party> = emptyList(),
@@ -41,7 +41,7 @@ data class KOV2Candidate(
     val districtNumber: Int,
     val quota: Float,
     val comparativeFigure: Float,
-    val mandateType: ElectionMandateType?,
+    val mandateType: GOVCandidateMandateType?,
     val elected: Boolean,
     val reserved: Boolean,
 )
