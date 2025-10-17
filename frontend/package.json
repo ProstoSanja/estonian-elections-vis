@@ -16,6 +16,7 @@
     "@heroicons/vue": "^2.2.0",
     "@tanstack/vue-query": "^5.90.2",
     "axios": "^1.12.2",
+    "bowser": "^2.12.1",
     "color": "^5.0.2",
     "echarts": "^6.0.0",
     "pinia": "^3.0.3",

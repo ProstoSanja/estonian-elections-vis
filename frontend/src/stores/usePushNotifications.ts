@@ -217,7 +217,7 @@ export const usePushNotifications = defineStore('pushNotifications', () => {
   };
 
   const shouldPrompt = computed(() => {
-    return isSupported.value && (permission.value === 'default' || permission.value === 'granted') && !isSubscribed.value
+    return isSupported.value && (permission.value === 'default' || permission.value === 'granted') && !isSubscribed.value && !isDenied.value
   });
 
   const isDenied = computed(() => {

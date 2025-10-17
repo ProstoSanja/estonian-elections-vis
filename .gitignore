@@ -44,3 +44,4 @@ out/
 .DS_Store
 MOCK_RESULTS.xml
 stats.html
+email-campaign/

@@ -3,7 +3,7 @@ import { useDashboardContentStore } from '@/stores/dashboardContent'
 import RegionRace from '@/components/RegionRace.vue'
 import { useElectionDataStore } from '@/stores/electionData'
 import CandidateCard from '@/components/CandidateCard.vue'
-import TutorialCard from '@/components/TutorialCard.vue'
+import PushNotificationPrompt from './PushNotificationPrompt.vue'
 
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
@@ -27,5 +27,5 @@ const electionDataStore = useElectionDataStore()
       :class="'self-stretch'"
       :onRemove="() => dashboardContentStore.toggleEntry(entry)" />
   </template>
-  <TutorialCard />
+  <PushNotificationPrompt />
 </template>
