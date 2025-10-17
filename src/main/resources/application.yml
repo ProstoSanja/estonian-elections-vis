@@ -18,5 +18,5 @@ push:
   vapid:
     publicKey: ${VAPID_PUBLIC_KEY:}
     privateKey: ${VAPID_PRIVATE_KEY:}
-    subject: ${VAPID_SUBJECT:legal@thatguyalex.com}
+    subject: ${VAPID_SUBJECT:valimised@valimisohtu.ee}
 

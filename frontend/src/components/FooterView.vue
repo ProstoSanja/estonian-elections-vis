@@ -19,7 +19,7 @@
     <div class="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center text-center">
       <span>© 2025 Aleksandr Tšernõh</span>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
-        href="mailto:alex@thatguyalex.com">Email</a>
+        href="mailto:valimised@valimisohtu.ee">Email</a>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
         href="https://www.linkedin.com/in/prostosanja/">LinkedIn</a>
       <a class="p-2 px-4 bg-slate-700 rounded-xl" rel="noreferrer" target="_blank"
