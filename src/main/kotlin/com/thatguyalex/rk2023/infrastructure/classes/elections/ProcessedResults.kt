@@ -62,7 +62,7 @@ data class VoteStats(
         fun empty() = VoteStats(
             votesCounted = 0,
             protocolsCounted = 0,
-            protocolsTotal = 0,
+            protocolsTotal = 1,
             evotesCounted = false,
         )
     }
