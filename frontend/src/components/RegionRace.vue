@@ -39,7 +39,8 @@ const mandateDividers = computed(() => {
     <div class="flex flex-row gap-4 items-center justify-between md:pl-4 mt-2">
       <span class="text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">{{ race?.name }}</span>
       <span class="flex flex-row items-center gap-4 text-slate-600 md:text-slate-500">
-        <span class="mt-[-2px] text-base font-medium hover:text-slate-400 cursor-pointer whitespace-nowrap" @click="expanded = !expanded">
+        <span class="mt-[-2px] text-base font-medium hover:text-slate-400 cursor-pointer whitespace-nowrap"
+          @click="expanded = !expanded">
           Detailid
           <BarsArrowDownIcon class="w-4 h-4 inline" />
         </span>
@@ -93,13 +94,17 @@ const mandateDividers = computed(() => {
     </div>
 
     <div v-if="voteStatsWithEVotes && expanded"
-      class="flex flex-row items-center justify-between rounded-xl px-4 py-1 text-slate-300 bg-slate-600" :style="{
+      class="flex flex-row gap-2 items-center justify-between rounded-xl px-4 py-1 text-slate-300 bg-slate-600" :style="{
         backgroundImage: `linear-gradient(to right, var(--color-slate-600) 0%, var(--color-slate-600) ${shareToPercentage(voteStatsWithEVotes.protocolsCountedShare)}%, var(--color-slate-700) ${shareToPercentage(voteStatsWithEVotes.protocolsCountedShare)}%, var(--color-slate-700) 100%)`
       }">
-      <span class="font-medium">Hääli edastatud</span>
+      <span class="hidden xs:inline">Hääli edastatud</span>
+      <span class="inline xs:hidden">Edastatud</span>
       <span class="font-mono text-sm">{{ shareToPercentage(voteStatsWithEVotes.protocolsCountedShare) }}% ({{
         voteStatsWithEVotes.originalProtocolsCounted }}/{{ voteStatsWithEVotes.originalProtocolsTotal }}
-        jaoskonda)</span>
+
+      <span class="hidden xs:inline">jaoskonda)</span>
+      <span class="inline xs:hidden">jaosk.)</span>
+      </span>
     </div>
 
     <!-- // Detailed graph -->

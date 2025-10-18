@@ -1,2 +1,7 @@
 @import 'tailwindcss';
 @plugin 'tailwind-scrollbar';
+
+
+@theme {
+    --breakpoint-xs: 25rem;
+}
