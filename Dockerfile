@@ -1,9 +1,13 @@
-# TODO: include frontend build in the build process
-
 FROM azul/zulu-openjdk-alpine:21-latest
-COPY . /build
 WORKDIR /build
-RUN ./gradlew clean bootJar
+
+COPY gradlew gradlew.bat ./
+COPY gradle gradle
+COPY build.gradle.kts settings.gradle.kts ./
+RUN ./gradlew dependencies --no-daemon
+
+COPY src src
+RUN ./gradlew clean bootJar --no-daemon
 
 FROM azul/zulu-openjdk-alpine:21-jre-latest
 COPY --from=0 /build/build/libs/estonian-election-vis-0.0.1.jar app.jar
