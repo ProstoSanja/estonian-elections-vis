@@ -73,9 +73,8 @@ const mandateDividers = computed(() => {
       <XMarkIcon v-if="onRemove" class="w-6 h-6 text-slate-600 md:text-slate-500 cursor-pointer md:invisible group-hover:visible group-focus:visible focus:visible hover:text-slate-400" @click="onRemove?.()" />
     </div>
 
-    <div class="flex flex-col items-stretch flex-1 rounded-xl overflow-clip"
-      v-if="voteStatsWithEVotes && partiesWithParticipation">
-      <div class="flex flex-row h-10 bg-slate-700" v-if="partiesWithParticipation.length > 0">
+    <div class="flex flex-col items-stretch flex-1 rounded-xl overflow-clip">
+      <div class="flex flex-row h-10 bg-slate-700" v-if="voteStatsWithEVotes && partiesWithParticipation && partiesWithParticipation.length > 0">
         <div v-for="party in partiesWithParticipation" :key="party.code"
           class="h-full hover:opacity-70 transition-opacity flex flex-col justify-center items-center" :style="{
             backgroundColor: party.color,
@@ -89,7 +88,7 @@ const mandateDividers = computed(() => {
             getShortPartyCode(party.code, 'ultra') }}</span>
         </div>
       </div>
-      <div class="flex flex-row h-10 bg-slate-700 justify-center items-center" v-else>
+      <div v-else class="flex flex-row h-10 bg-slate-700 justify-center items-center">
         <span class="opacity-70 text-xs lg:text-base overflow-hidden text-ellipsis whitespace-nowrap px-1">
           Ootame andmete laekumist valimiskomisjonist
         </span>
@@ -97,7 +96,7 @@ const mandateDividers = computed(() => {
 
       <!-- // mandate distribution -->
       <div class="flex flex-row h-10 bg-slate-700 relative border-t-[0.5px] border-slate-800"
-        v-if="shouldShowMandateDistribution">
+        v-if="voteStatsWithEVotes && shouldShowMandateDistribution">
         <div v-for="party in partiesWithParticipation" :key="party.code"
           class="h-full hover:opacity-70 transition-opacity flex flex-col justify-center items-center" :style="{
             backgroundColor: party.color,
@@ -115,9 +114,6 @@ const mandateDividers = computed(() => {
         <span class="opacity-70 text-xs lg:text-base overflow-hidden text-ellipsis whitespace-nowrap px-1">Mandaatide
           jaotuse ennustamiseks ootame rohkem andmeid</span>
       </div>
-    </div>
-    <div v-else class="flex flex-row h-10 rounded-xl bg-slate-700 overflow-clip justify-center items-center">
-      <span class="opacity-70">Ootame esimeste protokollide lugemist</span>
     </div>
   </div>
 </template>

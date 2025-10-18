@@ -9,10 +9,11 @@ import { getPartyColor } from "@/data/data-lookups";
 import Color from 'color';
 import type { District } from "@/data/api-types";
 import { BarsArrowDownIcon } from "@heroicons/vue/24/solid";
+import { useLoadingGatekeeper } from "@/stores/useLoadingGatekeeper";
 
+const loadingGatekeeper = useLoadingGatekeeper()
 const electionDataStore = useElectionDataStore()
 const dashboardContentStore = useDashboardContentStore()
-const mapLoaded = ref(false)
 const mapType = ref(1)
 
 const mapData = computed(() => {
@@ -121,7 +122,7 @@ onMounted(async () => {
   mapChartsJson.forEach((mapJson, index) => {
     registerMap(`custom${index + 1}`, (mapJson.default || mapJson) as any);
   });
-  mapLoaded.value = true;
+  loadingGatekeeper.announceLoaded('map')
 
   // Toggle mapType every 10 seconds
   if (mapChartsJson.length > 1) {
@@ -169,8 +170,8 @@ const handleDistrictChange = (event: any) => {
     </select>
   </div>
   <div class="flex items-center justify-center max-h-[55vh] !h-[60vw] md:!h-[35vw] w-full">
-    <VChart v-if="mapLoaded" :option="option" :autoresize="true" class="max-h-[55vh] !h-[60vw] md:!h-[35vw]"
+    <VChart v-if="loadingGatekeeper.mapLoaded" :option="option" :autoresize="true" class="max-h-[55vh] !h-[60vw] md:!h-[35vw]"
       @click="handleMapClick" />
-    <p v-else class="text-gray-500">Kaart on laadimas...</p>
+    <p v-else class="text-slate-400">Kaart on laadimas...</p>
   </div>
 </template>

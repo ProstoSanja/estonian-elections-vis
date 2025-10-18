@@ -5,7 +5,9 @@ import EestiCandidates from '@/components/EestiCandidates.vue'
 import { useElectionDataStore } from '@/stores/electionData'
 import FooterView from '@/components/FooterView.vue'
 import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { useLoadingGatekeeper } from '@/stores/useLoadingGatekeeper'
 
+const loadingGatekeeper = useLoadingGatekeeper()
 const electionDataStore = useElectionDataStore()
 const intervalId = ref<number | null>(null)
 
@@ -51,5 +53,9 @@ const globalVoteCountingStarter = computed<boolean>(() => {
       <!-- <span class="text-xl md:hidden text-slate-400" v-if="!globalVoteCountingStarter">Häälte lugemine algab valimispäeval kell 20:00</span> -->
       <EestiDashboard />
     </div>
+  </div>
+  <div v-if="!loadingGatekeeper.fullyLoaded" class="fixed bottom-0 left-0 right-0 p-4 top-0 bg-slate-800 flex flex-col items-center justify-center gap-4 text-slate-300">
+    <span v-if="loadingGatekeeper.delayedLoading" class="text-3xl">Palun oodake</span>
+    <span v-if="loadingGatekeeper.delayedLoading" class="animate-pulse text-xl">Andmeid laaditakse...</span>
   </div>
 </template>

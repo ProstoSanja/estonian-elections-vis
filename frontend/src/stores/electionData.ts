@@ -5,8 +5,10 @@ import axios from 'axios'
 import {computed} from 'vue'
 import { useElectionName } from './useElectionName'
 import { candidateUniqueId } from '@/data/data-lookups'
+import { useLoadingGatekeeper } from './useLoadingGatekeeper'
 
 export const useElectionDataStore = defineStore('electionData', () => {
+  const loadingGatekeeper = useLoadingGatekeeper()
   const electionData = ref<ProcessedResults | null>(null)
   const lastFetch = ref<Date>(new Date(0))
 
@@ -16,6 +18,7 @@ export const useElectionDataStore = defineStore('electionData', () => {
     const response = await axios.get<ProcessedResults>(`/api/data/${electionName.value}`);
     electionData.value = response.data
     lastFetch.value = new Date()
+    loadingGatekeeper.announceLoaded('data')
     return response.data
   };
 
