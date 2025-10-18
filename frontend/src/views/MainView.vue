@@ -56,7 +56,7 @@ const globalVoteCountingStarter = computed<boolean>(() => {
       <EestiCandidates />
       <FooterView />
     </div>
-    <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 max-md:pb-2 lg:p-8 gap-4 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900 md:scrollbar-thin">
+    <div class="flex flex-col w-full md:w-1/2 lg:w-2/5 p-4 max-md:pb-2 lg:p-8 gap-2 md:in-h-screen items-center md:overflow-y-auto overflow-x-hidden md:border-l-2 order-1 md:order-2 md:border-slate-900 md:scrollbar-thin">
       <h1 class="text-5xl font-bold block md:hidden pt-4">Eesti {{ electionTitle.type }} {{ electionTitle.year }} valimisõhtu</h1>
       <!-- <span class="text-xl md:hidden text-slate-400" v-if="!globalVoteCountingStarter">Häälte lugemine algab valimispäeval kell 20:00</span> -->
       <EestiDashboard />

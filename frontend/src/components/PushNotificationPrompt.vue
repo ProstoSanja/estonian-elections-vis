@@ -55,13 +55,13 @@ const shouldProposeSpecialOnboarding = computed(() => {
 
 const onboardingSteps = computed(() => {
   return [
-      { enabledFor: ['ios26Safari'], textBefore: 'Vajutage', badge: { text: '...' }, textAfter: 'ekraani alumises paremas nurgas' },
-      { enabledFor: ['ios26Safari'], textBefore: 'Vajutage', badge: { icon: 'share', text: 'Share' }, textAfter: 'nuppu' },
-      { enabledFor: ['ios26Other', 'iosPre26'], textBefore: 'Vajutage', badge: { icon: 'share', text: 'Share' }, textAfter: 'nuppu aadressiriba juures' },
-      { enabledFor: ['ios26Safari', 'ios26Other'], textBefore: 'Uusesti valige', badge: { text: '...' }, textAfter: 'dialoogi alumises paremas nurgas' },
-      { enabledFor: ['ios26Safari', 'ios26Other', 'iosPre26'], textBefore: 'Kerige alla ja vajutage', badge: { icon: 'folder', text: 'Add to Home Screen' }, textAfter: 'nuppu' },
-      { enabledFor: ['ios26Safari', 'ios26Other', 'iosPre26'], textBefore: 'Pärast seda saate avada veebilehe koos teavituste toega iPhone koduekraanilt!' }
-    ]
+    { enabledFor: ['ios26Safari'], textBefore: 'Vajutage', badge: { text: '...' }, textAfter: 'ekraani alumises paremas nurgas' },
+    { enabledFor: ['ios26Safari'], textBefore: 'Vajutage', badge: { icon: 'share', text: 'Share' }, textAfter: 'nuppu' },
+    { enabledFor: ['ios26Other', 'iosPre26'], textBefore: 'Vajutage', badge: { icon: 'share', text: 'Share' }, textAfter: 'nuppu aadressiriba juures' },
+    { enabledFor: ['ios26Safari', 'ios26Other'], textBefore: 'Uusesti valige', badge: { text: '...' }, textAfter: 'dialoogi alumises paremas nurgas' },
+    { enabledFor: ['ios26Safari', 'ios26Other', 'iosPre26'], textBefore: 'Kerige alla ja vajutage', badge: { icon: 'folder', text: 'Add to Home Screen' }, textAfter: 'nuppu' },
+    { enabledFor: ['ios26Safari', 'ios26Other', 'iosPre26'], textBefore: 'Pärast seda saate avada veebilehe koos teavituste toega iPhone koduekraanilt!' }
+  ]
     .filter(step => step.enabledFor.includes(specialOnboardingType.value ?? ''))
 })
 
@@ -77,7 +77,7 @@ const isRunningAsPWA = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col self-stretch rounded-xl overflow-hidden p-0.5" :style="{
+  <div class="flex flex-col self-stretch rounded-xl p-0.5" :style="{
     backgroundImage: getBackgroundImage(pushNotifications.isSubscribed)
   }">
     <div v-if="specialOnboardingInProgress" class="flex flex-col gap-4 p-2 pl-4 pr-3">
@@ -133,7 +133,8 @@ const isRunningAsPWA = computed(() => {
 
     <!-- Tutorial -->
     <div v-if="!specialOnboardingInProgress"
-      class="flex flex-row items-center gap-4 self-stretch text-slate-500 hover:text-slate-400 transition-colors bg-slate-800 rounded-b-xl p-2 pl-4 pr-3" :class="{ 'rounded-xl': pushNotifications.isDenied }">
+      class="flex flex-row items-center gap-4 self-stretch text-slate-500 hover:text-slate-400 transition-colors bg-slate-800 rounded-b-xl p-2 pl-4 pr-3"
+      :class="{ 'rounded-xl': pushNotifications.isDenied }">
       <CursorArrowRaysIcon class="min-w-6 h-6 max-md:hidden" />
       <ArrowTurnLeftDownIcon class="min-w-6 h-6 md:hidden" />
       <span class="text-base md:hidden">Valige regiooni või vajutage kandidaadi nimele, et lisada neid siin jälgimiseks

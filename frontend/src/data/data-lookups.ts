@@ -58,3 +58,7 @@ export const getShortPartyCode = (partyCode: string, type: 'ultra' | 'very' = 'u
 export const candidateUniqueId = (candidate: Candidate) => {
   return `${candidate.primaryDistrictNumber}-${candidate.regNumber}`
 }
+
+export const shareToPercentage = (share: number, decimals: number = 2) => {
+  return (share * 100).toFixed(decimals)
+}
