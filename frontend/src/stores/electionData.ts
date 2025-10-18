@@ -16,6 +16,9 @@ export const useElectionDataStore = defineStore('electionData', () => {
 
   const fetchElectionData = async (): Promise<ProcessedResults> => {
     const response = await axios.get<ProcessedResults>(`/api/data/${electionName.value}`);
+    if (response.data.candidates.length === 0 && response.data.districts.length === 0 && response.data.parties.length === 0) {
+      throw new Error('Empty response data')
+    }
     electionData.value = response.data
     lastFetch.value = new Date()
     loadingGatekeeper.announceLoaded('data')

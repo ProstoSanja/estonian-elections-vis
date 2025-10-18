@@ -9,7 +9,7 @@ import { useLoadingGatekeeper } from '@/stores/useLoadingGatekeeper'
 
 const loadingGatekeeper = useLoadingGatekeeper()
 const electionDataStore = useElectionDataStore()
-const intervalId = ref<number | null>(null)
+const timeoutId = ref<number | null>(null)
 
 const electionTitle = computed(() => {
   return {
@@ -18,17 +18,26 @@ const electionTitle = computed(() => {
   }
 })
 
-onMounted(() => {
-  electionDataStore.fetchElectionData()
+const refreshData = async () => {
+  if (timeoutId.value !== null) {
+    clearTimeout(timeoutId.value)
+  }
+  try {
+    await electionDataStore.fetchElectionData()
+    setTimeout(refreshData, 10 * 1000)
+  } catch {
+    setTimeout(refreshData, 3 * 1000)
+  }
+}
 
-  intervalId.value = window.setInterval(() => {
-    electionDataStore.fetchElectionData()
-  }, 15 * 1000)
+onMounted(async () => {
+  await electionDataStore.fetchElectionData()
+  refreshData()
 })
 
 onUnmounted(() => {
-  if (intervalId.value !== null) {
-    clearInterval(intervalId.value)
+  if (timeoutId.value !== null) {
+    clearTimeout(timeoutId.value)
   }
 })
 
