@@ -3,8 +3,8 @@
 import { onMounted, onUnmounted, computed, ref } from "vue";
 import { registerMap } from "echarts/core";
 import VChart from "vue-echarts";
-import { useElectionDataStore } from "@/stores/electionData";
-import { useDashboardContentStore } from "@/stores/dashboardContent";
+import { useElectionDataStore } from "@/stores/useElectionData";
+import { useDashboardContentStore } from "@/stores/useDashboardContent";
 import { getPartyColor } from "@/data/data-lookups";
 import Color from 'color';
 import type { District } from "@/data/api-types";

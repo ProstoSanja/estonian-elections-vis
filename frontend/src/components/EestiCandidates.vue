@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useElectionDataStore } from '@/stores/electionData'
+import { useElectionDataStore } from '@/stores/useElectionData'
 import { ref, computed } from 'vue'
 import CandidateCard from './CandidateCard.vue'
 import LoadMoreButton from './LoadMoreButton.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { XMarkIcon } from '@heroicons/vue/16/solid'
 import { tokenizeString } from '@/data/search'
-import { useDashboardContentStore } from '@/stores/dashboardContent'
+import { useDashboardContentStore } from '@/stores/useDashboardContent'
 import { candidateUniqueId } from '@/data/data-lookups'
 
 const electionDataStore = useElectionDataStore()

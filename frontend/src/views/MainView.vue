@@ -2,7 +2,7 @@
 import MapComponent from '@/components/EestiMap.vue'
 import EestiDashboard from '@/components/EestiDashboard.vue'
 import EestiCandidates from '@/components/EestiCandidates.vue'
-import { useElectionDataStore } from '@/stores/electionData'
+import { useElectionDataStore } from '@/stores/useElectionData'
 import FooterView from '@/components/FooterView.vue'
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useLoadingGatekeeper } from '@/stores/useLoadingGatekeeper'
@@ -31,7 +31,6 @@ const refreshData = async () => {
 }
 
 onMounted(async () => {
-  await electionDataStore.fetchElectionData()
   refreshData()
 })
 

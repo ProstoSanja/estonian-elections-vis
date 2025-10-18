@@ -3,7 +3,7 @@ import {defineStore} from 'pinia'
 import type { Candidate, District, Party, ProcessedResults } from '@/data/api-types'
 import axios from 'axios'
 import {computed} from 'vue'
-import { useElectionName } from './useElectionName'
+import { useElectionName } from '../composable/useElectionName'
 import { candidateUniqueId } from '@/data/data-lookups'
 import { useLoadingGatekeeper } from './useLoadingGatekeeper'
 

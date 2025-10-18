@@ -1,6 +1,6 @@
 import {ref, watch} from 'vue'
 import {defineStore} from 'pinia'
-import { useElectionName } from './useElectionName'
+import { useElectionName } from '../composable/useElectionName'
 import { usePushNotifications } from './usePushNotifications'
 
 export type DashboardContentEntry = {

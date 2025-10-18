@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePushNotifications } from '@/stores/usePushNotifications';
-import { useDashboardContentStore } from '@/stores/dashboardContent';
-import { useElectionName } from '@/stores/useElectionName';
+import { useDashboardContentStore } from '@/stores/useDashboardContent';
+import { useElectionName } from '@/composable/useElectionName';
 import { ref, computed } from 'vue';
 import { BellAlertIcon, CheckBadgeIcon, CursorArrowRaysIcon, ArrowTurnLeftDownIcon, ArrowUpOnSquareIcon, FolderPlusIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import Bowser from 'bowser';

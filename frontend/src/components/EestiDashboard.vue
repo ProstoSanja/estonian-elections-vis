@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useDashboardContentStore } from '@/stores/dashboardContent'
+import { useDashboardContentStore } from '@/stores/useDashboardContent'
 import RegionRace from '@/components/RegionRace.vue'
-import { useElectionDataStore } from '@/stores/electionData'
+import { useElectionDataStore } from '@/stores/useElectionData'
 import CandidateCard from '@/components/CandidateCard.vue'
 import PushNotificationPrompt from './PushNotificationPrompt.vue'
 

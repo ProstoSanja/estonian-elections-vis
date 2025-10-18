@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import type { ElectionType } from '@/data/api-types';
-import type { DashboardContentEntry } from './dashboardContent';
+import type { DashboardContentEntry } from './useDashboardContent';
 
 const VAPID_PUBLIC_KEY = import.meta.env.VAPID_PUBLIC_KEY || 'YOUR_VAPID_PUBLIC_KEY_HERE';
 
