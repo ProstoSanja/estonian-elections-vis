@@ -4,6 +4,7 @@ import RegionRace from '@/components/RegionRace.vue'
 import { useElectionDataStore } from '@/stores/useElectionData'
 import CandidateCard from '@/components/CandidateCard.vue'
 import PushNotificationPrompt from './PushNotificationPrompt.vue'
+import ErrPlayer from './ErrPlayer.vue'
 
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
@@ -13,6 +14,7 @@ const electionDataStore = useElectionDataStore()
 
 </script>
 <template>
+  <ErrPlayer />
   <template v-for="entry in dashboardContentStore.dashboardContent" :key="`${entry.type}-${entry.code}`">
     <RegionRace v-if="entry.type === 'REGION'" :district="electionDataStore.districtsByNumber[Number(entry.code)]"
       :onRemove="() => dashboardContentStore.toggleEntry(entry)" />
