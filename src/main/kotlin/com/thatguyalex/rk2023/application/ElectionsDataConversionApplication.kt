@@ -19,6 +19,7 @@ import com.thatguyalex.rk2023.infrastructure.classes.elections.getTotalVotes
 import com.thatguyalex.rk2023.infrastructure.classes.elections.kov2ListToResult
 import com.thatguyalex.rk2023.infrastructure.classes.elections.subDistrictCodeFor
 import com.thatguyalex.rk2023.infrastructure.classes.elections.toResult
+import com.thatguyalex.rk2023.infrastructure.classes.helpers.tokenizeString
 import org.springframework.stereotype.Service
 
 @Service
@@ -53,19 +54,19 @@ class ElectionsDataConversionApplication {
             .flatMap { it.votesAndMandates.map { party -> Triple(it.adminUnit.ehakCode.toInt(), it.adminUnit.parentEhakCode?.toInt(), party) } }
             .flatMap { (ehakCode, parentEhakCode, party) ->  party.candidates.map { cand ->
                 val districtCode = if (ehakCode == 784) ehakCode.subDistrictCodeFor(cand.districtNumber) else null
-                cand.toResult(party.code ?: "ÜKSIK", ehakCode, listOfNotNull(ehakCode, parentEhakCode, districtCode))
+                cand.toResult(party.code ?: "ÜKSIK", party.name,ehakCode, listOfNotNull(ehakCode, parentEhakCode, districtCode))
             } }
         val districts = rawResults.map { it.toResult(rawResults) }
         val parties = rawResults
             .flatMap { it.votesAndMandates }
-            .groupBy { it.code ?: "ÜKSIK" }
+            .groupBy { (it.code ?: "ÜKSIK") to tokenizeString(it.name) }
             .map { it.value.kov2ListToResult() }
         return ProcessedResults(parties, districts, candidates)
     }
 
     private fun processRK2(rawResults: RK2Result): ProcessedResults {
         val candidates = rawResults.parties
-            .flatMap { it.candidates.map { cand -> cand.toResult(it.code ?: "ÜKSIK") } }
+            .flatMap { it.candidates.map { cand -> cand.toResult(it.code ?: "ÜKSIK", it.name ?: "Üksikkandidaadid") } }
         val globalDistrict = rawResults.toResult()
         val districts = rawResults.districts.map { it.toResult(rawResults.parties.flatMap { it.candidates }) }
             .plus(globalDistrict)
@@ -82,7 +83,7 @@ class ElectionsDataConversionApplication {
                             val ehakCode = adminUnit.ehakCode.toInt()
                             val districtCode = if (ehakCode == 784) ehakCode.subDistrictCodeFor(district.districtNumber) else null
                             val allCodes = parentUnits.map { parent -> parent.ehakCode.toInt() } + ehakCode + districtCode
-                            candidate.toResult(party.partyCode, ehakCode, allCodes.filterNotNull())
+                            candidate.toResult(party.partyCode, party.partyName,ehakCode, allCodes.filterNotNull())
                         }
                     }
                 }
@@ -90,7 +91,7 @@ class ElectionsDataConversionApplication {
         val parties = rawResults.adminUnits.flatMap { unpackCAND1(emptyList(), it) { _, adminUnit ->
             adminUnit.districts.flatMap { district -> district.parties }
         } }
-            .groupBy { party -> party.partyCode }
+            .groupBy { party -> party.partyCode to tokenizeString(party.partyName) } // partyCode turns out is not unique, holy shit
             .map {
                 it.value.cand1ListtoResult()
             }

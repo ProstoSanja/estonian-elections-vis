@@ -3,13 +3,15 @@ package com.thatguyalex.rk2023.infrastructure.classes.elections
 import com.thatguyalex.rk2023.application.ElectionsDataConversionApplication.Companion.candidateSort
 import com.thatguyalex.rk2023.application.ElectionsDataConversionApplication.Companion.districtSort
 import com.thatguyalex.rk2023.application.ElectionsDataConversionApplication.Companion.partySort
+import com.thatguyalex.rk2023.infrastructure.classes.helpers.tokenizeString
+
 
 class ProcessedResults(
     val partiesList: List<Party>,
     val districtsList: List<District>,
     val candidatesList: List<Candidate>,
 ) {
-    val parties: Map<String, Party> = partiesList.associateBy { it.code }
+    val parties: Map<Pair<String, String>, Party> = partiesList.associateBy { it.code to tokenizeString(it.name) } // TODO: This is a temp solution after i found out codes are not unique
     val districts: Map<Int, District> = districtsList.associateBy { it.number }
     val candidates: Map<String, Candidate> = candidatesList.associateBy { it.uniqueId }
 
@@ -74,6 +76,7 @@ data class Candidate(
     val regNumber: Int,
     val votes: Int,
     val partyCode: String,
+    val partyName: String,
     val primaryDistrictNumber: Int,
     val districtNumbers: List<Int>,
 ) {

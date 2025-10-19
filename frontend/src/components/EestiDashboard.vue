@@ -16,15 +16,11 @@ const electionDataStore = useElectionDataStore()
 </script>
 <template>
   <template v-for="entry in dashboardContentStore.dashboardContent" :key="`${entry.type}-${entry.code}`">
-    <RegionRace
-      v-if="entry.type === 'REGION'"
-      :district="electionDataStore.districtsByNumber[Number(entry.code)]"
-      :onRemove="() => dashboardContentStore.toggleEntry(entry)"
-    />
+    <RegionRace v-if="entry.type === 'REGION'" :district="electionDataStore.districtsByNumber[Number(entry.code)]"
+      :onRemove="() => dashboardContentStore.toggleEntry(entry)" />
 
-    <CandidateCard v-if="entry.type === 'CANDIDATE' && electionDataStore.candidatesByToken[entry.code]" :candidate="electionDataStore.candidatesByToken[entry.code]"
-      :party="electionDataStore.partiesByCode[electionDataStore.candidatesByToken[entry.code]?.partyCode ?? '']"
-      :class="'self-stretch'"
+    <CandidateCard v-if="entry.type === 'CANDIDATE' && electionDataStore.candidatesByToken[entry.code]"
+      :candidate="electionDataStore.candidatesByToken[entry.code]" :class="'self-stretch'"
       :onRemove="() => dashboardContentStore.toggleEntry(entry)" />
   </template>
   <PushNotificationPrompt />

@@ -32,6 +32,7 @@ export interface Candidate {
   regNumber: number;
   votes: number;
   partyCode: string;
+  partyName: string;
   primaryDistrictNumber: number;
   districtNumbers: number[];
 }

@@ -25,8 +25,9 @@ const candidates = computed(() => {
       return true
     })
     .filter(candidate => {
-      if (partySearch.value) return candidate.partyCode === partySearch.value
-      return true
+      if (!partySearch.value) return true
+      const candidatePartyToken = candidate.partyCode + '|' + tokenizeString(candidate.partyName)
+      return candidatePartyToken === partySearch.value
     })
     .filter(candidate => {
       if (!searchToken) return true
@@ -69,7 +70,7 @@ const searchableDistricts = computed(() => {
             class="rounded-xl p-2 pl-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full max-w-full appearance-none"
             :class="{ 'text-slate-400': partySearch.length <= 0 }" v-model="partySearch">
             <option value="">Kõik erakonnad</option>
-            <option v-for="party in electionDataStore.electionData?.parties" :value="party.code" :key="party.code">{{
+            <option v-for="party in electionDataStore.electionData?.parties" :value="party.code + '|' + tokenizeString(party.name)" :key="party.code + '|' + tokenizeString(party.name)">{{
               party.name }}</option>
           </select>
           <XMarkIcon class="absolute right-3 w-6 h-6 text-slate-400 cursor-pointer" @click.stop="partySearch = ''"

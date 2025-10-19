@@ -1,11 +1,12 @@
 package com.thatguyalex.rk2023.infrastructure.classes.elections
 
-fun RK2PartyCandidate.toResult(partyCode: String) = Candidate(
+fun RK2PartyCandidate.toResult(partyCode: String, partyName: String) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = registrationNumber,
     votes = votes,
     partyCode = partyCode,
+    partyName = partyName,
     primaryDistrictNumber = districtNumber,
     districtNumbers = listOf(districtNumber),
 )
@@ -40,12 +41,13 @@ fun RK2Party.toResult() = Party(
     votes = votes,
 )
 
-fun KOV2Candidate.toResult(partyCode: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
+fun KOV2Candidate.toResult(partyCode: String, partyName: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = registrationNumber,
     votes = votes,
     partyCode = partyCode,
+    partyName = partyName,
     primaryDistrictNumber = primaryDistrictNumber,
     districtNumbers = districtNumbers
 )
@@ -83,12 +85,13 @@ fun GOVElectionStatistics.toResult() = VoteStats(
     evotesCounted = eVotesCounted,
 )
 
-fun CAND1Candidate.toResult(partyCode: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
+fun CAND1Candidate.toResult(partyCode: String, partyName: String, primaryDistrictNumber: Int, districtNumbers: List<Int>) = Candidate(
     forename = forename,
     surename = surname,
     regNumber = candidateRegNumber,
     votes = 0,
     partyCode = partyCode,
+    partyName = partyName,
     primaryDistrictNumber = primaryDistrictNumber,
     districtNumbers = districtNumbers,
 )
