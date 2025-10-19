@@ -86,7 +86,7 @@ const searchableDistricts = computed(() => {
       </div>
     </div>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(min(16rem,100%),1fr))] gap-4"
-      :key="`candidates-${candidateSearch}-${partySearch}`">
+      :key="`candidates-${electionDataStore.lastFetch}-${candidateSearch}-${partySearch}-${districtSearch}`">
       <CandidateCard v-for="candidate in candidates" :key="candidate.regNumber" :candidate="candidate"
         :party="electionDataStore.electionData?.parties.find(party => party.code === candidate.partyCode)"
         @click="dashboardContentStore.toggleEntry({ type: 'CANDIDATE', code: candidateUniqueId(candidate) })" />

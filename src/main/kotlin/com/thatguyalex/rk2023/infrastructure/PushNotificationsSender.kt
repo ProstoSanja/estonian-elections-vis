@@ -107,7 +107,7 @@ class PushNotificationsSender(
                 }
             }
         } catch (e: Exception) {
-            logger.error("Failed to send push notification to ${subscription.endpoint}", e)
+            logger.error("Failed to send push notification to ${subscription.endpoint}, Unsubscribed")
             return PushSendResult.FAILED
         }
     }
