@@ -32,15 +32,17 @@ data class PushSubscriptionDto(
     }
     
     fun toTopics(subscriptionId: Long): List<PushSubscriptionTopic> {
-        return dashboardEntries.map { entry ->
-            PushSubscriptionTopic(
-                id = null,
-                pushSubscriptionId = subscriptionId,
-                electionType = electionType,
-                topicType = entry.type,
-                topicCode = entry.code
-            )
-        }
+        return dashboardEntries
+            .distinctBy { "${it.type}-${it.code}" } // Deduplicate entries
+            .map { entry ->
+                PushSubscriptionTopic(
+                    id = null,
+                    pushSubscriptionId = subscriptionId,
+                    electionType = electionType,
+                    topicType = entry.type,
+                    topicCode = entry.code
+                )
+            }
     }
 }
 
