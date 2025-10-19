@@ -18,12 +18,12 @@ class PushNotificationApplication(
 ) {
     private val logger = LoggerFactory.getLogger(PushNotificationApplication::class.java)
 
-    fun sendMessageToAllElectionSubscribers(electionType: ElectionType): Int {
+    fun sendMessageToAllElectionSubscribers(electionType: ElectionType, message: String? = null): Int {
         return topicRepo.findSubscriptionIdsByElection(electionType)
             .let { subscriptionRepo.findAllByIds(it) }
             .let { sender.sendNotificationTo(it, PushMessage(
                 title = "$electionType Valimised",
-                body = "Hääletamine on lõppenud",
+                body = message ?: "Hääletamine on lõppenud",
             )) }
 
     }

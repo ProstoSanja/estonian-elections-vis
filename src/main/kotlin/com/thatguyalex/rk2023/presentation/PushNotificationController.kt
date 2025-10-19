@@ -51,11 +51,11 @@ class PushNotificationController(
     }
 
     @GetMapping("/announce")
-    fun sendTestNotification(@RequestParam electionType: ElectionType, @RequestParam password: String): Int {
+    fun sendTestNotification(@RequestParam electionType: ElectionType, @RequestParam password: String, @RequestParam message: String?): Int {
         if (password != adminPushKey) {
             throw IllegalArgumentException("Wrong password")
         }
-        return pushNotificationApplication.sendMessageToAllElectionSubscribers(electionType)
+        return pushNotificationApplication.sendMessageToAllElectionSubscribers(electionType, message)
     }
 }
 
