@@ -37,11 +37,8 @@ const candidates = computed(() => {
     .slice(0, candidateCount.value)
 })
 
-// TODO: temp for KOV, since parent districts do not work, because candidate numbers are only assigned to children districts
 const searchableDistricts = computed(() => {
-  return electionDataStore.electionData?.districts.filter(district => {
-    return !district.name.toLowerCase().includes('maakond') && !district.name.toLowerCase().includes('vabariik')
-  })
+  return electionDataStore.electionData?.districts.filter(district => district.number != 0)
 })
 
 </script>
