@@ -15,6 +15,8 @@ server:
 # Push Notification Configuration
 # Generate VAPID keys using: npx web-push generate-vapid-keys
 push:
+  admin:
+    key: ${PUSH_ADMIN_KEY:}
   vapid:
     publicKey: ${VAPID_PUBLIC_KEY:}
     privateKey: ${VAPID_PRIVATE_KEY:}
