@@ -40,6 +40,22 @@ const mapData = computed(() => {
       (current.votes > prev.votes) ? current : prev
     );
 
+    if (leadingParty.votes === 0) {
+      return {
+        name: district.name,
+        value: 0,
+        electionDistrict: district,
+        itemStyle: {
+          areaColor: '#cccccc'
+        },
+        emphasis: {
+          itemStyle: {
+            areaColor: '#aaaaaa'
+          }
+        }
+      };
+    }
+
     const leadingPartyColor = Color(getPartyColor(leadingParty.code))
 
     return {
