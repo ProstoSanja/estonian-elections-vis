@@ -1,19 +1,24 @@
 package com.thatguyalex.rk2023.presentation
 
+import com.thatguyalex.rk2023.application.PushNotificationApplication
 import com.thatguyalex.rk2023.infrastructure.PushSubscriptionRepo
 import com.thatguyalex.rk2023.infrastructure.PushNotificationsSender
 import com.thatguyalex.rk2023.infrastructure.PushSubscriptionTopicRepo
+import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
 import com.thatguyalex.rk2023.presentation.classes.push.PushSubscriptionDto
 import com.thatguyalex.rk2023.presentation.classes.push.UnsubscribeDto
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpClientErrorException
 
 @RestController
 @RequestMapping("/api/push")
 class PushNotificationController(
     private val subscriptionRepo: PushSubscriptionRepo,
     private val topicRepo: PushSubscriptionTopicRepo,
-    private val sender: PushNotificationsSender
+    private val pushNotificationApplication: PushNotificationApplication,
+    @Value("\${push.admin.key}") private val adminPushKey: String,
 ) {
 
     @PostMapping("/subscribe")
@@ -45,12 +50,12 @@ class PushNotificationController(
         subscriptionRepo.deleteByEndpoint(unsubscribeDto.endpoint)
     }
 
-    @PostMapping("/test")
-    fun sendTestNotification(): Int {
-        return sender.sendNotificationTo(subscriptionRepo.findAll().toList(), PushMessage(
-            title = "Test Title",
-            body = "Test message"
-        ))
+    @GetMapping("/announce")
+    fun sendTestNotification(@RequestParam electionType: ElectionType, @RequestParam password: String): Int {
+        if (password != adminPushKey) {
+            throw IllegalArgumentException("Wrong password")
+        }
+        return pushNotificationApplication.sendMessageToAllElectionSubscribers(electionType)
     }
 }
 
