@@ -108,6 +108,7 @@ class PushNotificationsSender(
             }
         } catch (e: Exception) {
             logger.error("Failed to send push notification to ${subscription.endpoint}, Unsubscribed")
+            subscriptionRepo.deleteById(subscription.id!!)
             return PushSendResult.FAILED
         }
     }
