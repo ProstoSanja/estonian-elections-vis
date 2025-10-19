@@ -120,7 +120,7 @@ const mandateDividers = computed(() => {
         }">
         <span class="font-medium group-hover/detailed:hidden">{{ party.code }}</span>
         <span class="font-medium hidden group-hover/detailed:block">{{ party.name }}</span>
-        <span class="font-mono text-sm">{{ (party.shareOfCountedVotes * 100).toFixed(2) }}% ({{
+        <span class="font-mono text-sm">{{ shareToPercentage(party.shareOfCountedVotes) }}% ({{
           party.votes.toLocaleString() }})</span>
       </div>
     </div>
