@@ -8,8 +8,6 @@ import PushNotificationPrompt from './PushNotificationPrompt.vue'
 const dashboardContentStore = useDashboardContentStore()
 const electionDataStore = useElectionDataStore()
 
-// TODO: Detailed views for candidates and parties in sidebar. enabled with toggle
-// TODO: Some indicator of how many votes have been counted, for region and for candidates?
 // TODO: For candidates add stats from previous elections? Same for parties?
 // TODO: Exit polls/predictions for these elections?
 

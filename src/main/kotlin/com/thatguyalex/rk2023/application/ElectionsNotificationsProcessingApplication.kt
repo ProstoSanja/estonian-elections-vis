@@ -69,7 +69,8 @@ class ElectionsNotificationsProcessingApplication(
             .associateWith { newDistrict -> old.districts[newDistrict.number] }
             .mapNotNull { (newDistrict, oldDistrict) ->
                 if (oldDistrict == null) return@mapNotNull null
-                if (oldDistrict.voteStats.protocolsCounted >= newDistrict.voteStats.protocolsCounted) return@mapNotNull null
+                if (oldDistrict.voteStats.protocolsCounted >= newDistrict.voteStats.protocolsCounted
+                    || (!oldDistrict.voteStats.evotesCounted && newDistrict.voteStats.evotesCounted)) return@mapNotNull null
                 val regionStats = "(${newDistrict.voteStats.protocolsCounted}/${newDistrict.voteStats.protocolsTotal} jaoskonda)"
                 val message = newDistrict.parties
                     .associate { party -> party.code to round(party.votes.toDouble() * 100 / newDistrict.voteStats.votesCounted).toInt() }
