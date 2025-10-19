@@ -3,10 +3,10 @@ package com.thatguyalex.rk2023.infrastructure
 import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscriptionTopic
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushTopicType
+import org.springframework.data.jdbc.repository.query.Modifying
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 interface PushSubscriptionTopicRepo : CrudRepository<PushSubscriptionTopic, Long> {
@@ -21,8 +21,9 @@ interface PushSubscriptionTopicRepo : CrudRepository<PushSubscriptionTopic, Long
         topicCode: String
     ): List<PushSubscriptionTopic>
     
-    @Transactional
-    fun deleteByPushSubscriptionId(subscriptionId: Long): Long
+    @Modifying
+    @Query("DELETE FROM push_subscriptions_topics WHERE push_subscription_id = :subscriptionId")
+    fun deleteByPushSubscriptionId(subscriptionId: Long): Int
     
     @Query("""
         SELECT DISTINCT pst.push_subscription_id 

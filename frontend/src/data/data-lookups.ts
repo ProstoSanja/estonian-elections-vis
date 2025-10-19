@@ -60,5 +60,6 @@ export const candidateUniqueId = (candidate: Candidate) => {
 }
 
 export const shareToPercentage = (share: number, decimals: number = 2) => {
+  if (isNaN(share)) return '0.00'
   return (share * 100).toFixed(decimals)
 }

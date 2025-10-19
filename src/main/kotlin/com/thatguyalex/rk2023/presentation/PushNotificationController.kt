@@ -9,6 +9,7 @@ import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
 import com.thatguyalex.rk2023.presentation.classes.push.PushSubscriptionDto
 import com.thatguyalex.rk2023.presentation.classes.push.UnsubscribeDto
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 
@@ -22,6 +23,7 @@ class PushNotificationController(
 ) {
 
     @PostMapping("/subscribe")
+    @Transactional
     fun subscribe(@RequestBody subscriptionDto: PushSubscriptionDto) {
         // Check if subscription already exists by endpoint
         val existing = subscriptionRepo.findByEndpoint(subscriptionDto.endpoint)
@@ -35,10 +37,12 @@ class PushNotificationController(
             subscriptionRepo.save(subscriptionDto.toEntity())
         }
 
-        if (subscriptionDto.dashboardEntries.isNotEmpty()) {
-            // Delete old topics and create new ones
-            subscription.id!!.let { subscriptionId ->
-                topicRepo.deleteByPushSubscriptionId(subscriptionId)
+        // Always delete existing topics first to avoid conflicts
+        subscription.id!!.let { subscriptionId ->
+            topicRepo.deleteByPushSubscriptionId(subscriptionId)
+            
+            // Only insert new topics if there are dashboard entries
+            if (subscriptionDto.dashboardEntries.isNotEmpty()) {
                 val topics = subscriptionDto.toTopics(subscriptionId)
                 topicRepo.saveAll(topics)
             }
