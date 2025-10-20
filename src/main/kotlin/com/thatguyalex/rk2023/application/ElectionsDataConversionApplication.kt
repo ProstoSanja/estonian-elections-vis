@@ -139,7 +139,7 @@ class ElectionsDataConversionApplication {
                 }.sortedByDescending { it.votes },
                 voteStats = VoteStats(
                     votesCounted = district.votesDistributionRow.getTotalVotes(),
-                    protocolsCounted = district.votesDistributionRow.count { it.name.contains("J") && (it.value?.toInt() ?: 0) > 0 },
+                    protocolsCounted = district.votesDistributionRow.count { it.name.contains("J") },
                     protocolsTotal = district.votesDistributionRow.count { it.name.contains("J") },
                     evotesCounted = district.votesDistributionRow.getEVotes() > 0
                 ),
