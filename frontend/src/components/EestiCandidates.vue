@@ -78,7 +78,7 @@ const searchableDistricts = computed(() => {
         <div class="flex flex-row relative items-center flex-1 ">
           <MagnifyingGlassIcon class="absolute left-3 w-5 h-5 text-slate-400" />
           <input
-            class="rounded-xl p-2 pl-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full max-w-full"
+            class="rounded-xl p-2 pl-10 bg-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-slate-600 w-full max-w-full placeholder:text-slate-400"
             type="text" v-model="candidateSearch" placeholder="Kandidaadi nimi või number" />
           <XMarkIcon class="absolute right-3 w-6 h-6 text-slate-400 cursor-pointer" @click.stop="candidateSearch = ''"
             v-if="candidateSearch.length > 0" />
