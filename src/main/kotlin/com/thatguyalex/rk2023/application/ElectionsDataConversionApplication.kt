@@ -83,7 +83,7 @@ class ElectionsDataConversionApplication {
                         .map { candidate ->
                             val ehakCode = adminUnit.ehakCode.toInt()
                             val districtCode = if (ehakCode == 784) ehakCode.subDistrictCodeFor(district.districtNumber) else null
-                            val allCodes = parentUnits.map { parent -> parent.ehakCode.toInt() } + ehakCode + districtCode
+                            val allCodes = parentUnits.map { parent -> parent.ehakCode.toInt() } + ehakCode + districtCode + 0
                             candidate.toResult(party.partyCode, party.partyName,ehakCode, allCodes.filterNotNull())
                         }
                     }
@@ -140,13 +140,19 @@ class ElectionsDataConversionApplication {
                 voteStats = VoteStats(
                     votesCounted = district.votesDistributionRow.getTotalVotes(),
                     protocolsCounted = district.votesDistributionRow.count { it.name.contains("J") },
-                    protocolsTotal = district.votesDistributionRow.count { it.name.contains("J") },
+                    protocolsTotal = district.votesDistributionRow.count { it.name.contains("J") }, // TODO This data is not available in realtime, so it always shows 1/1, 3/3, etc...
                     evotesCounted = district.votesDistributionRow.getEVotes() > 0
                 ),
                 totalMandates = district.mandateCount ?: 0
             )
         }
-
-        return ProcessedResults(emptyList(), districts, emptyList())
+        val candidates = rawResults.districts.flatMap { district ->
+            district.voteDistributionByParties.flatMap { party ->
+                party.candidates.mapNotNull { candidate ->
+                    fallback?.candidates[Candidate.buildUniqueId(parentRegion, candidate.candidateRegNumber)]?.copy(votes = candidate.votesDistributionRow.getTotalVotes())
+                }
+            }
+        }
+        return ProcessedResults(emptyList(), districts, candidates)
     }
 }

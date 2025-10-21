@@ -80,5 +80,11 @@ data class Candidate(
     val primaryDistrictNumber: Int,
     val districtNumbers: List<Int>,
 ) {
-    val uniqueId: String = "$primaryDistrictNumber-$regNumber"
+    val uniqueId: String = buildUniqueId(primaryDistrictNumber, regNumber)
+
+    companion object {
+        fun buildUniqueId(primaryDistrictNumber: Int, regNumber: Int): String {
+            return "$primaryDistrictNumber-$regNumber"
+        }
+    }
 }

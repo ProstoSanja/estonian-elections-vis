@@ -3,7 +3,9 @@ package com.thatguyalex.rk2023.infrastructure.classes.helpers
 private val CHARACTER_FOLDING_MAP = mapOf(
     'ò' to 'o', 'ó' to 'o', 'ô' to 'o', 'õ' to 'o', 'ö' to 'o', 'ø' to 'o',
     'à' to 'a', 'á' to 'a', 'â' to 'a', 'ã' to 'a', 'ä' to 'a', 'å' to 'a',
-    'ù' to 'u', 'ú' to 'u', 'û' to 'u', 'ü' to 'u'
+    'ù' to 'u', 'ú' to 'u', 'û' to 'u', 'ü' to 'u',
+    'š' to 's', 'ś' to 's', 'ŝ' to 's', 'ş' to 's', 'ș' to 's',
+    'ž' to 'z', 'ź' to 'z', 'ż' to 'z', 'ẑ' to 'z'
 )
 
 fun tokenizeString(str: String): String = buildString(str.length) {

@@ -15,6 +15,15 @@ const characterFoldingMap = new Map([
   [0xFA, 'u'], // ú
   [0xFB, 'u'], // û
   [0xFC, 'u'], // ü
+  [0x161, 's'], // š
+  [0x15B, 's'], // ś
+  [0x15D, 's'], // ŝ
+  [0x15F, 's'], // ş
+  [0x219, 's'], // ș
+  [0x17E, 'z'], // ž
+  [0x17A, 'z'], // ź
+  [0x17C, 'z'], // ż
+  [0x1E91, 'z'], // ẑ
 ]);
 
 export const tokenizeString = (str: string): string => {
