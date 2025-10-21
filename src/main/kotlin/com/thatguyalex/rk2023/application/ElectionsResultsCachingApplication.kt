@@ -27,7 +27,7 @@ class ElectionsResultsCachingApplication(
         return processedResults[electionType] ?: ProcessedResults.empty()
     }
 
-    @Scheduled(fixedRate = 60 * 1000)
+//    @Scheduled(fixedRate = 60 * 1000)
     fun fetchActiveElection() {
         val activeElection = ElectionType.KOV2025
         val newCoreResults = electionsRestRepo.fetchElectionData<KOV2ResultsData>(activeElection, ElectionFile.RESULTS)
@@ -55,6 +55,12 @@ class ElectionsResultsCachingApplication(
             results = electionsStorageRepo.loadFile(ElectionType.RK2023, ElectionFile.RESULTS),
             candidates = { electionsStorageRepo.loadFile(ElectionType.RK2023, ElectionFile.CANDIDATE) },
             detailedMunicipalities = emptyMap()
+        )
+        processedResults[ElectionType.KOV2025] = electionsProcessorApplication.processElection(
+            electionType = ElectionType.KOV2025,
+            results = electionsStorageRepo.loadFile(ElectionType.KOV2025, ElectionFile.RESULTS),
+            candidates = { electionsStorageRepo.loadFile(ElectionType.KOV2025, ElectionFile.CANDIDATE) },
+            detailedMunicipalities = mapOf("784" to electionsStorageRepo.loadFile(ElectionType.KOV2025, ElectionFile.DETAILED_RESULT_PARISH, "784"))
         )
     }
 }

@@ -22,7 +22,8 @@ class ElectionsStorageRepo {
                         .let { mapper.readValue<GOVResultsRoot<KOV2ResultsData>>(it).data }
                     ElectionType.RK2023 -> javaClass.getResourceAsStream("/results/RESULTS_RK2023.xml")!!
                         .let { mapper.readValue<GOVResultsRoot<RK2ResultsData>>(it).data }
-                    ElectionType.KOV2025 -> throw NotImplementedError()
+                    ElectionType.KOV2025 -> javaClass.getResourceAsStream("/results/RESULTS_KOV2025.xml")!!
+                        .let { mapper.readValue<GOVResultsRoot<KOV2ResultsData>>(it).data }
                 }
             }
             ElectionFile.CANDIDATE -> {
@@ -36,7 +37,7 @@ class ElectionsStorageRepo {
                 when (electionType) {
                     ElectionType.KOV2021 ->  javaClass.getResourceAsStream("/results/DETAILED_RESULT_PARISH_${extraArgs.padStart(4, '0')}_KOV2021.xml")
                     ElectionType.RK2023 -> throw NotImplementedError()
-                    ElectionType.KOV2025 -> throw NotImplementedError()
+                    ElectionType.KOV2025 -> javaClass.getResourceAsStream("/results/DETAILED_RESULT_PARISH_${extraArgs.padStart(4, '0')}_KOV2025.xml")
                 }!!.let { mapper.readValue<GOVResultsRoot<KOV1MUNResultsData>>(it).data }
             }
         }

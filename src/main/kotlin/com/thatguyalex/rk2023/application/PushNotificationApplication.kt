@@ -6,7 +6,6 @@ import com.thatguyalex.rk2023.infrastructure.PushSubscriptionTopicRepo
 import com.thatguyalex.rk2023.infrastructure.classes.elections.ElectionType
 import com.thatguyalex.rk2023.infrastructure.classes.push.ElectionPushMessage
 import com.thatguyalex.rk2023.infrastructure.classes.push.PushMessage
-import com.thatguyalex.rk2023.infrastructure.classes.push.PushSubscription
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -37,7 +36,6 @@ class PushNotificationApplication(
                 val subscriptions = subscriptionRepo.findAllByIds(subscriptionIds)
                 logger.info("Sending notification for ${message.topicType} ${message.topicCode} to ${subscriptions.size} subscriptions")
                 sender.sendNotificationTo(subscriptions, message.pushMessage)
-//                    .also { Thread.sleep(1000) }
             }
             .sum()
     }
