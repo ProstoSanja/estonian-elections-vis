@@ -1,12 +1,17 @@
 import csv
+import re
 import sys
 from datetime import datetime
 from collections import defaultdict
 
 from pymongo import MongoClient
 
-CSV_PATH = "salary_merged.csv"
-SOURCE_URL = "https://www.fin.ee/sites/default/files/documents/2025-05/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2025%20ja%20kogupalgad%202024_0.xlsx"
+CSV_PATH = sys.argv[1] if len(sys.argv) > 1 else "salary_merged.csv"
+SOURCE_URLS = {
+    2022: "https://www.fin.ee/sites/default/files/documents/2024-06/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2023%20ja%20kogupalgad%202022.xlsx",
+    2023: "https://www.fin.ee/sites/default/files/documents/2025-04/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2024%20ja%20kogupalgad%202023.xlsx",
+    2024: "https://www.fin.ee/sites/default/files/documents/2025-05/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2025%20ja%20kogupalgad%202024_0.xlsx",
+}
 
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "election-vis"
@@ -29,60 +34,61 @@ ORG_ALIASES = {
     "oru osavalla valitsus": "lääne-nigula vallavalitsus",
     "palivere osavalla valitsus": "lääne-nigula vallavalitsus",
     "risti osavalla valitsus": "lääne-nigula vallavalitsus",
+    "taebla osavallavalitsus": "lääne-nigula vallavalitsus",
+    "kullamaa osavallavalitsus": "lääne-nigula vallavalitsus",
+    "martna osavallavalitsus": "lääne-nigula vallavalitsus",
+    "noarootsi osavallavalitsus": "lääne-nigula vallavalitsus",
+    "oru osavallavalitsus": "lääne-nigula vallavalitsus",
+    "palivere osavallavalitsus": "lääne-nigula vallavalitsus",
+    "risti osavallavalitsus": "lääne-nigula vallavalitsus",
+    "jõhvi vallavolikogu": "jõhvi vallavalitsus",
+    "toila vallavolikogu": "toila vallavalitsus",
+    "vinni vallavaitsus": "vinni vallavalitsus",
+    "vigala osavallavalitsus": "märjamaa vallavalitsus",
+    "nõva osavallavalitsus": "lääne-nigula vallavalitsus",
+    "linnavolikogu kantselei": "tallinna linnavolikogu kantselei",
     "emmaste osavalla valitsus": "hiiumaa vallavalitsus",
     "käina osavalla valitsus": "hiiumaa vallavalitsus",
     "kärdla osavalla valitsus": "hiiumaa vallavalitsus",
     "kärdla ja pühalepa osavalla valitsus": "hiiumaa vallavalitsus",
     "kõrgessaare osavalla valitsus": "hiiumaa vallavalitsus",
     "pühalepa osavalla valitsus": "hiiumaa vallavalitsus",
+    "kastre vallavlitsus": "kastre vallavalitsus",
+    "keskkonnaministeerium": "kliimaministeerium",
+    "maaeluministeerium": "regionaal- ja põllumajandusministeerium",
+    "tallinna linnaplaneerimisamet": "tallinna linnaplaneerimise amet",
+    "tallinna sotsiaal-jatervishoiuamet": "tallinna sotsiaal- ja tervishoiuamet",
+}
+
+KEEP_ORIGINAL_NAME_ALIASES = {
+    "vigala osavallavalitsus",
+    "nõva osavallavalitsus",
 }
 
 
-DEFAULT_START = datetime(2024, 1, 1)
-DEFAULT_END = datetime(2024, 12, 31)
-
-
-def clean_period(period_str):
-    """Fix known date format issues before parsing."""
-    import re
-    s = period_str.strip()
-
-    if not s or s == "-":
-        return None
-
-    # Multi-period (comma or semicolon separated) -> first start to last end
-    if "," in s or ";" in s:
-        parts = re.split(r"[,;]", s)
-        parts = [p.strip() for p in parts if p.strip()]
-        if parts:
-            first_start = parts[0].split("-")[0].strip()
-            last_end = parts[-1].split("-")[-1].strip()
-            s = f"{first_start}-{last_end}"
-
-    # Fix "31-12.2024" -> "31.12.2024" (dash instead of dot in date part)
-    s = re.sub(r"(\d{2})-(\d{2})\.(\d{4})", r"\1.\2.\3", s)
-    # Fix "02.01-2024" -> "02.01.2024" (dash instead of dot in date part)
-    s = re.sub(r"(\d{2})\.(\d{2})-(\d{4})", r"\1.\2.\3", s)
-    # Fix "01.01.2024.31.12.2024" -> "01.01.2024-31.12.2024" (dot instead of dash separator)
-    s = re.sub(r"(\d{2}\.\d{2}\.\d{4})\.(\d{2}\.\d{2}\.\d{4})", r"\1-\2", s)
-
-    return s
+DEFAULT_START = None
+DEFAULT_END = None
 
 
 def parse_period(period_str):
-    cleaned = clean_period(period_str)
-    if not cleaned:
+    s = period_str.strip()
+    if not s or s == "-":
         return DEFAULT_START, DEFAULT_END
 
-    parts = cleaned.split("-")
-    if len(parts) != 2:
+    parts = re.findall(r"\d+", s)
+    if len(parts) == 0:
         return DEFAULT_START, DEFAULT_END
+    if len(parts) % 3 != 0 or len(parts) < 6:
+        return None, None
+
     try:
-        start = datetime.strptime(parts[0].strip(), "%d.%m.%Y")
-        end = datetime.strptime(parts[1].strip(), "%d.%m.%Y")
+        d1, m1, y1 = parts[0], parts[1], parts[2]
+        d2, m2, y2 = parts[-3], parts[-2], parts[-1]
+        start = datetime(int(y1), int(m1), int(d1))
+        end = datetime(int(y2), int(m2), int(d2))
         return start, end
     except ValueError:
-        return DEFAULT_START, DEFAULT_END
+        return None, None
 
 
 def parse_koormus(s):
@@ -197,8 +203,33 @@ def main():
     with open(CSV_PATH, encoding="utf-8") as f:
         reader = csv.reader(f)
         header = next(reader)
-        all_rows = [row for row in reader if len(row) >= 11]
+        all_rows = [[cell.strip() for cell in row] for row in reader if len(row) >= 11]
     print(f"  {len(all_rows)} rows loaded\n")
+
+    print("Pre-check: Validating all periods...")
+    global DEFAULT_START, DEFAULT_END
+    bad_periods = []
+    for i, row in enumerate(all_rows):
+        start, end = parse_period(row[10])
+        if start is None:
+            bad_periods.append((i + 2, row[10]))
+            continue
+        if DEFAULT_START is None:
+            data_year = start.year
+            DEFAULT_START = datetime(data_year, 1, 1)
+            DEFAULT_END = datetime(data_year, 12, 31)
+            source_url = SOURCE_URLS.get(data_year)
+            if not source_url:
+                print(f"FATAL: No source URL configured for year {data_year}.")
+                sys.exit(1)
+            print(f"  Data year: {data_year}")
+    if bad_periods:
+        print(f"\n  FATAL: {len(bad_periods)} rows with unparseable periods:")
+        for line_no, val in bad_periods:
+            print(f"    - line {line_no}: '{val}'")
+        print("\nAborting. Fix these periods in the CSV first.")
+        sys.exit(1)
+    print(f"  All periods valid.\n")
 
     print("Phase 1: Detecting overworked duplicates...")
     dupe_names = detect_duplicates(all_rows)
@@ -240,8 +271,12 @@ def main():
     connections_created = 0
     unconfirmed_count = 0
     defaulted_period = 0
+    bad_period = 0
 
-    for row in all_rows:
+    total = len(all_rows)
+    for idx, row in enumerate(all_rows):
+        if idx % 500 == 0:
+            print(f"  {idx}/{total}... ({row[3]} {row[4]} @ {row[0]})")
         org_name = row[0].strip()
         unit = row[1].strip()
         position = row[2].strip()
@@ -253,10 +288,13 @@ def main():
         if not first or not last:
             continue
 
-        if start_date == DEFAULT_START and end_date == DEFAULT_END:
-            raw = row[10].strip()
-            if raw != "01.01.2024-31.12.2024":
-                defaulted_period += 1
+        if start_date is None:
+            bad_period += 1
+            start_date, end_date = DEFAULT_START, DEFAULT_END
+
+        raw_parts = re.findall(r"\d+", row[10])
+        if len(raw_parts) == 0 and row[10].strip() not in ("", "-"):
+            defaulted_period += 1
 
         key = (first.lower(), last.lower())
         is_overworked = key in dupe_names
@@ -301,10 +339,12 @@ def main():
 
         confirmed = not is_overworked and len(person_ids) == 1
 
-        if unit:
+        if unit and unit != "-" and unit.lower() != org_name.lower():
             pos_str = f"{unit} - {position}"
         else:
             pos_str = position
+        if org_name.lower().strip() in KEEP_ORIGINAL_NAME_ALIASES:
+            pos_str = f"{org_name} - {pos_str}"
 
         connection_doc = {
             "connectedIds": [org_id] + person_ids,
@@ -315,7 +355,7 @@ def main():
             "monetaryValue": salary,
             "startDate": start_date,
             "endDate": end_date,
-            "sources": [{"sourceUrl": SOURCE_URL}],
+            "sources": [{"sourceUrl": source_url}],
         }
         connections_col.insert_one(connection_doc)
         connections_created += 1
@@ -328,6 +368,7 @@ def main():
     print("\nDone.\n")
     print(f"  Total rows:              {len(all_rows)}")
     print(f"  Defaulted period:        {defaulted_period}")
+    print(f"  Bad period (!=6 parts):  {bad_period}")
     print(f"  Persons created:         {persons_created}")
     print(f"  Persons reused (1):      {persons_reused}")
     print(f"  Persons multi-match:     {persons_multi}")
