@@ -8,6 +8,10 @@ spring:
     url: jdbc:postgresql://${SPRING_DB_ADDRESS:localhost}:${SPRING_DB_PORT:5432}/${SPRING_DB_NAME:election-vis}
     username: ${SPRING_DB_USERNAME:postgres_user}
     password: ${SPRING_DB_PASSWORD:postgres_pass}
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/election-vis}
+      auto-index-creation: true
 
 server:
   port: 12345

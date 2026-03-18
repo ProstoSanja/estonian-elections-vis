@@ -30,6 +30,7 @@ dependencies {
 
     // Db Modules
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.flywaydb:flyway-core:11.14.0")
     implementation("org.flywaydb:flyway-database-postgresql:11.14.0")
     runtimeOnly("org.postgresql:postgresql")

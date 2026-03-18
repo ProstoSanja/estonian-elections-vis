@@ -7,11 +7,15 @@ import org.springframework.context.annotation.Primary
 import org.springframework.context.event.ApplicationEventMulticaster
 import org.springframework.context.event.SimpleApplicationEventMulticaster
 import org.springframework.core.task.SimpleAsyncTaskExecutor
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @Configuration
 @EnableScheduling
 @ConfigurationPropertiesScan
+@EnableJdbcRepositories(basePackages = ["com.thatguyalex.rk2023"])
+@EnableMongoRepositories(basePackages = ["com.thatguyalex.monitoring"])
 class ElectionVisConfiguration {
     @Bean
     @Primary
