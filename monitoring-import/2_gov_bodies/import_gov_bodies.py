@@ -14,6 +14,8 @@ BUSINESS_SUFFIXES = [
 ]
 BUSINESS_SUFFIXES_BY_LEN = sorted(BUSINESS_SUFFIXES, key=len, reverse=True)
 
+DIRECT_TYPES = {"GOV", "GOV_KOV", "PUBLIC_BODY", "BUSINESS"}
+
 NON_KOV_TYPE_MAP = {
     "põhiseaduslikud institutsioonid ja Riigikantselei": "GOV",
     "riigi ametiasutused": "GOV",
@@ -54,10 +56,14 @@ def extract_suffix(name):
 
 
 def resolve_non_kov_type(liik):
+    if liik in DIRECT_TYPES:
+        return liik
     return NON_KOV_TYPE_MAP.get(liik)
 
 
 def resolve_kov_type(liik, name, parent_name):
+    if liik in DIRECT_TYPES:
+        return liik
     if liik in KOV_SIMPLE_TYPE_MAP:
         return KOV_SIMPLE_TYPE_MAP[liik]
     if liik in KOV_CONDITIONAL_LIIK:
@@ -71,6 +77,7 @@ def resolve_kov_type(liik, name, parent_name):
 def process_file(csv_path, resolve_type_fn, entries_col, connections_col):
     name_to_id = {}  # lowercase name -> ObjectId
     inserted = 0
+    skipped = 0
     connections_created = 0
     parentless = 0
     errors = 0
@@ -95,24 +102,32 @@ def process_file(csv_path, resolve_type_fn, entries_col, connections_col):
                 errors += 1
                 continue
 
-            biz_name, biz_suffix = extract_suffix(name)
-
-            entry_doc = {
-                "ids": {"estGovId": code, "ariregisterAnonId": None},
-                "name": name,
-                "type": entry_type,
-                "nameParts": {
-                    "firstName": None,
-                    "lastName": None,
-                    "businessName": biz_name,
-                    "businessSuffix": biz_suffix,
-                },
-                "birthDate": None,
-            }
-            result = entries_col.insert_one(entry_doc)
-            entry_id = result.inserted_id
-            name_to_id[name.lower()] = entry_id
-            inserted += 1
+            existing = entries_col.find_one(
+                {"name": {"$regex": f"^{name}$", "$options": "i"}},
+                {"_id": 1},
+            )
+            if existing:
+                name_to_id[name.lower()] = existing["_id"]
+                skipped += 1
+                continue
+            else:
+                biz_name, biz_suffix = extract_suffix(name)
+                entry_doc = {
+                    "ids": {"estGovId": code, "ariregisterAnonId": None},
+                    "name": name,
+                    "type": entry_type,
+                    "nameParts": {
+                        "firstName": None,
+                        "lastName": None,
+                        "businessName": biz_name,
+                        "businessSuffix": biz_suffix,
+                    },
+                    "birthDate": None,
+                }
+                result = entries_col.insert_one(entry_doc)
+                entry_id = result.inserted_id
+                name_to_id[name.lower()] = entry_id
+                inserted += 1
 
             if parent_name.lower() == name.lower():
                 continue
@@ -135,9 +150,17 @@ def process_file(csv_path, resolve_type_fn, entries_col, connections_col):
 
             parent_id = name_to_id.get(parent_name.lower())
             if not parent_id:
-                print(f"  ERROR: Parent '{parent_name}' not found for '{name}'", file=sys.stderr)
-                errors += 1
-                continue
+                parent_doc = entries_col.find_one(
+                    {"name": {"$regex": f"^{parent_name}$", "$options": "i"}},
+                    {"_id": 1},
+                )
+                if parent_doc:
+                    parent_id = parent_doc["_id"]
+                    name_to_id[parent_name.lower()] = parent_id
+                else:
+                    print(f"  ERROR: Parent '{parent_name}' not found for '{name}'", file=sys.stderr)
+                    errors += 1
+                    continue
 
             connection_doc = {
                 "connectedIds": [parent_id, entry_id],
@@ -153,36 +176,33 @@ def process_file(csv_path, resolve_type_fn, entries_col, connections_col):
             connections_col.insert_one(connection_doc)
             connections_created += 1
 
-    return inserted, connections_created, parentless, errors
+    return inserted, skipped, connections_created, parentless, errors
 
 
 def main():
+    csv_files = sys.argv[1:] if len(sys.argv) > 1 else ["avalik_sektor_non_kov.csv", "avalik_sektor_kov.csv"]
+
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
     entries_col = db["monitoring_entries"]
     connections_col = db["monitoring_entry_connections"]
 
-    print("Importing non-KOV organizations...")
-    ins, conn, pless, err = process_file(
-        "avalik_sektor_non_kov.csv",
-        lambda liik, name, parent_name: resolve_non_kov_type(liik),
-        entries_col, connections_col,
-    )
-    print(f"  Inserted: {ins}, Connections: {conn}, Parentless: {pless}, Errors: {err}\n")
-
-    print("Importing KOV organizations...")
-    ins2, conn2, pless2, err2 = process_file(
-        "avalik_sektor_kov.csv",
-        resolve_kov_type,
-        entries_col, connections_col,
-    )
-    print(f"  Inserted: {ins2}, Connections: {conn2}, Parentless: {pless2}, Errors: {err2}\n")
+    total_ins = total_conn = total_pless = total_err = 0
+    for csv_path in csv_files:
+        print(f"Importing {csv_path}...")
+        resolve_fn = resolve_kov_type if "kov" in csv_path.lower() else lambda liik, name, parent_name: resolve_non_kov_type(liik)
+        ins, skip, conn, pless, err = process_file(csv_path, resolve_fn, entries_col, connections_col)
+        print(f"  Inserted: {ins}, Skipped: {skip}, Connections: {conn}, Parentless: {pless}, Errors: {err}\n")
+        total_ins += ins
+        total_conn += conn
+        total_pless += pless
+        total_err += err
 
     print("Done.")
-    print(f"  Total entries: {ins + ins2}")
-    print(f"  Total connections: {conn + conn2}")
-    print(f"  Total parentless (CONNECTION_PENDING): {pless + pless2}")
-    print(f"  Total errors: {err + err2}")
+    print(f"  Total entries: {total_ins}")
+    print(f"  Total connections: {total_conn}")
+    print(f"  Total parentless (CONNECTION_PENDING): {total_pless}")
+    print(f"  Total errors: {total_err}")
 
     client.close()
 

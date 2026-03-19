@@ -8,6 +8,14 @@ from pymongo import MongoClient
 
 CSV_PATH = sys.argv[1] if len(sys.argv) > 1 else "salary_merged.csv"
 SOURCE_URLS = {
+    2014: "https://web.archive.org/web/20170720224500/http://www.fin.ee/doc.php?110758",
+    2015: "https://web.archive.org/web/20170718190358/http://avalikteenistus.ee/index.php?id=41596",
+    2016: "https://web.archive.org/web/20170718190358/http://avalikteenistus.ee/index.php?id=41596",
+    2017: "https://www.fin.ee/sites/default/files/documents/2020-11/Ametnike%20kuup%C3%B5hipalgad%2001.04.2018%20ja%20aastakogupalgad%202017.xlsx",
+    2018: "https://www.fin.ee/sites/default/files/documents/2020-11/Ametnike%20kuup%C3%B5hipalgad%2001.04.2019%20ja%20aastakogupalgad%202018.xlsx",
+    2019: "https://www.fin.ee/sites/default/files/documents/2020-11/Ametnike%20kuup%C3%B5hipalgad%2001.04.2020%20ja%20aastakogupalgad%202019.xlsx",
+    2020: "https://www.fin.ee/media/2421/download",
+    2021: "https://www.fin.ee/media/6622/download",
     2022: "https://www.fin.ee/sites/default/files/documents/2024-06/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2023%20ja%20kogupalgad%202022.xlsx",
     2023: "https://www.fin.ee/sites/default/files/documents/2025-04/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2024%20ja%20kogupalgad%202023.xlsx",
     2024: "https://www.fin.ee/sites/default/files/documents/2025-05/Ametnike%20p%C3%B5hipalgad%20seisuga%2001.04.2025%20ja%20kogupalgad%202024_0.xlsx",
@@ -54,10 +62,39 @@ ORG_ALIASES = {
     "kõrgessaare osavalla valitsus": "hiiumaa vallavalitsus",
     "pühalepa osavalla valitsus": "hiiumaa vallavalitsus",
     "kastre vallavlitsus": "kastre vallavalitsus",
+    "kambja vv": "kambja vallavalitsus",
+    "kanepi vallavalitus": "kanepi vallavalitsus",
     "keskkonnaministeerium": "kliimaministeerium",
     "maaeluministeerium": "regionaal- ja põllumajandusministeerium",
     "tallinna linnaplaneerimisamet": "tallinna linnaplaneerimise amet",
     "tallinna sotsiaal-jatervishoiuamet": "tallinna sotsiaal- ja tervishoiuamet",
+    "tallinna ettevõtlusamet": "tallinna strateegiakeskus",
+    "spordi-ja noorsooamet": "tallinna spordi- ja noorsooamet",
+    "sotsiaal-jatervishoiuamet": "tallinna sotsiaal- ja tervishoiuamet",
+    "mustamäe linnaosa valits": "mustamäe linnaosa valitsus",
+    "munitsipaalpolitsei amet": "tallinna munitsipaalpolitsei amet",
+    "maanteeamet": "transpordiamet",
+    "linnavaraamet": "tallinna linnavaraamet",
+    "linnaplaneerimisamet": "tallinna linnaplaneerimise amet",
+    "linnakantselei": "tallinna linnakantselei",
+    "linnaarhiiv": "tallinna linnaarhiiv",
+    "keskkonna- ja kommunaala.": "tallinna keskkonna- ja kommunaalamet",
+    "tallinna keskkonnaamet": "tallinna keskkonna- ja kommunaalamet",
+    "tallinna kommunaalamet": "tallinna keskkonna- ja kommunaalamet",
+    "tarbijakaitseamet": "tarbijakaitse ja tehnilise järelevalve amet",
+    "soolise võrdõiguslikkuse ja võrdse kohtlemise volinik": "soolise võrdõiguslikkuse ja võrdse kohtlemise voliniku kantselei",
+    "kunda linnavalitsus": "viru-nigula vallavalitsus",
+    "narva linnavalitsus": "narva linnakantselei",
+    "politsei-ja piirivalveamet": "politsei- ja piirivalveamet",
+    "tallinna linnavalitsus": "tallinna linnakantselei",
+    "tehnilise järelevalve amet": "tarbijakaitse ja tehnilise järelevalve amet",
+    "värska vallavalitsus": "setomaa vallavalitsus",
+    "õigukantsleri kantselei": "õiguskantsleri kantselei",
+    "pajusi vallvalitsus": "pajusi vallavalitsus",
+    "haridusamet": "tallinna haridusamet",
+    "haabersti linnaosa valits": "haabersti linnaosa valitsus",
+    "arhitektuuri- ja linnaplaneerimise amet": "narva linnavalitsuse arhitektuuri- ja linnaplaneerimise amet",
+    "keeleinspektsioon": "keeleamet",
 }
 
 KEEP_ORIGINAL_NAME_ALIASES = {
@@ -78,8 +115,24 @@ def parse_period(period_str):
     parts = re.findall(r"\d+", s)
     if len(parts) == 0:
         return DEFAULT_START, DEFAULT_END
+
+    if len(parts) == 4:
+        year = str(DEFAULT_START.year)
+        parts = [parts[0], parts[1], year, parts[2], parts[3], year]
+    elif len(parts) == 5:
+        if len(parts[2]) == 4:
+            parts = [parts[0], parts[1], parts[2], parts[3], parts[4], parts[2]]
+        elif len(parts[4]) == 4:
+            parts = [parts[0], parts[1], parts[4], parts[2], parts[3], parts[4]]
+        else:
+            return None, None
+
     if len(parts) % 3 != 0 or len(parts) < 6:
         return None, None
+
+    for i in range(2, len(parts), 3):
+        if len(parts[i]) == 2:
+            parts[i] = "20" + parts[i]
 
     try:
         d1, m1, y1 = parts[0], parts[1], parts[2]
