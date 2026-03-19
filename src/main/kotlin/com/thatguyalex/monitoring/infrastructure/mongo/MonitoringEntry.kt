@@ -1,6 +1,7 @@
 package com.thatguyalex.monitoring.infrastructure.mongo
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -10,6 +11,7 @@ import java.time.LocalDate
 
 interface MonitoringEntryRepository : MongoRepository<MonitoringEntry, String>
 
+@CompoundIndex(def = "{'nameParts.firstName': 1, 'nameParts.lastName': 1}")
 @Document(collection = "monitoring_entries")
 data class MonitoringEntry(
     @Id
@@ -27,6 +29,7 @@ data class MonitoringEntryIds(
     @Indexed
     val estGovId: String? = null, // isikukood or ariregister
     val ariregisterAnonId: String? = null, // anonymized ariregister isikukood 9xxxxxxxx
+    val erjkId: String? = null, // ERJK id
 )
 
 data class MonitoringEntryNameParts(

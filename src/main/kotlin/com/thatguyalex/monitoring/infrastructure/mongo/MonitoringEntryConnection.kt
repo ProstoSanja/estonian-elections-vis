@@ -33,6 +33,7 @@ enum class MonitoringEntryConnectionType {
     EMPLOYMENT,
     ADMINISTRATION,
     DONATION,
+    BANK_LOAN,
     // and unknown
     UNKNOWN,
 }
