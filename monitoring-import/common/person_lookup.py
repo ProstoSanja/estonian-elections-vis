@@ -2,10 +2,14 @@ import re
 from datetime import datetime
 
 
-def find_or_create_person(entries_col, full_name, birthdate=None):
+def find_or_create_person(entries_col, full_name, birthdate=None,
+                          first_name=None, last_name=None):
     """
     Look up a person by full name (case-insensitive). Create if not found.
     When birthdate is provided, uses it to disambiguate among multiple matches.
+
+    If first_name and last_name are provided, tries nameParts lookup first,
+    falling back to full name if no results.
 
     Lookup is always by name only. Birthdate is used for disambiguation:
     - 0 found: create new record with birthdate
@@ -18,15 +22,12 @@ def find_or_create_person(entries_col, full_name, birthdate=None):
 
     Returns: (person_ids: list[ObjectId], created: bool, updated_birthdate: bool)
     """
-    name_title = full_name.strip().title()
+    name_clean = full_name.strip()
 
-    found = list(entries_col.find(
-        {"type": "INDIVIDUAL", "name": {"$regex": f"^{re.escape(name_title)}$", "$options": "i"}},
-        {"_id": 1, "birthDate": 1},
-    ))
+    found = _lookup_by_name(entries_col, name_clean, first_name, last_name)
 
     if len(found) == 0:
-        return _create_person(entries_col, name_title, birthdate), True, False
+        return _create_person(entries_col, name_clean, birthdate, first_name, last_name), True, False
 
     if not birthdate:
         return [d["_id"] for d in found], False, False
@@ -38,7 +39,7 @@ def find_or_create_person(entries_col, full_name, birthdate=None):
             return [rec["_id"]], False, True
         if _dates_equal(rec["birthDate"], birthdate):
             return [rec["_id"]], False, False
-        return _create_person(entries_col, name_title, birthdate), True, False
+        return _create_person(entries_col, name_clean, birthdate, first_name, last_name), True, False
 
     bd_match = [d for d in found if _dates_equal(d.get("birthDate"), birthdate)]
     if bd_match:
@@ -48,7 +49,7 @@ def find_or_create_person(entries_col, full_name, birthdate=None):
     if no_bd:
         return [d["_id"] for d in no_bd], False, False
 
-    return _create_person(entries_col, name_title, birthdate), True, False
+    return _create_person(entries_col, name_clean, birthdate, first_name, last_name), True, False
 
 
 def find_or_create_org(entries_col, name, est_gov_id):
@@ -95,14 +96,37 @@ def find_or_create_org(entries_col, name, est_gov_id):
     return result.inserted_id
 
 
-def _create_person(entries_col, name_title, birthdate):
+def _lookup_by_name(entries_col, name_clean, first_name=None, last_name=None):
+    """
+    Try nameParts.firstName + nameParts.lastName first if provided,
+    fall back to full name match.
+    """
+    if first_name and last_name:
+        found = list(entries_col.find(
+            {
+                "type": "INDIVIDUAL",
+                "nameParts.firstName": {"$regex": f"^{re.escape(first_name.strip())}$", "$options": "i"},
+                "nameParts.lastName": {"$regex": f"^{re.escape(last_name.strip())}$", "$options": "i"},
+            },
+            {"_id": 1, "birthDate": 1},
+        ))
+        if found:
+            return found
+
+    return list(entries_col.find(
+        {"type": "INDIVIDUAL", "name": {"$regex": f"^{re.escape(name_clean)}$", "$options": "i"}},
+        {"_id": 1, "birthDate": 1},
+    ))
+
+
+def _create_person(entries_col, name_clean, birthdate, first_name=None, last_name=None):
     doc = {
         "ids": {"estGovId": None, "ariregisterAnonId": None, "erjkId": None},
-        "name": name_title,
+        "name": name_clean,
         "type": "INDIVIDUAL",
         "nameParts": {
-            "firstName": None,
-            "lastName": None,
+            "firstName": first_name.strip() if first_name else None,
+            "lastName": last_name.strip() if last_name else None,
             "businessName": None,
             "businessSuffix": None,
         },

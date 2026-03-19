@@ -23,6 +23,7 @@ data class MonitoringEntry(
     val nameParts: MonitoringEntryNameParts,
     @Indexed
     val birthDate: LocalDate? = null,
+    val unstructuredData: Map<String, Any>? = null,
 )
 
 data class MonitoringEntryIds(
@@ -30,6 +31,7 @@ data class MonitoringEntryIds(
     val estGovId: String? = null, // isikukood or ariregister
     val ariregisterAnonId: String? = null, // anonymized ariregister isikukood 9xxxxxxxx
     val erjkId: String? = null, // ERJK id
+    val riigikoguGuid: String? = null, // Riigikogu GUID
 )
 
 data class MonitoringEntryNameParts(
@@ -47,3 +49,8 @@ enum class MonitoringEntryType {
     BUSINESS,
     PUBLIC_BODY,
 }
+
+// unstructure data known contents:
+// - contacts: array [{"type": "xxx", "value": "yyy"}] // type: phone, email, website, social, other
+// - photo: url
+// other unknown keys
