@@ -361,8 +361,8 @@ def main():
             person_ids = person_cache[key]
         else:
             found = list(entries_col.find(
-                {"type": "INDIVIDUAL", "nameParts.firstName": {"$regex": f"^{first}$", "$options": "i"},
-                 "nameParts.lastName": {"$regex": f"^{last}$", "$options": "i"}},
+                {"type": "INDIVIDUAL", "nameParts.firstName": {"$regex": f"^{re.escape(first)}$", "$options": "i"},
+                 "nameParts.lastName": {"$regex": f"^{re.escape(last)}$", "$options": "i"}},
                 {"_id": 1},
             ))
             if len(found) == 0:

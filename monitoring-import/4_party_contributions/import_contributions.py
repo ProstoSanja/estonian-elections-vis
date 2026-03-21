@@ -15,13 +15,6 @@ SOURCE_URL = "https://erjk.ee/avaandmed/#/"
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "election-vis"
 
-SKIP_PARTIES = {
-    "Eesti Iseseisvuspartei",
-    "Eesti Vabaerakond",
-    "Elurikkuse Erakond",
-    "Erakond Rahva Tahe",
-}
-
 CATEGORY_TYPE_MAP = {
     "Liikmemaks": "PARTY_MEMBERSHIP",
     "Rahaline annetus": "DONATION",
@@ -68,11 +61,7 @@ def main():
     for p in erjk_parties:
         name = p["party_name"]
         erjk_id = str(p["party_id"])
-
-        if name in SKIP_PARTIES:
-            print(f"  SKIP: {name}")
-            continue
-
+        
         doc = entries_col.find_one(
             {"type": "PARTY", "name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}},
             {"_id": 1, "ids": 1},
