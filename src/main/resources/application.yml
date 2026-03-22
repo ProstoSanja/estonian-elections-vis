@@ -16,6 +16,11 @@ spring:
 server:
   port: 12345
 
+ariregister:
+  url: ${ARIREGISTER_URL:https://ariregxmlv6.rik.ee}
+  username: ${ARIREGISTER_USERNAME:}
+  password: ${ARIREGISTER_PASSWORD:}
+
 # Push Notification Configuration
 # Generate VAPID keys using: npx web-push generate-vapid-keys
 push:

@@ -83,8 +83,8 @@ class MonitoringEntryLookupService(
 
         if (hasNameParts) {
             val criteria = typeCriteria(params.individual)
-                .and("nameParts.firstName").regex("^${Pattern.quote(params.firstName!!.trim())}$", "i")
-                .and("nameParts.lastName").regex("^${Pattern.quote(params.lastName!!.trim())}$", "i")
+                .and("altNames.firstName").regex("^${Pattern.quote(params.firstName!!.trim())}$", "i")
+                .and("altNames.lastName").regex("^${Pattern.quote(params.lastName!!.trim())}$", "i")
             val found = mongoTemplate.find(Query(criteria), MonitoringEntry::class.java)
             if (found.isNotEmpty()) return found
         }
@@ -156,7 +156,7 @@ class MonitoringEntryLookupService(
                 ids = MonitoringEntryIds(estGovId = params.estGovId),
                 name = name,
                 type = MonitoringEntryType.BUSINESS,
-                nameParts = MonitoringEntryNameParts(businessName = name),
+                altNames = listOf(MonitoringEntryNames(fullName = name, businessName = name, businessSuffix = null)),
             )
         )
         return EntryLookupResult(listOf(entry), created = true, updatedBirthdate = false)
@@ -170,13 +170,23 @@ class MonitoringEntryLookupService(
             update.set("birthDate", params.birthDate)
             patched = patched.copy(birthDate = params.birthDate)
         }
-        if (entry.nameParts.firstName == null && !params.firstName.isNullOrBlank()) {
-            update.set("nameParts.firstName", params.firstName.trim())
-            patched = patched.copy(nameParts = patched.nameParts.copy(firstName = params.firstName.trim()))
-        }
-        if (entry.nameParts.lastName == null && !params.lastName.isNullOrBlank()) {
-            update.set("nameParts.lastName", params.lastName.trim())
-            patched = patched.copy(nameParts = patched.nameParts.copy(lastName = params.lastName.trim()))
+        if (entry.altNames.size == 1 && !params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()) {
+            update.set("altNames.0.fullName", entry.name.trim())
+            update.set("altNames.0.firstName", params.firstName.trim())
+            update.set("altNames.0.lastName", params.lastName.trim())
+            patched = patched.copy(altNames = listOf(MonitoringEntryNames(
+                fullName = entry.name.trim(),
+                firstName = params.firstName.trim(),
+                lastName = params.lastName.trim(),
+            )))
+        } else if (entry.altNames.isEmpty() && !params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()) {
+            val newName = MonitoringEntryNames(
+                fullName = entry.name.trim(),
+                firstName = params.firstName.trim(),
+                lastName = params.lastName.trim(),
+            )
+            update.set("altNames", listOf(newName))
+            patched = patched.copy(altNames = listOf(newName))
         }
         if (entry.ids.estGovId == null && !params.estGovId.isNullOrBlank()) {
             update.set("ids.estGovId", params.estGovId)
@@ -202,10 +212,11 @@ class MonitoringEntryLookupService(
                 ids = MonitoringEntryIds(estGovId = params.estGovId),
                 name = name,
                 type = MonitoringEntryType.INDIVIDUAL,
-                nameParts = MonitoringEntryNameParts(
+                altNames = listOf(MonitoringEntryNames(
+                    fullName = name,
                     firstName = params.firstName?.trim(),
                     lastName = params.lastName?.trim(),
-                ),
+                )),
                 birthDate = params.birthDate,
             )
         )

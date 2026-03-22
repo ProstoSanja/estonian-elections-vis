@@ -9,7 +9,7 @@ import org.bson.types.ObjectId
 import java.time.Instant
 import java.time.LocalDate
 
-@CompoundIndex(def = "{'nameParts.firstName': 1, 'nameParts.lastName': 1}")
+@CompoundIndex(def = "{'altNames.firstName': 1, 'altNames.lastName': 1}")
 @Document(collection = "monitoring_entries")
 data class MonitoringEntry(
     @Id
@@ -18,7 +18,7 @@ data class MonitoringEntry(
     @Indexed
     val name: String,
     val type: MonitoringEntryType,
-    val nameParts: MonitoringEntryNameParts,
+    val altNames: List<MonitoringEntryNames> = emptyList(),
     @Indexed
     val birthDate: LocalDate? = null,
     val unstructuredData: Map<String, Any>? = null,
@@ -32,11 +32,14 @@ data class MonitoringEntryIds(
     val riigikoguGuid: String? = null, // Riigikogu GUID
 )
 
-data class MonitoringEntryNameParts(
+data class MonitoringEntryNames(
+    val fullName: String,
     val firstName: String? = null,
     val lastName: String? = null,
     val businessName: String? = null,
     val businessSuffix: String? = null,
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null,
 )
 
 enum class MonitoringEntryType {

@@ -1,0 +1,65 @@
+
+<div class=\"h3\">Leitud tulemused (2)</div>
+        <div class=\"company_related_persons_results\">
+            <div class=\"company_related_persons_row row mb-1\">
+                <div class=\"col-md-1\"></div>
+                <div class=\"col-md-7\">Nimi
+                </div>
+                <div class=\"col-md-4\">
+                        Isikukood / sünniaeg
+                </div>
+            </div>
+            <div class=\"company_related_persons_row mb-1 custom-control custom-checkbox\">
+                <input type=\"checkbox\" value=\"Vali isik\" id=\"person_0\" class=\"custom-control-input\"
+                    data-isikukood=\"36401052714\" data-isikukoodi_riik=\"\" data-valis_kood=\"\"
+                    data-synnipaev=\"\" data-liignimi=\"LINNAMÄE\" data-eesnimi=\"MARGUS\"
+                    data-ark=\"\" data-jvalis_kood=\"\" data-arinimi=\"\">
+                <label class=\"row col-md-12 custom-control-label ml-1\" for=\"person_0\">
+                    <div class=\"col-md-8\">
+                        MARGUS LINNAMÄE
+                    </div>
+                    <div class=\"col-md-4\">
+                            36401052714
+                    </div>
+                </label>
+            </div>
+            <div class=\"company_related_persons_row mb-1 custom-control custom-checkbox\">
+                <input type=\"checkbox\" value=\"Vali isik\" id=\"person_1\" class=\"custom-control-input\"
+                    data-isikukood=\"36401052714\" data-isikukoodi_riik=\"\" data-valis_kood=\"\"
+                    data-synnipaev=\"\" data-liignimi=\"Linnamäe\" data-eesnimi=\"Margus\"
+                    data-ark=\"\" data-jvalis_kood=\"\" data-arinimi=\"\">
+                <label class=\"row col-md-12 custom-control-label ml-1\" for=\"person_1\">
+                    <div class=\"col-md-8\">
+                        Margus Linnamäe
+                    </div>
+                    <div class=\"col-md-4\">
+                            36401052714
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class=\"card-body\">
+            
+
+
+    
+
+
+        <b class=\"text-muted mt-1 float-right\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title=\"Kuvatakse 1 - 2 rida 2-st\">1 - 2 / 2</b>
+
+    <ul class=\"pagination\">
+
+                <li class=\"page-item d-none d-md-block active\"><a class=\"page-link\" 
+                    href=\"#/\" 
+                    data-page=\"1\"
+                    data-href=\"/est/company_related_person_search_json?page=1\"
+                >1</a></li>
+
+    </ul>
+
+        </div>
+
+        <button class=\"btn btn-primary mb-2 mr-2\" type=\"button\" id=\"confirm\">Kinnita valik</button>
+        <button class=\"btn btn-secondary mb-2\" type=\"button\" id=\"cancel\">Katkesta</button>
+
