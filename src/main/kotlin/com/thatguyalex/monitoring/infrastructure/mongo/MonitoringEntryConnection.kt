@@ -8,8 +8,6 @@ import org.bson.types.ObjectId
 import java.time.Instant
 import java.time.LocalDate
 
-interface MonitoringEntryConnectionRepository : MongoRepository<MonitoringEntryConnection, String>
-
 @Document(collection = "monitoring_entry_connections")
 data class MonitoringEntryConnection(
     @Id
@@ -41,3 +39,5 @@ enum class MonitoringEntryConnectionType {
 data class MonitoringEntryConnectionSource(
     val sourceUrl: String,
 )
+
+interface MonitoringEntryConnectionRepository : MongoRepository<MonitoringEntryConnection, String>
