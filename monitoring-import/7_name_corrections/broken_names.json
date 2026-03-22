@@ -1,0 +1,470 @@
+[
+  {
+    "id": "69ba9fd556f9caaef26821fe",
+    "name": "Katrin Tõrukene(tõruke)",
+    "corrected_name": "Katrin Tõruke",
+    "reason": "parenthesized"
+  },
+  {
+    "id": "69ba9fd556f9caaef2682238",
+    "name": "Kädy Tänav (tänak)",
+    "corrected_name": "Kädy Tänak",
+    "reason": "parenthesized"
+  },
+  {
+    "id": "69baa01356f9caaef268e287",
+    "name": "Kersti Romann (roomann)",
+    "corrected_name": "Kersti Roomann",
+    "reason": "parenthesized"
+  },
+  {
+    "id": "69bb1367476ce922843c29e7",
+    "name": "Kajar Kase, K",
+    "corrected_name": "Kajar Kase",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bb1367476ce922843c29e9",
+    "name": "Karl Sander Kase, K S",
+    "corrected_name": "Karl Sander Kase",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bb21e9e03ff89c1221c721",
+    "name": "Veiko Kiik (Sõbber)",
+    "corrected_name": "Veiko Sõbber",
+    "reason": "parenthesized"
+  },
+  {
+    "id": "69bb3c640b435b3a230ca9d4",
+    "name": "Katrin Rosar ,",
+    "corrected_name": "Katrin Rosar",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bb4888d9d2e4990280e279",
+    "name": "Reelika Riiga/Riga/",
+    "corrected_name": "Reelika Riiga",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffa864ecd95164f43471",
+    "name": "48310132718 Lippur Maria, Eur",
+    "corrected_name": "Maria Lippur",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffb264ecd95164f435a6",
+    "name": "34611165528 Kalam Tõnis, Eur",
+    "corrected_name": "Tõnis Kalam",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffc164ecd95164f437ad",
+    "name": "33808295715 Sõna Raimu, Eur",
+    "corrected_name": "Raimu Sõna",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffc664ecd95164f4383d",
+    "name": "44904215226 Joll Asta, Eur",
+    "corrected_name": "Asta Joll",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffc664ecd95164f4383f",
+    "name": "457122285221 Ummik Maire, Eur",
+    "corrected_name": "Maire Ummik",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffd764ecd95164f43a51",
+    "name": "48307052746 Polomošnova Oksana, Eur",
+    "corrected_name": "Oksana Polomošnova",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bbffe564ecd95164f43c11",
+    "name": "37602025523 Veedla Arne, Eur",
+    "corrected_name": "Arne Veedla",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bc0fda64ecd95164f616a6",
+    "name": "Natalja O`Konnel-Bronina",
+    "corrected_name": "Natalja O'Konnel-Bronina",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd26571f58459098dc7416",
+    "name": "Zoja S^ts^eberina",
+    "corrected_name": "Zoja Štšeberina",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd265b1f58459098dc741f",
+    "name": "Vladimir S^umejev",
+    "corrected_name": "Vladimir Šumejev",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd28df1f58459098dc7919",
+    "name": "Anre` Vooremaa",
+    "corrected_name": "André Vooremaa",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd53f11f58459098dcbd7e",
+    "name": "Valeri Budit?",
+    "corrected_name": "Valeri Buditš",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd54021f58459098dcbda2",
+    "name": "Juri Dolgu?ev",
+    "corrected_name": "Juri Dolgušev",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd548b1f58459098dcbe89",
+    "name": "Feofania Ju?t?inski",
+    "corrected_name": "Feofania Juštšinski",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd54a71f58459098dcbeba",
+    "name": "Sergei Ka?kin",
+    "corrected_name": "Sergei Kaškin",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd54e01f58459098dcbf23",
+    "name": "Olga Ko?ina",
+    "corrected_name": "Olga Kožina",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd54e91f58459098dcbf37",
+    "name": "Jakov Kr?lov",
+    "corrected_name": "Jakov Krõlov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd54f41f58459098dcbf4a",
+    "name": "Andrei Kulinit?",
+    "corrected_name": "Andrei Kulinitš",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd55021f58459098dcbf61",
+    "name": "Nikolai Kuzmit?ov",
+    "corrected_name": "Nikolai Kuzmitšov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd556c1f58459098dcc011",
+    "name": "Anna Mi?enina",
+    "corrected_name": "Anna Mišenina",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd55bc1f58459098dcc093",
+    "name": "Evelina Petra?enko",
+    "corrected_name": "Evelina Petratšenko",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd55e41f58459098dcc0d6",
+    "name": "Sofia Pugat?ova",
+    "corrected_name": "Sofia Pugatšova",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd55e51f58459098dcc0d8",
+    "name": "Georgi Pugat?ov",
+    "corrected_name": "Georgi Pugatšov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd560c1f58459098dcc113",
+    "name": "Valeri Ro?ko",
+    "corrected_name": "Valeri Rožko",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd560d1f58459098dcc115",
+    "name": "Klavdija Ro?kova",
+    "corrected_name": "Klavdija Rožkova",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56211f58459098dcc135",
+    "name": "Anatoli ?estakov",
+    "corrected_name": "Anatoli Šestakov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56251f58459098dcc13a",
+    "name": "Elena ?elt?kova",
+    "corrected_name": "Elena Želtkova",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56461f58459098dcc171",
+    "name": "Olga Sipt?enko",
+    "corrected_name": "Olga Siptšenko",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56541f58459098dcc18c",
+    "name": "Vjat?eslav Solovjov",
+    "corrected_name": "Vjatšeslav Solovjov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd569f1f58459098dcc21d",
+    "name": "Berta T?urkina",
+    "corrected_name": "Berta Tšurkina",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56c51f58459098dcc265",
+    "name": "Vjat?eslav Viktorov",
+    "corrected_name": "Vjatšeslav Viktorov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56d71f58459098dcc287",
+    "name": "Ain V?imre",
+    "corrected_name": "Ain Võimre",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56dc1f58459098dcc28f",
+    "name": "Nelli ?itkova",
+    "corrected_name": "Nelli Žitkova",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd56e21f58459098dcc299",
+    "name": "Maria ?ulina-Tarelkina",
+    "corrected_name": "Maria Žulina-Tarelkina",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd57391f58459098dcc32b",
+    "name": "Juri T?rk",
+    "corrected_name": "Juri Türk",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd57621f58459098dcc372",
+    "name": "Aleksandr But?in",
+    "corrected_name": "Aleksandr Butšin",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd57781f58459098dcc39b",
+    "name": "Ludmilla S?da",
+    "corrected_name": "Ludmilla Süda",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd587a1f58459098dcc551",
+    "name": "Nade?da Vaher",
+    "corrected_name": "Nadežda Vaher",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd589f1f58459098dcc593",
+    "name": "Juri ?uravljov",
+    "corrected_name": "Juri Žuravljov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd58b11f58459098dcc5b8",
+    "name": "Vjat?eslav Trapeznikov",
+    "corrected_name": "Vjatšeslav Trapeznikov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bd6ced1f58459098dce684",
+    "name": "Toomas Rais(raist)",
+    "corrected_name": "Toomas Raist",
+    "reason": "parenthesized"
+  },
+  {
+    "id": "69bda1161f58459098dd2452",
+    "name": "Hans J?rvela",
+    "corrected_name": "Hans Järvela",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bda1231f58459098dd2469",
+    "name": "J?rgen Kajakas",
+    "corrected_name": "Jürgen Kajakas",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bda1f01f58459098dd25e6",
+    "name": "Teodor K?tt",
+    "corrected_name": "Teodor Kütt",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bda2931f58459098dd270e",
+    "name": "Eugen M?nnik",
+    "corrected_name": "Eugen Männik",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bda2991f58459098dd271b",
+    "name": "Ants M?ldre",
+    "corrected_name": "Ants Möldre",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bda7801f58459098dd2d18",
+    "name": "Vjats^eslav Kokorev",
+    "corrected_name": "Vjatšeslav Kokorev",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bdb0541f58459098dd3825",
+    "name": "Vladimir P?lder",
+    "corrected_name": "Vladimir Põlder",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bdb0561f58459098dd3829",
+    "name": "Linda P?hk",
+    "corrected_name": "Linda Pähk",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bdb0771f58459098dd3865",
+    "name": "J?ri Raudsepp",
+    "corrected_name": "Jüri Raudsepp",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bdb0a91f58459098dd38c9",
+    "name": "Juri R?zov",
+    "corrected_name": "Juri Rõzov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bde64a1f58459098dd78f5",
+    "name": "Vladimir Galu?kin",
+    "corrected_name": "Vladimir Galuškin",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bde68a1f58459098dd798d",
+    "name": "Vjat?eslav Gussev",
+    "corrected_name": "Vjatšeslav Gussev",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bde6ac1f58459098dd79d9",
+    "name": "Nade?da Pelihh",
+    "corrected_name": "Nadežda Pelihh",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bde6bf1f58459098dd7a00",
+    "name": "Vassili ?apovalov",
+    "corrected_name": "Vassili Šapovalov",
+    "reason": "contains ?"
+  },
+  {
+    "id": "69bab3282290a56440d6e45d",
+    "name": "Kelli-Ann KovljašĮenko",
+    "corrected_name": "Kelli-Ann Kovljašenko",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd41761f58459098dca5f1",
+    "name": "Aino Jōepere",
+    "corrected_name": "Aino Jõepere",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd49111f58459098dcaf7d",
+    "name": "Viljar Lōbu",
+    "corrected_name": "Viljar Lõbu",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4aa91f58459098dcb1a4",
+    "name": "Oskar Mōttus",
+    "corrected_name": "Oskar Mõttus",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4be11f58459098dcb32f",
+    "name": "Solomonia Nōmm",
+    "corrected_name": "Solomonia Nõmm",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4be91f58459098dcb33b",
+    "name": "Endel Nōmmik",
+    "corrected_name": "Endel Nõmmik",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4c621f58459098dcb3e4",
+    "name": "Paul Orupōld",
+    "corrected_name": "Paul Orupõld",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4ef81f58459098dcb731",
+    "name": "Arved Pōder",
+    "corrected_name": "Arved Põder",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4f0c1f58459098dcb74f",
+    "name": "Vilma Pōldma",
+    "corrected_name": "Vilma Põldma",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd4f1f1f58459098dcb768",
+    "name": "Nadezda Pōlendik",
+    "corrected_name": "Nadezda Põlendik",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd5e831f58459098dccd48",
+    "name": "Rein Vōso",
+    "corrected_name": "Rein Võso",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd5f251f58459098dcce87",
+    "name": "Veera Karteˇnikova",
+    "corrected_name": "Veera Kartežnikova",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd5f6c1f58459098dccf55",
+    "name": "Viktor ˇilin",
+    "corrected_name": "Viktor Žilin",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd626e1f58459098dcd7e8",
+    "name": "Leonid Poˇarski",
+    "corrected_name": "Leonid Požarski",
+    "reason": "unexpected characters"
+  },
+  {
+    "id": "69bd63dc1f58459098dcdbe7",
+    "name": "Ljudmilla ˇigalina",
+    "corrected_name": "Ljudmilla Žigalina",
+    "reason": "unexpected characters"
+  }
+]
