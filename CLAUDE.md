@@ -107,13 +107,12 @@ ORDER BY score DESC;
 ```
 monitoring/
 ├── application/
-│   ├── MonitoringEntryLookupService.kt.bak  — shelved, pending refactor to JDBC
-│   └── AriregisterSyncService.kt.bak        — shelved, pending refactor to JDBC
+│   ├── MonitoringEntryLookupService.kt      — unified entity lookup/create with disambiguation
+│   └── AriregisterSyncService.kt            — Ariregister SOAP sync orchestration
 └── infrastructure/
-    ├── MonitoringTypes.kt                    — shared enums (MonitoringEntryType, MonitoringEntryConnectionType)
+    ├── MonitoringTypes.kt                    — shared enums (MonitoringEntryType, MonitoringEntryConnectionType, MonitoringExternalIdType)
     ├── jdbc/
     │   ├── Jsonb.kt                          — JSONB wrapper type + Spring Data converters
-    │   ├── JdbcMonitoringConfiguration.kt    — registers JSONB converters
     │   ├── MonitoringEntryEntities.kt        — entry, external ID, name entity classes
     │   ├── MonitoringConnectionEntities.kt   — connection + candidate entity classes
     │   └── MonitoringRepositories.kt         — all Spring Data JDBC repositories
@@ -123,16 +122,23 @@ monitoring/
         └── AriregisterProperties.kt          — @ConfigurationProperties for ariregister.*
 ```
 
-### Shelved Services (pending refactor)
+### MonitoringEntryLookupService
 
-`MonitoringEntryLookupService.kt.bak` and `AriregisterSyncService.kt.bak` contain the original MongoDB-based implementations. They need to be rewritten to use the new JDBC repositories. Key query translations:
+Central service for finding or creating entries. Takes `LookupParams(individual, fullName?, estGovId?, firstName?, lastName?, rawBirthDate?)`.
 
-| Old (MongoDB) | New (JDBC) |
-|---|---|
-| `ids.estGovId` exact match | `MonitoringEntryExternalIdRepo.findEntriesByExternalId("estGovId", value)` |
-| `altNames.firstName/lastName` regex | `MonitoringEntryNameRepo.findIndividualsByNameParts(first, last)` |
-| `name` regex | `MonitoringEntryRepo.findIndividualByNameIgnoreCase(name)` |
-| `connectedIds.all(ids)` + type + startDate | `MonitoringConnectionRepo.findByPairAndTypeAndStartDate(a, b, type, date)` |
+**Lookup fallback order**: estGovId (via `MonitoringEntryExternalIdRepo`) → firstName+lastName (via `MonitoringEntryNameRepo`) → fullName (via `MonitoringEntryRepo`)
+
+**Individual disambiguation with birthdate**:
+- 0 found → create new
+- 1 found, no birthdate in DB → patch and return
+- 1 found, matching birthdate → return
+- 1 found, different birthdate → create new (different person)
+- N found, any matching birthdate → return matches
+- N found, none matching → return those without birthdate, or create new if all have different birthdates
+
+**Org handling**: error if multiple found; creates as `BUSINESS` type if not found.
+
+**Birth date resolution**: If `individual=true` and `estGovId` is a valid Estonian personal ID (isikukood), birthdate is automatically derived from digits 1-7 of the ID code.
 
 ### AriregisterMappings
 
@@ -235,12 +241,9 @@ Shared functions used by multiple import scripts (MongoDB-based):
 
 ## Current Work
 
-The monitoring data has been migrated from MongoDB to PostgreSQL. The JDBC infrastructure (entities, repositories, JSONB converters) is in place. Two services still need refactoring:
+The monitoring data has been fully migrated from MongoDB to PostgreSQL. All services (`MonitoringEntryLookupService`, `AriregisterSyncService`) have been refactored to use Spring Data JDBC repositories. MongoDB is no longer a dependency of the Kotlin application.
 
-1. **MonitoringEntryLookupService** — unified entity lookup/create with disambiguation (shelved as `.kt.bak`)
-2. **AriregisterSyncService** — Ariregister SOAP sync orchestration (shelved as `.kt.bak`)
-
-These need to be rewritten to use the new JDBC repositories instead of MongoTemplate.
+The `onStartup()` method in `AriregisterSyncService` iterates all entries with `estGovId` and syncs them. The `@EventListener` annotation is currently commented out — uncomment to run on boot.
 
 ## Important Conventions
 

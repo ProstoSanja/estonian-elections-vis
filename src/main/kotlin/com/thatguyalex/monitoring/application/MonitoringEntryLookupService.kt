@@ -1,13 +1,11 @@
 package com.thatguyalex.monitoring.application
 
-import com.thatguyalex.monitoring.infrastructure.mongo.*
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.core.query.Update
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryType
+import com.thatguyalex.monitoring.infrastructure.MonitoringExternalIdType
+import com.thatguyalex.monitoring.infrastructure.jdbc.*
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
-import java.util.regex.Pattern
 
 data class LookupParams(
     val individual: Boolean,
@@ -40,15 +38,18 @@ data class LookupParams(
 }
 
 data class EntryLookupResult(
-    val entries: List<MonitoringEntry>,
+    val entries: List<MonitoringEntryEntity>,
     val created: Boolean,
     val updatedBirthdate: Boolean,
 )
 
 @Service
 class MonitoringEntryLookupService(
-    private val mongoTemplate: MongoTemplate,
+    private val entryRepo: MonitoringEntryRepo,
+    private val externalIdRepo: MonitoringEntryExternalIdRepo,
+    private val nameRepo: MonitoringEntryNameRepo,
 ) {
+    @Transactional
     fun findOrCreate(params: LookupParams): EntryLookupResult {
         val hasEstGovId = !params.estGovId.isNullOrBlank()
         val hasNameParts = !params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()
@@ -72,37 +73,33 @@ class MonitoringEntryLookupService(
         hasEstGovId: Boolean,
         hasNameParts: Boolean,
         hasFullName: Boolean,
-    ): List<MonitoringEntry> {
+    ): List<MonitoringEntryEntity> {
         if (hasEstGovId) {
-            val found = mongoTemplate.find(
-                Query(Criteria.where("ids.estGovId").`is`(params.estGovId)),
-                MonitoringEntry::class.java,
+            val found = externalIdRepo.findEntriesByExternalId(
+                MonitoringExternalIdType.EST_GOV_ID, params.estGovId!!,
             )
             if (found.isNotEmpty()) return found
         }
 
         if (hasNameParts) {
-            val criteria = typeCriteria(params.individual)
-                .and("altNames.firstName").regex("^${Pattern.quote(params.firstName!!.trim())}$", "i")
-                .and("altNames.lastName").regex("^${Pattern.quote(params.lastName!!.trim())}$", "i")
-            val found = mongoTemplate.find(Query(criteria), MonitoringEntry::class.java)
+            val found = nameRepo.findIndividualsByNameParts(
+                params.firstName!!.trim(), params.lastName!!.trim(),
+            )
             if (found.isNotEmpty()) return found
         }
 
         if (hasFullName) {
-            val criteria = typeCriteria(params.individual)
-                .and("name").regex("^${Pattern.quote(params.fullName!!.trim())}$", "i")
-            return mongoTemplate.find(Query(criteria), MonitoringEntry::class.java)
+            return if (params.individual) {
+                entryRepo.findIndividualByNameIgnoreCase(params.fullName!!.trim())
+            } else {
+                entryRepo.findOrgByNameIgnoreCase(params.fullName!!.trim())
+            }
         }
 
         return emptyList()
     }
 
-    private fun typeCriteria(individual: Boolean): Criteria =
-        if (individual) Criteria.where("type").`is`(MonitoringEntryType.INDIVIDUAL.name)
-        else Criteria.where("type").ne(MonitoringEntryType.INDIVIDUAL.name)
-
-    private fun disambiguateIndividual(found: List<MonitoringEntry>, params: LookupParams): EntryLookupResult {
+    private fun disambiguateIndividual(found: List<MonitoringEntryEntity>, params: LookupParams): EntryLookupResult {
         if (found.isEmpty()) {
             val created = createIndividual(params)
             return EntryLookupResult(listOf(created), created = true, updatedBirthdate = false)
@@ -139,7 +136,7 @@ class MonitoringEntryLookupService(
         return EntryLookupResult(listOf(created), created = true, updatedBirthdate = false)
     }
 
-    private fun handleOrg(found: List<MonitoringEntry>, params: LookupParams): EntryLookupResult {
+    private fun handleOrg(found: List<MonitoringEntryEntity>, params: LookupParams): EntryLookupResult {
         if (found.size > 1) {
             val names = found.map { it.name }
             throw IllegalStateException("Multiple entries found for org lookup: $names")
@@ -148,77 +145,103 @@ class MonitoringEntryLookupService(
             return EntryLookupResult(found, created = false, updatedBirthdate = false)
         }
 
-        val name = requireNotNull(params.fullName?.trim()) {
-            "fullName is required to create a new org entry"
-        }
-        val entry = mongoTemplate.insert(
-            MonitoringEntry(
-                ids = MonitoringEntryIds(estGovId = params.estGovId),
-                name = name,
-                type = MonitoringEntryType.BUSINESS,
-                altNames = listOf(MonitoringEntryNames(fullName = name, businessName = name, businessSuffix = null)),
-            )
-        )
+        val entry = createOrg(params)
         return EntryLookupResult(listOf(entry), created = true, updatedBirthdate = false)
     }
 
-    private fun patchIndividual(entry: MonitoringEntry, params: LookupParams): MonitoringEntry {
-        val update = Update()
+    private fun createOrg(params: LookupParams): MonitoringEntryEntity {
+        val name = requireNotNull(params.fullName?.trim()) {
+            "fullName is required to create a new org entry"
+        }
+
+        val entry = entryRepo.save(MonitoringEntryEntity(
+            type = MonitoringEntryType.BUSINESS,
+            name = name,
+        ))
+
+        nameRepo.save(MonitoringEntryNameEntity(
+            entryId = entry.id!!,
+            fullName = name,
+            businessName = name,
+        ))
+
+        if (!params.estGovId.isNullOrBlank()) {
+            externalIdRepo.save(MonitoringEntryExternalIdEntity(
+                entryId = entry.id,
+                type = MonitoringExternalIdType.EST_GOV_ID,
+                value = params.estGovId,
+            ))
+        }
+
+        return entry
+    }
+
+    private fun patchIndividual(entry: MonitoringEntryEntity, params: LookupParams): MonitoringEntryEntity {
         var patched = entry
 
         if (entry.birthDate == null && params.birthDate != null) {
-            update.set("birthDate", params.birthDate)
-            patched = patched.copy(birthDate = params.birthDate)
-        }
-        if (entry.altNames.size == 1 && !params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()) {
-            update.set("altNames.0.fullName", entry.name.trim())
-            update.set("altNames.0.firstName", params.firstName.trim())
-            update.set("altNames.0.lastName", params.lastName.trim())
-            patched = patched.copy(altNames = listOf(MonitoringEntryNames(
-                fullName = entry.name.trim(),
-                firstName = params.firstName.trim(),
-                lastName = params.lastName.trim(),
-            )))
-        } else if (entry.altNames.isEmpty() && !params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()) {
-            val newName = MonitoringEntryNames(
-                fullName = entry.name.trim(),
-                firstName = params.firstName.trim(),
-                lastName = params.lastName.trim(),
-            )
-            update.set("altNames", listOf(newName))
-            patched = patched.copy(altNames = listOf(newName))
-        }
-        if (entry.ids.estGovId == null && !params.estGovId.isNullOrBlank()) {
-            update.set("ids.estGovId", params.estGovId)
-            patched = patched.copy(ids = patched.ids.copy(estGovId = params.estGovId))
+            patched = entryRepo.save(patched.copy(birthDate = params.birthDate))
         }
 
-        if (update.updateObject.isNotEmpty()) {
-            mongoTemplate.updateFirst(
-                Query(Criteria.where("_id").`is`(entry.id)),
-                update,
-                MonitoringEntry::class.java,
-            )
+        if (!params.firstName.isNullOrBlank() && !params.lastName.isNullOrBlank()) {
+            val existingNames = nameRepo.findByEntryId(entry.id!!)
+            if (existingNames.size == 1) {
+                nameRepo.save(existingNames[0].copy(
+                    fullName = entry.name.trim(),
+                    firstName = params.firstName.trim(),
+                    lastName = params.lastName.trim(),
+                ))
+            } else if (existingNames.isEmpty()) {
+                nameRepo.save(MonitoringEntryNameEntity(
+                    entryId = entry.id,
+                    fullName = entry.name.trim(),
+                    firstName = params.firstName.trim(),
+                    lastName = params.lastName.trim(),
+                ))
+            }
         }
+
+        if (!params.estGovId.isNullOrBlank()) {
+            val existing = externalIdRepo.findByTypeAndValue(
+                MonitoringExternalIdType.EST_GOV_ID, params.estGovId,
+            )
+            if (existing == null) {
+                externalIdRepo.save(MonitoringEntryExternalIdEntity(
+                    entryId = entry.id!!,
+                    type = MonitoringExternalIdType.EST_GOV_ID,
+                    value = params.estGovId,
+                ))
+            }
+        }
+
         return patched
     }
 
-    private fun createIndividual(params: LookupParams): MonitoringEntry {
+    private fun createIndividual(params: LookupParams): MonitoringEntryEntity {
         val name = params.fullName?.trim()
             ?: listOfNotNull(params.firstName?.trim(), params.lastName?.trim()).joinToString(" ")
 
-        return mongoTemplate.insert(
-            MonitoringEntry(
-                ids = MonitoringEntryIds(estGovId = params.estGovId),
-                name = name,
-                type = MonitoringEntryType.INDIVIDUAL,
-                altNames = listOf(MonitoringEntryNames(
-                    fullName = name,
-                    firstName = params.firstName?.trim(),
-                    lastName = params.lastName?.trim(),
-                )),
-                birthDate = params.birthDate,
-            )
-        )
+        val entry = entryRepo.save(MonitoringEntryEntity(
+            type = MonitoringEntryType.INDIVIDUAL,
+            name = name,
+            birthDate = params.birthDate,
+        ))
+
+        nameRepo.save(MonitoringEntryNameEntity(
+            entryId = entry.id!!,
+            fullName = name,
+            firstName = params.firstName?.trim(),
+            lastName = params.lastName?.trim(),
+        ))
+
+        if (!params.estGovId.isNullOrBlank()) {
+            externalIdRepo.save(MonitoringEntryExternalIdEntity(
+                entryId = entry.id,
+                type = MonitoringExternalIdType.EST_GOV_ID,
+                value = params.estGovId,
+            ))
+        }
+
+        return entry
     }
 }

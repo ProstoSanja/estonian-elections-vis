@@ -1,17 +1,15 @@
 package com.thatguyalex.monitoring.application
 
-import com.thatguyalex.monitoring.infrastructure.mongo.*
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryConnectionType
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryType
+import com.thatguyalex.monitoring.infrastructure.MonitoringExternalIdType
+import com.thatguyalex.monitoring.infrastructure.jdbc.*
 import com.thatguyalex.monitoring.infrastructure.rest.*
-import com.thatguyalex.monitoring.infrastructure.rest.AriregisterClient.Companion.NS
 import com.thatguyalex.monitoring.infrastructure.rest.AriregisterClient.Companion.directChildElements
 import com.thatguyalex.monitoring.infrastructure.rest.AriregisterClient.Companion.elements
 import com.thatguyalex.monitoring.infrastructure.rest.AriregisterClient.Companion.textContent
-import org.bson.types.ObjectId
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.core.query.Update
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
@@ -22,22 +20,24 @@ import java.time.LocalDate
 class AriregisterSyncService(
     private val client: AriregisterClient,
     private val lookupService: MonitoringEntryLookupService,
-    private val mongoTemplate: MongoTemplate,
+    private val entryRepo: MonitoringEntryRepo,
+    private val externalIdRepo: MonitoringEntryExternalIdRepo,
+    private val nameRepo: MonitoringEntryNameRepo,
+    private val connectionRepo: MonitoringConnectionRepo,
+    private val objectMapper: ObjectMapper,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
     // @EventListener(ApplicationReadyEvent::class)
     fun onStartup() {
-        val entries = mongoTemplate.find(
-            Query(Criteria.where("type").ne(MonitoringEntryType.INDIVIDUAL.name)
-                .and("ids.estGovId").ne(null)),
-            MonitoringEntry::class.java,
-        )
+        val entries = entryRepo.findNonIndividualWithEstGovId()
         log.info("Starting ariregister sync for {} entries", entries.size)
         var success = 0
         var failed = 0
         for ((i, entry) in entries.withIndex()) {
-            val code = entry.ids.estGovId ?: continue
+            val externalIds = externalIdRepo.findByEntryId(entry.id!!)
+            val code = externalIds.firstOrNull { it.type == MonitoringExternalIdType.EST_GOV_ID }?.value
+                ?: continue
             try {
                 sync(code)
                 success++
@@ -90,42 +90,51 @@ class AriregisterSyncService(
     }
 
     private fun updateCompanyEntry(
-        entryId: ObjectId,
+        entryId: Long,
         yldandmed: Element?,
         entryType: MonitoringEntryType?,
     ) {
-        val update = Update()
         if (entryType != null) {
-            update.set("type", entryType)
+            val entry = entryRepo.findById(entryId).orElseThrow {
+                IllegalStateException("Entry $entryId not found")
+            }
+            entryRepo.save(entry.copy(type = entryType))
         }
 
-        if (yldandmed != null) {
-            val altNames = buildAltNames(yldandmed)
-            if (altNames.isNotEmpty()) {
-                update.set("altNames", altNames)
-            }
+        if (yldandmed == null) return
 
-            val contacts = buildContacts(yldandmed)
-            if (contacts.isNotEmpty()) {
-                update.set("unstructuredData.contacts", contacts)
-            }
+        val altNames = buildAltNames(entryId, yldandmed)
+        if (altNames.isNotEmpty()) {
+            nameRepo.deleteByEntryId(entryId)
+            altNames.forEach { nameRepo.save(it) }
         }
 
-        mongoTemplate.updateFirst(
-            Query(Criteria.where("_id").`is`(entryId)),
-            update,
-            MonitoringEntry::class.java,
-        )
+        val contacts = buildContacts(yldandmed)
+        if (contacts.isNotEmpty()) {
+            val entry = entryRepo.findById(entryId).orElseThrow {
+                IllegalStateException("Entry $entryId not found")
+            }
+            val currentExtra: MutableMap<String, Any?> = if (entry.extra?.value != null && entry.extra.value != "{}") {
+                objectMapper.readValue(entry.extra.value, objectMapper.typeFactory.constructMapType(
+                    MutableMap::class.java, String::class.java, Any::class.java,
+                ))
+            } else {
+                mutableMapOf()
+            }
+            currentExtra["contacts"] = contacts
+            entryRepo.updateExtra(entryId, objectMapper.writeValueAsString(currentExtra))
+        }
     }
 
-    private fun buildAltNames(yldandmed: Element): List<MonitoringEntryNames> {
+    private fun buildAltNames(entryId: Long, yldandmed: Element): List<MonitoringEntryNameEntity> {
         val arinimedContainer = elements(yldandmed, "arinimed").firstOrNull() ?: return emptyList()
         return directChildElements(arinimedContainer, "item").mapNotNull { item ->
             val fullName = textContent(item, "sisu") ?: return@mapNotNull null
             val startDate = parseAriDate(textContent(item, "algus_kpv"))
             val endDate = parseAriDate(textContent(item, "lopp_kpv"))
             val (bizName, bizSuffix) = splitBusinessSuffix(fullName)
-            MonitoringEntryNames(
+            MonitoringEntryNameEntity(
+                entryId = entryId,
                 fullName = fullName,
                 businessName = bizName,
                 businessSuffix = bizSuffix,
@@ -146,7 +155,7 @@ class AriregisterSyncService(
     }
 
     private fun processConnectedPersons(
-        companyId: ObjectId,
+        companyId: Long,
         registrikood: String,
         isikuandmed: Element,
         containerTag: String,
@@ -166,7 +175,7 @@ class AriregisterSyncService(
         }
     }
 
-    private fun processOneConnection(companyId: ObjectId, registrikood: String, item: Element) {
+    private fun processOneConnection(companyId: Long, registrikood: String, item: Element) {
         val isikuTyyp = textContent(item, "isiku_tyyp")
         val roll = textContent(item, "isiku_roll") ?: return
         val rollText = textContent(item, "isiku_roll_tekstina") ?: roll
@@ -184,7 +193,7 @@ class AriregisterSyncService(
         upsertConnection(companyId, relatedId, connectionType, rollText, startDate, endDate, registrikood)
     }
 
-    private fun resolveRelatedEntry(item: Element, isikuTyyp: String?): ObjectId? {
+    private fun resolveRelatedEntry(item: Element, isikuTyyp: String?): Long? {
         val code = textContent(item, "isikukood_registrikood")
 
         return if (isikuTyyp == "F") {
@@ -221,21 +230,17 @@ class AriregisterSyncService(
     }
 
     private fun upsertConnection(
-        companyId: ObjectId,
-        relatedId: ObjectId,
+        companyId: Long,
+        relatedId: Long,
         type: MonitoringEntryConnectionType,
         name: String,
         startDate: LocalDate?,
         endDate: LocalDate?,
         registrikood: String,
     ) {
-        val ids = listOf(companyId, relatedId)
-
-        val criteria = Criteria.where("connectedIds").all(ids)
-            .and("type").`is`(type)
-            .and("startDate").`is`(startDate)
-
-        val candidates = mongoTemplate.find(Query(criteria), MonitoringEntryConnection::class.java)
+        val candidates = connectionRepo.findByPairAndTypeAndStartDate(
+            companyId, relatedId, type, startDate,
+        )
 
         val existing = when {
             candidates.size == 1 -> candidates[0]
@@ -244,43 +249,40 @@ class AriregisterSyncService(
         }
 
         if (existing != null) {
-            val update = Update()
+            var needsUpdate = false
+            var updated = existing
+
             if (!existing.confirmed) {
-                update.set("confirmed", true)
+                updated = updated.copy(confirmed = true)
+                needsUpdate = true
             }
             if (existing.endDate != endDate) {
-                update.set("endDate", endDate)
+                updated = updated.copy(endDate = endDate)
+                needsUpdate = true
             }
-            if (existing.connectedIds.toSet() != ids.toSet()) {
-                update.set("connectedIds", ids)
-            }
-            if (update.updateObject.isNotEmpty()) {
-                mongoTemplate.updateFirst(
-                    Query(Criteria.where("_id").`is`(existing.id)),
-                    update,
-                    MonitoringEntryConnection::class.java,
-                )
+
+            if (needsUpdate) {
+                connectionRepo.save(updated)
                 log.debug("Updated connection {} for {}", existing.id, registrikood)
             }
             return
         }
 
-        mongoTemplate.insert(
-            MonitoringEntryConnection(
-                connectedIds = ids,
-                parentId = if (type == MonitoringEntryConnectionType.BUSINESS_OWNERSHIP) relatedId else null,
-                name = name,
-                type = type,
-                confirmed = true,
-                startDate = startDate,
-                endDate = endDate,
-                sources = listOf(
-                    MonitoringEntryConnectionSource(
-                        sourceUrl = "https://ariregister.rik.ee/est/company/$registrikood"
-                    )
-                ),
-            )
+        val sourcesJson = objectMapper.writeValueAsString(
+            listOf("https://ariregister.rik.ee/est/company/$registrikood")
         )
+
+        connectionRepo.save(MonitoringConnectionEntity(
+            entryAId = companyId,
+            entryBId = relatedId,
+            parentId = if (type == MonitoringEntryConnectionType.BUSINESS_OWNERSHIP) relatedId else null,
+            name = name,
+            type = type,
+            confirmed = true,
+            startDate = startDate,
+            endDate = endDate,
+            sources = Jsonb(sourcesJson),
+        ))
         log.debug("Created connection {} ({}) for {}", name, type, registrikood)
     }
 
