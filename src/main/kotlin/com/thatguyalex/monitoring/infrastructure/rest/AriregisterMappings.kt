@@ -1,10 +1,10 @@
 package com.thatguyalex.monitoring.infrastructure.rest
 
-import com.thatguyalex.monitoring.infrastructure.mongo.MonitoringEntryConnectionType
-import com.thatguyalex.monitoring.infrastructure.mongo.MonitoringEntryConnectionType.ADMINISTRATION
-import com.thatguyalex.monitoring.infrastructure.mongo.MonitoringEntryConnectionType.BUSINESS_OWNERSHIP
-import com.thatguyalex.monitoring.infrastructure.mongo.MonitoringEntryConnectionType.EMPLOYMENT
-import com.thatguyalex.monitoring.infrastructure.mongo.MonitoringEntryType
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryConnectionType
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryConnectionType.ADMINISTRATION
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryConnectionType.BUSINESS_OWNERSHIP
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryConnectionType.EMPLOYMENT
+import com.thatguyalex.monitoring.infrastructure.MonitoringEntryType
 
 // TODO: expad by alaliik
 val ARIREGISTER_LEGAL_FORM_TYPE_MAPPINGS: Map<String, MonitoringEntryType> = mapOf(
